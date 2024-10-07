@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     FloatingActionButton fab;
     BottomNavigationView bottomNavigationView;
-//chao cau 3
+//chao cau caho
+    //toi la minh chinh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
