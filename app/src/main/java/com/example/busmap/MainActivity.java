@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab;
     BottomNavigationView bottomNavigationView;
 //chao cau caho
-    //toi la minh chinh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
