@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // Gán view cho DrawerLayout, Toolbar và BottomNavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -35,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Load fragment đầu tiên nếu chưa có
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, new HomeFragment()).commit();
+            //Hiện Map đầu tiên
+            replaceFragment(new MapsFragment());
+            //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, new HomeFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_home);
         }
 
