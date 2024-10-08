@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             }else if(item.getItemId() == R.id.nav_logout){
                 replaceFragment(new LogoutFragment());
             }else if(item.getItemId() == R.id.nav_home){
-                replaceFragment(new HomeFragment());
+                replaceFragment(new MapsFragment());
             }
             return true;
         });

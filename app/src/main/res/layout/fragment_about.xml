@@ -1,14 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/about_us_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AboutFragment">
+    android:padding="16dp"
+    tools:context=".MainActivity">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Logo của ứng dụng -->
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/aklogo"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="16dp"/>
+
+    <!-- Tiêu đề "About Us" -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/aboutUsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About Us"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/logoImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
-</FrameLayout>
+    <!-- Nội dung "About Us" -->
+    <TextView
+        android:id="@+id/aboutUsContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Chào mừng bạn đến với BusMap, ứng dụng di động giúp bạn di chuyển thông minh và dễ dàng hơn bằng xe buýt. BusMap cung cấp thông tin đầy đủ và cập nhật nhất về lộ trình, thời gian di chuyển, và các tuyến xe buýt trên khắp các thành phố lớn. Với BusMap, bạn có thể tìm kiếm tuyến xe buýt phù hợp, xem bản đồ và lịch trình chi tiết theo thời gian thực."
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:lineSpacingExtra="6dp"
+        app:layout_constraintTop_toBottomOf="@id/aboutUsTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="8dp" />
+
+    <!-- Phần mở rộng nội dung giới thiệu -->
+    <TextView
+        android:id="@+id/aboutUsContent2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Chúng tôi tin rằng giao thông công cộng không chỉ là một phương tiện di chuyển, mà còn là một phần của cuộc sống hiện đại bền vững. Hãy để BusMap giúp bạn trải nghiệm một cuộc sống thuận tiện và xanh hơn!"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:lineSpacingExtra="6dp"
+        app:layout_constraintTop_toBottomOf="@id/aboutUsContent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="8dp" />
+
+    <!-- Nút back để quay lại -->
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        app:layout_constraintTop_toBottomOf="@id/aboutUsContent2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
