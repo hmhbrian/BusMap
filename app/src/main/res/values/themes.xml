@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Xebus" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.busmap" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/lavender</item>
         <item name="colorPrimaryVariant">@color/lavender</item>
@@ -18,5 +18,5 @@
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
-    <style name="Theme.Xebus" parent="Base.Theme.Xebus" />
+    <style name="Theme.busmap" parent="Base.Theme.busmap" />
 </resources>
