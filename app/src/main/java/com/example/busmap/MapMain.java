@@ -15,7 +15,7 @@ public class MapMain extends FragmentActivity implements OnMapReadyCallback {
 
     GoogleMap mMap;
     SupportMapFragment mapFragment;
-
+//huyy
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
