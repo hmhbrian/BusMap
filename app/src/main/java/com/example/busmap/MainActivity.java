@@ -39,6 +39,21 @@ public class MainActivity extends AppCompatActivity {
             //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, new HomeFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_home);
         }
+        //Thay thế Fragment theo lựa chọn của NavigationView
+        navigationView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_settings) {
+                replaceFragment(new SettingFragment());
+            }else if(item.getItemId() == R.id.nav_share){
+                replaceFragment(new ShareFragment());
+            }else if(item.getItemId() == R.id.nav_about){
+                replaceFragment(new AboutFragment());
+            }else if(item.getItemId() == R.id.nav_logout){
+                replaceFragment(new LogoutFragment());
+            }else if(item.getItemId() == R.id.nav_home){
+                replaceFragment(new HomeFragment());
+            }
+            return true;
+        });
 
         // Thay thế Fragment theo lựa chọn của BottomNavigationView
         bottomNavigationView.setOnItemSelectedListener(item -> {
