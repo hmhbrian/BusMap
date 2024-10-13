@@ -22,10 +22,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsFragment extends Fragment {
 
@@ -51,8 +56,27 @@ public class MapsFragment extends Fragment {
             }else{
                 Log.e("MapError", "GoogleMap is null.");
             }
+            addBusMarkers();
         }
     };
+    private void addBusMarkers(){
+        List<LatLng> busLocations = new ArrayList<>();
+        busLocations.add(new LatLng(10.98335004747691, 106.67431075125997));
+        busLocations.add(new LatLng(10.980180239846662, 106.6756130977606));
+        busLocations.add(new LatLng(10.978769631402264, 106.6757348698315));
+
+        for (LatLng location : busLocations) {
+            mMap.addMarker(new MarkerOptions()
+                    .position(location)
+                    .title("Điểm Xe Bus")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))); // Tùy chỉnh icon nếu cần
+        }
+
+        // Di chuyển camera đến vị trí đầu tiên
+        if (!busLocations.isEmpty()) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(busLocations.get(0), 12));
+        }
+    }
 
     @Nullable
     @Override

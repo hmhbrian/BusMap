@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tìm kiếm địa điểm"
-            android:background="@null"
+            android:background="@color/lavender"
             android:textColor="#888"
             android:paddingStart="8dp"
             android:minHeight="48dp"/>
@@ -94,126 +94,128 @@
 <!--                android:textColor="#666" />-->
 <!--        </LinearLayout>-->
 <!--    </LinearLayout>-->
-
-    <GridLayout
+    <TableLayout
+        android:id="@+id/table1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnCount="4"
-        android:padding="16dp"
-        android:layout_marginBottom="16dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/baseline_remove_red_eye_24"
-                android:contentDescription="Tra cứu" />
-
-            <TextView
+        android:stretchColumns="*">
+        <TableRow android:id="@+id/row1">
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tra cứu"
-                android:textSize="14sp"
-                android:textColor="#000"
-                android:gravity="center" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="8dp">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/baseline_remove_red_eye_24"
+                    android:contentDescription="Tra cứu" />
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/baseline_find_replace_24"
-                android:contentDescription="Tìm đường" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tra cứu"
+                    android:textSize="14sp"
+                    android:textColor="#000"
+                    android:gravity="center" />
+            </LinearLayout>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tìm đường"
-                android:textSize="14sp"
-                android:textColor="#000"
-                android:gravity="center" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="8dp">
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/baseline_find_replace_24"
-                android:contentDescription="Tìm đường" />
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/baseline_find_replace_24"
+                    android:contentDescription="Tìm đường" />
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tìm đường"
+                    android:textSize="14sp"
+                    android:textColor="#000"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tìm đường"
-                android:textSize="14sp"
-                android:textColor="#000"
-                android:gravity="center" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="8dp">
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/baseline_find_replace_24"
-                android:contentDescription="Tìm đường" />
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/baseline_find_replace_24"
+                    android:contentDescription="Tìm đường" />
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tìm đường"
+                    android:textSize="14sp"
+                    android:textColor="#000"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tìm đường"
-                android:textSize="14sp"
-                android:textColor="#000"
-                android:gravity="center" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="8dp">
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/baseline_find_replace_24"
-                android:contentDescription="Tìm đường" />
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/baseline_find_replace_24"
+                    android:contentDescription="Tìm đường" />
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tìm đường"
+                    android:textSize="14sp"
+                    android:textColor="#000"
+                    android:gravity="center" />
+            </LinearLayout>
+        </TableRow>
+        <TableRow android:id="@+id/row2">
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tìm đường"
-                android:textSize="14sp"
-                android:textColor="#000"
-                android:gravity="center" />
-        </LinearLayout>
-    </GridLayout>
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/baseline_find_replace_24"
+                    android:contentDescription="Tìm đường" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tìm đường"
+                    android:textSize="14sp"
+                    android:textColor="#000"
+                    android:gravity="center" />
+            </LinearLayout>
+        </TableRow>
+    </TableLayout>
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="350dp"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center_vertical"
         tools:context=".MapsFragment" />
 </LinearLayout>
