@@ -8,7 +8,7 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="lavender">#8692f7</color>
-    <color name="xam">#F4EEEE</color>
-
+    <color name="xam">##fafbff</color>
     <color name="purple">#8692f7</color>
+    <color name="trang">##f5f7ff</color>
 </resources>

@@ -54,7 +54,9 @@
         app:layout_constraintTop_toBottomOf="@id/txtTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+
+        >
 
         <ImageView
             android:id="@+id/imgUpgradeIcon"
@@ -66,10 +68,11 @@
             android:id="@+id/txtUpgrade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="Nâng cấp lên BusMap Plus"
             android:textSize="16sp"
             android:textColor="@color/black"
-            android:layout_marginStart="8dp"/>
+         />
     </LinearLayout>
 
     <!-- Menu items -->
@@ -131,8 +134,7 @@
             android:textSize="16sp"
             android:drawableStart="@drawable/baseline_star_rate_24"
             android:drawablePadding="8dp"
-            android:padding="16dp"
-            />
+            android:padding="16dp" />
 
         <TextView
             android:id="@+id/txtCompanyInfo"
