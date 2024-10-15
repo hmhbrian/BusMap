@@ -131,7 +131,8 @@
             android:textSize="16sp"
             android:drawableStart="@drawable/baseline_star_rate_24"
             android:drawablePadding="8dp"
-            android:padding="16dp" />
+            android:padding="16dp"
+            />
 
         <TextView
             android:id="@+id/txtCompanyInfo"
