@@ -2,6 +2,7 @@ package com.example.busmap;
 
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
@@ -61,9 +64,12 @@ public class MapsFragment extends Fragment {
     };
     private void addBusMarkers(){
         List<LatLng> busLocations = new ArrayList<>();
-        busLocations.add(new LatLng(10.98335004747691, 106.67431075125997));
-        busLocations.add(new LatLng(10.980180239846662, 106.6756130977606));
-        busLocations.add(new LatLng(10.978769631402264, 106.6757348698315));
+        LatLng latLng1 = new LatLng(10.98335004747691, 106.67431075125997);
+        LatLng latLng2 = new LatLng(10.980180239846662, 106.6756130977606);
+        LatLng latLng3 = new LatLng(10.978769631402264, 106.6757348698315);
+        busLocations.add(latLng1);
+        busLocations.add(latLng2);
+        busLocations.add(latLng3);
 
         for (LatLng location : busLocations) {
             mMap.addMarker(new MarkerOptions()
@@ -72,6 +78,11 @@ public class MapsFragment extends Fragment {
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))); // Tùy chỉnh icon nếu cần
         }
 
+        PolylineOptions polylineOptions = new PolylineOptions()
+                .add(latLng1).add(latLng2).add(latLng3)
+                .color(Color.GREEN)
+                .width(7);
+        Polyline polyline = mMap.addPolyline(polylineOptions);
         // Di chuyển camera đến vị trí đầu tiên
         if (!busLocations.isEmpty()) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(busLocations.get(0), 12));
@@ -117,7 +128,7 @@ public class MapsFragment extends Fragment {
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
-                                LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                                LatLng currentLocation = new LatLng(10.98335004747691, 106.67431075125997);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15)); // Zoom level 15
                             }
                         }
