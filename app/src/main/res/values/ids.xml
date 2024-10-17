@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="tv_rating_title" type="id" />
+    <item name="rating_bar" type="id" />
+    <item name="tv_rating_feedback" type="id" />
+    <item name="btn_submit_rating" type="id" />
+    <item name="tv_company_intro" type="id" />
+</resources>
