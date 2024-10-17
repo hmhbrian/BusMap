@@ -50,21 +50,24 @@ public class BusRoute extends AppCompatActivity implements OnMapReadyCallback, T
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bus_route);
-        getDirection = findViewById(R.id.btnGetDirection);
-        getDirection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new FetchURL(BusRoute.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "bus"), "bus");
-            }
-        });
+        //getDirection = findViewById(R.id.btnGetDirection);
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.maproute);
+        mapFragment.getMapAsync(this);
+//        getDirection.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                new FetchURL(BusRoute.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "bus"), "bus");
+//            }
+//        });
         //27.658143,85.3199503
         //27.667491,85.3208583
         place1 = new MarkerOptions().position(new LatLng(10.98335004747691, 106.67431075125997)).title("Location 1");
         place2 = new MarkerOptions().position(new LatLng(10.980180239846662, 106.6756130977606)).title("Location 2");
         place3 = new MarkerOptions().position(new LatLng(10.978769631402264, 106.6757348698315)).title("Location 3");
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.maproute);
-        mapFragment.getMapAsync(this);
+
+        new FetchURL(BusRoute.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "bus"), "bus");
+
     }
 
     @Override
