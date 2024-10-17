@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    tools:context=".FindRoadActivity">
-
+    android:orientation="vertical"
+    tools:context=".ResultFindRoadActivity">>
 
     <androidx.appcompat.widget.Toolbar
         android:theme="@style/ToolbarLight"
@@ -55,7 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:hint="nhập địa điểm xuất phát"
+                    android:hint="chọn địa điểm bắt đầu"
                     android:textColorHint="@color/secondary_500"
                     android:textColor="@color/secondary_900"
                     android:background="@null"/>
@@ -90,47 +89,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:hint="nhập địa điểm đến"
+                    android:hint="chọn địa điểm đến"
                     android:textColorHint="@color/secondary_500"
                     android:textColor="@color/secondary_900"
                     android:background="@null"/>
             </LinearLayout>
 
-<!--            <ImageButton-->
-<!--                android:id="@+id/ib_swap"-->
-<!--                android:layout_width="40dp"-->
-<!--                android:layout_height="38dp"-->
-<!--                android:layout_below="@id/ll_from"-->
-<!--                android:layout_alignParentEnd="true"-->
-<!--                android:layout_marginTop="-20dp"-->
-<!--                android:background="@drawable/corner_left_10"-->
-<!--                android:backgroundTint="@color/primary_600"-->
-<!--                android:src="@drawable/ic_swap"-->
-<!--                app:tint="@color/secondary_900" />-->
+            <ImageButton
+                android:id="@+id/ib_swap"
+                android:layout_width="40dp"
+                android:layout_height="38dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="-20dp"
+                android:background="@drawable/corner_left_10"
+                android:backgroundTint="@color/primary_600"
+                android:src="@drawable/ic_swap"
+                app:tint="@color/secondary_900" />
         </RelativeLayout>
-        <Spinner
-            android:id="@+id/spinner_route_amount"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="8dp"
-            android:popupBackground="@color/primary_800"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"/>
-        <Button
-            android:id="@+id/btn_find_road"
-            android:layout_marginHorizontal="16dp"
-            android:text="Tìm đường"
+        <TextView
+            android:paddingVertical="8dp"
+            android:text="danh sách các tuyến xe phù hợp"
             android:textSize="18sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/primary_600"
-            app:backgroundTint="@color/secondary_900"
-            android:background="@drawable/corner_30"/>
-    </LinearLayout>
-    <fragment
-        android:id="@+id/fm_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+            android:fontFamily="@font/quicksand_semi_bold"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/secondary_900"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_results"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </LinearLayout>
