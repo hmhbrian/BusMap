@@ -8,7 +8,7 @@
     android:orientation="vertical">
     <fragment
         android:id="@+id/maproute"
-        android:name="com.google.android.gms.maps.MapFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="680dp"/>
     <Button
