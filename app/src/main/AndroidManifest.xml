@@ -35,11 +35,14 @@
             android:value="GJoizF0wNmNFPLGIdtG9"/>
         <meta-data
             android:name="com.here.android.maps.apikey"
-            android:value="ZnsyCFGQ7hZK7bSgRoQHVLNQWALF3JSfydwmSeXAxFs"/>
+            android:value="AIzaSyADEinajs4O3R5HpsFGLCVzStO8aAwAvKQ"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyADEinajs4O3R5HpsFGLCVzStO8aAwAvKQ"/>
 
 
         <activity
-            android:name=".BusRoute"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
