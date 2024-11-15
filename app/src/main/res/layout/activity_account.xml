@@ -17,18 +17,23 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+<!--<FrameLayout-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
 
     <ImageView
         android:id="@+id/imgProfile"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="120dp"
-        android:src="@drawable/ic_profile"
+        android:layout_marginTop="152dp"
         android:scaleType="centerCrop"
+        android:src="@drawable/ic_profile"
 
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+<!--    </FrameLayout>-->
 
     <TextView
         android:id="@+id/txtTitle"
@@ -58,9 +63,9 @@
 
         <ImageView
             android:id="@+id/imgUpgradeIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_upgrade_24" />
+            android:layout_width="44dp"
+            android:layout_height="32dp"
+            android:src="@drawable/bus_notification" />
 
         <TextView
             android:id="@+id/txtUpgrade"
@@ -85,7 +90,7 @@
 
         <TextView
             android:id="@+id/txtPersonalInfo"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Thông tin cá nhân"
             android:textSize="16sp"
@@ -95,7 +100,7 @@
 
         <TextView
             android:id="@+id/txtSettings"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cài đặt"
             android:textSize="16sp"
@@ -105,7 +110,7 @@
 
         <TextView
             android:id="@+id/txtChangeArea"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Thay đổi khu vực"
             android:textSize="16sp"
@@ -115,7 +120,7 @@
 
         <TextView
             android:id="@+id/txtUpdateData"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cập nhật dữ liệu"
             android:textSize="16sp"
@@ -125,7 +130,7 @@
 
         <TextView
             android:id="@+id/txtRateApp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Đánh giá ứng dụng"
             android:textSize="16sp"
@@ -136,7 +141,7 @@
 
         <TextView
             android:id="@+id/txtCompanyInfo"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Thông tin công ty"
             android:textSize="16sp"

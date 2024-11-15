@@ -13,7 +13,11 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
-
+    <style name="ToolbarLight" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:fontFamily">@font/quicksand_semi_bold</item>
+        <item name="android:textColorPrimary">@color/secondary_900</item>
+        <item name="android:colorControlNormal">@color/secondary_900</item>
+    </style>
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>

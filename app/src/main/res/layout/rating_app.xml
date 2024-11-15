@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="378dp"
+        android:layout_height="446dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="173dp"
+        tools:ignore="MissingConstraints">
+
+
+        <!-- Tiêu đề đánh giá -->
+
+
+        <TextView
+            android:id="@+id/tv_rating_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="Đánh giá ứng dụng"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- RatingBar cho đánh giá 5 sao -->
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:isIndicator="false"
+            android:numStars="5"
+            android:rating="0"
+            android:stepSize="1.0" />
+
+        <!-- TextView để hiển thị phản hồi người dùng -->
+        <TextView
+            android:id="@+id/tv_rating_feedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="Vui lòng cho chúng tôi biết ý kiến của bạn!" />
+
+        <!-- Nút gửi đánh giá -->
+        <Button
+            android:id="@+id/btn_submit_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Gửi đánh giá" />
+    </LinearLayout>
+
+     <Button
+         android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="đóng"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="291dp"
+         tools:ignore="MissingConstraints" />
+</androidx.constraintlayout.widget.ConstraintLayout>
