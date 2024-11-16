@@ -3,6 +3,7 @@ package com.example.busmap.Route;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,9 +16,14 @@ import java.util.ArrayList;
 
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHolder> {
     private ArrayList<route> routeList;
+    private OnItemClickListener onItemClickListener;
 
-    public RouteAdapter(ArrayList<route> routeList) {
+    public interface OnItemClickListener {
+        void onItemClick(route route);
+    }
+    public RouteAdapter(ArrayList<route> routeList, OnItemClickListener onItemClickListener) {
         this.routeList = routeList;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -29,9 +35,10 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
 
     @Override
     public void onBindViewHolder(@NonNull RouteViewHolder holder, int position) {
-        route route = routeList.get(position);
-        holder.tvRouteName.setText(route.getName());
+        route currentRoute = routeList.get(position);
+        holder.tvRouteName.setText(currentRoute.getName());
         //holder.tvRouteDetails.setText("Price: " + route.getPrice() + " VND\nOperation: " + route.getOperation());
+        holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(currentRoute));
     }
 
     @Override

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+    <LinearLayout
+        android:id="@+id/linear1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txtSelectedRouter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Danh sách tuyến xe bus"
+            android:textSize="24sp"
+            android:textColor="@color/primary_900"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:padding="16dp"
+            android:elevation="4dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/primary_200"
+            android:background="@drawable/rounded_background"/>
+
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_routList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/linear1"
+        android:dividerHeight="5dp"/>
+</RelativeLayout>

@@ -3,10 +3,14 @@ package com.example.busmap.Route;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,25 +26,33 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class FindRoadActivity extends AppCompatActivity {
+public class StationListFragment extends Fragment {
     private RecyclerView rVRouteList;
     private RouteAdapter routeAdapter;
     private ArrayList<route> routeList = new ArrayList<>();
-    void init(){
-        rVRouteList = findViewById(R.id.rv_routList);
-        rVRouteList.setLayoutManager(new LinearLayoutManager(this));
+    private DatabaseReference databaseReference;
+    void init(View view){
+        rVRouteList = view.findViewById(R.id.rv_routList);
+        rVRouteList.setLayoutManager(new LinearLayoutManager(getContext()));
 
     }
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_road_result);
-        init();
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_station_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init(view);
         fetchRoutesFromFirebase();
+
     }
     private void fetchRoutesFromFirebase(){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("route");
+        databaseReference = FirebaseDatabase.getInstance().getReference("route");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -55,9 +67,9 @@ public class FindRoadActivity extends AppCompatActivity {
                 List<route> firebaseRouteList = snapshot.getValue(typeIndicator); // Lấy danh sách từ Firebase
                 if (firebaseRouteList != null) {
                     routeList.addAll(firebaseRouteList);// Thêm tất cả vào danh sách
-                    routeAdapter = new RouteAdapter(routeList,route -> {
+                    routeAdapter = new RouteAdapter(routeList, route -> {
                         // Chuyển qua BusRouteActivity
-                        Intent intent = new Intent(FindRoadActivity.this, BusRouteActivity.class);
+                        Intent intent = new Intent(getContext(), BusRouteActivity.class);
                         intent.putExtra("route_id", route.getId()); // Truyền id qua Intent
                         startActivity(intent);
                     });
@@ -69,7 +81,7 @@ public class FindRoadActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("FirebaseError", "Error loading routes: " + error.getMessage());
-                Toast.makeText(FindRoadActivity.this, "Đã xảy ra lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Đã xảy ra lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show();
             }
         });
     }

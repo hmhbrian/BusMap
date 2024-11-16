@@ -8,6 +8,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.example.busmap.Route.StationListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -62,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new MapsFragment());
             } else if (item.getItemId() == R.id.shorts) {
                 replaceFragment(new ShortsFragment());
-            }else if (item.getItemId() == R.id.subscriptions) {
-                replaceFragment(new SubscriptionFragment());
+            }else if (item.getItemId() == R.id.route) {
+                replaceFragment(new StationListFragment());
             }else if (item.getItemId() == R.id.library) {
                 replaceFragment(new LibraryFragment());
             }
