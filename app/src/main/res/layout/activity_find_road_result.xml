@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ResultFindRoadActivity">>
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:theme="@style/ToolbarLight"
@@ -119,7 +118,7 @@
             android:layout_height="wrap_content"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_results"
+            android:id="@+id/rv_routList"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>

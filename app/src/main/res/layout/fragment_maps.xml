@@ -77,6 +77,7 @@
         android:stretchColumns="*">
         <TableRow android:id="@+id/row1">
             <LinearLayout
+                android:id="@+id/linearFindRoute"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"

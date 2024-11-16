@@ -37,7 +37,7 @@
                 android:gravity="center_vertical">
                 <TextView
                     android:layout_marginStart="8dp"
-                    android:text="@string/from"
+                    android:text="aaa"
                     android:layout_width="50dp"
                     android:textSize="16sp"
                     android:fontFamily="@font/quicksand_semi_bold"
@@ -54,10 +54,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:hint="@string/from_hint"
+                    android:hint="from_hint"
                     android:textColorHint="@color/secondary_500"
-                    android:textColor="@color/secondary_900"
-                    android:background="@null"/>
+                    android:textColor="@color/secondary_900"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_below="@id/ll_from"
@@ -72,7 +71,7 @@
                 android:gravity="center_vertical">
                 <TextView
                     android:layout_marginStart="8dp"
-                    android:text="@string/to"
+                    android:text="to"
                     android:layout_width="50dp"
                     android:textSize="16sp"
                     android:fontFamily="@font/quicksand_semi_bold"
@@ -89,10 +88,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:hint="@string/to_hint"
+                    android:hint="to_hint"
                     android:textColorHint="@color/secondary_500"
-                    android:textColor="@color/secondary_900"
-                    android:background="@null"/>
+                    android:textColor="@color/secondary_900"/>
             </LinearLayout>
 
             <ImageButton
@@ -118,7 +116,7 @@
         <Button
             android:id="@+id/btn_find_road"
             android:layout_marginHorizontal="16dp"
-            android:text="@string/find_road"
+            android:text="find_road"
             android:textSize="18sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
