@@ -43,20 +43,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-    implementation("com.google.firebase:firebase-analytics")
     //implementation ("com.google.android.gms:play-services-maps:19.0.0")
     implementation ("com.google.android.gms:play-services-maps:18.0.2")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation ("com.google.maps.android:android-maps-utils:2.2.3")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation ("com.google.firebase:firebase-database:20.0.5")
     implementation ("com.google.firebase:firebase-auth:21.1.0")
-//    implementation ("com.here.android.mpa:maps:3.18.4")
-//    implementation ("com.here.android.mpa:common:3.18.4")
-//    implementation ("com.here.android.mpa:directions:3.18.4")
-//    implementation ("com.here.sdk:here-sdk:4.9.4")
-
-
-
-
 }
