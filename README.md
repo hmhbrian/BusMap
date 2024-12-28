@@ -21,8 +21,7 @@
 ## 📖 Kiến Trúc Ứng Dụng
 
 - **MVVM**: Giúp tách biệt logic xử lý dữ liệu và giao diện, tăng khả năng mở rộng và bảo trì.
-- **RESTful API**: Giao tiếp với máy chủ để lấy dữ liệu về tuyến xe buýt và tình trạng giao thông.
-
+- **RESTful API**: Giao tiếp với máy chủ để lấy dữ liệu về tuyến xe buýt và tình trạng giao thông
 ## 📋 Hướng Dẫn Cài Đặt
 
 1. **Clone dự án**:  
