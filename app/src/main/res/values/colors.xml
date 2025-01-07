@@ -10,9 +10,13 @@
     <color name="lavender">#8692f7</color>
     <color name="xam">#F4EEEE</color>
     <color name="purple">#8692f7</color>
-
     <color name="orange">#FFA500</color>
     <color name="red">#FF0000</color>
+
+
+    <color name="border_color">#d1d5db</color>  <!-- Borders -->
+
+
 
     <!-- Chọn primary color là màu xanh -->
     <color name="primary_900">#1B419D</color>

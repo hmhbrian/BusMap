@@ -16,9 +16,9 @@
 
         <ImageView
             android:id="@+id/search_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/baseline_find_in_page_24"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_search_magnifying"
             android:contentDescription="Search Icon" />
 
         <EditText
@@ -26,167 +26,109 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tìm kiếm địa điểm"
-            android:background="@color/lavender"
+            android:background="@drawable/corner_5"
             android:textColor="#888"
             android:paddingStart="8dp"
             android:minHeight="48dp"/>
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="16dp"-->
-<!--        android:background="@drawable/"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:padding="16dp">-->
-
-<!--        <ImageView-->
-<!--            android:layout_width="64dp"-->
-<!--            android:layout_height="64dp"-->
-<!--            android:src="@drawable/baseline_add_24"-->
-<!--            android:contentDescription="BusMap Plus Icon" />-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="vertical"-->
-<!--            android:layout_marginStart="16dp">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/ad_title"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="BusMap Plus"-->
-<!--                android:textSize="18sp"-->
-<!--                android:textColor="#000"-->
-<!--                android:textStyle="bold" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/ad_description"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="BUS MAP"-->
-<!--                android:textSize="14sp"-->
-<!--                android:textColor="#666" />-->
-<!--        </LinearLayout>-->
-<!--    </LinearLayout>-->
     <TableLayout
         android:id="@+id/table1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stretchColumns="*">
-        <TableRow android:id="@+id/row1">
+
+        <TableRow
+            android:id="@+id/row1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/TraCuu"
+                style="@style/itemrow">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/rounded_background2"
+                    android:contentDescription="Tra cứu"
+                    android:src="@drawable/ic_search" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Tra cứu"
+                    android:textColor="#000"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/linearFindRoute"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="8dp">
+                style="@style/itemrow">
 
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/baseline_remove_red_eye_24"
-                    android:contentDescription="Tra cứu" />
+                    android:contentDescription="Tìm đường"
+                    android:src="@drawable/ic_route"
+                    android:background="@drawable/rounded_background2"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tra cứu"
-                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:text="Tìm đường"
                     android:textColor="#000"
-                    android:gravity="center" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="8dp">
+                android:id="@+id/TramXungQuanh"
+                style="@style/itemrow">
 
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/baseline_find_replace_24"
-                    android:contentDescription="Tìm đường" />
+                    android:contentDescription="Tìm đường"
+                    android:src="@drawable/ic_swap"
+                    android:background="@drawable/rounded_background2"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tìm đường"
-                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:text="Trạm Xung Quanh"
                     android:textColor="#000"
-                    android:gravity="center" />
+                    android:textSize="14sp" />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="8dp">
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/baseline_find_replace_24"
-                    android:contentDescription="Tìm đường" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tìm đường"
-                    android:textSize="14sp"
-                    android:textColor="#000"
-                    android:gravity="center" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/baseline_find_replace_24"
-                    android:contentDescription="Tìm đường" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tìm đường"
-                    android:textSize="14sp"
-                    android:textColor="#000"
-                    android:gravity="center" />
-            </LinearLayout>
         </TableRow>
+
         <TableRow android:id="@+id/row2">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="8dp">
+<!--            <LinearLayout style="@style/itemrow">-->
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/baseline_find_replace_24"
-                    android:contentDescription="Tìm đường" />
+<!--                <ImageView-->
+<!--                    android:layout_width="48dp"-->
+<!--                    android:layout_height="48dp"-->
+<!--                    android:contentDescription="Tài khoản"-->
+<!--                    android:src="@drawable/ic_profile"-->
+<!--                    android:background="@drawable/rounded_background2"/>-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tìm đường"
-                    android:textSize="14sp"
-                    android:textColor="#000"
-                    android:gravity="center" />
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="tài khoản"-->
+<!--                    android:textColor="#000"-->
+<!--                    android:textSize="14sp" />-->
+<!--            </LinearLayout>-->
+
+
         </TableRow>
     </TableLayout>
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"

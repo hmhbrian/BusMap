@@ -44,13 +44,13 @@ public class MainActivity extends AppCompatActivity {
         //Thay thế Fragment theo lựa chọn của NavigationView
         navigationView.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_settings) {
-                replaceFragment(new SettingFragment());
+                replaceFragment(new MapsFragment());
             }else if(item.getItemId() == R.id.nav_share){
                 replaceFragment(new ShareFragment());
             }else if(item.getItemId() == R.id.nav_about){
                 replaceFragment(new AboutFragment());
             }else if(item.getItemId() == R.id.nav_logout){
-                replaceFragment(new LogoutFragment());
+                replaceFragment(new MapsFragment());
             }else if(item.getItemId() == R.id.nav_home){
                 replaceFragment(new MapsFragment());
             }
@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
             {
                 replaceFragment(new MapsFragment());
             } else if (item.getItemId() == R.id.shorts) {
-                replaceFragment(new ShortsFragment());
+                replaceFragment(new MapsFragment());
             }else if (item.getItemId() == R.id.route) {
                 replaceFragment(new StationListFragment());
             }else if (item.getItemId() == R.id.library) {
-                replaceFragment(new LibraryFragment());
+                replaceFragment(new MapsFragment());
             }
             return true;
         });
