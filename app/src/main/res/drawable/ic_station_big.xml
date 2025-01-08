@@ -3,7 +3,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:width="24dp" android:height="24dp"
         android:drawable="@drawable/circle_marker" />
-    <item android:drawable="@drawable/ic_bus_mini" android:width="16dp"
+    <item android:drawable="@drawable/baseline_directions_bus_24" android:width="16dp"
         android:height="16dp" android:gravity="center_horizontal" android:top="4dp"/>
     <item android:drawable="@drawable/triangle" android:width="12dp"
         android:height="12dp" android:top="22dp" android:gravity="center_horizontal"/>

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.busmap.Route.StationListFragment;
+import com.example.busmap.Route.RouteListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.shorts) {
                 replaceFragment(new MapsFragment());
             }else if (item.getItemId() == R.id.route) {
-                replaceFragment(new StationListFragment());
+                replaceFragment(new RouteListFragment());
             }else if (item.getItemId() == R.id.library) {
                 replaceFragment(new MapsFragment());
             }

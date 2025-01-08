@@ -93,7 +93,7 @@ public class FindRoadActivity extends AppCompatActivity {
             }
         });
     }
-
+    //chuyển địa chỉ thành tọa độ
     public void getCoordinatesFromAddress(String address, Context context) {
         Geocoder geocoder = new Geocoder(context);
         try {
@@ -180,6 +180,7 @@ public class FindRoadActivity extends AppCompatActivity {
         return nearestStation;
     }
 
+    //Tính khoảng cách giữa 2 tọa độ
     public float calculateDistance(double lat1, double lng1, double lat2, double lng2) {
         float[] results = new float[1];
         Location.distanceBetween(lat1, lng1, lat2, lng2, results);

@@ -3,6 +3,9 @@ package com.example.busmap;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -63,32 +66,6 @@ public class MapsFragment extends Fragment {
             //addBusMarkers();
         }
     };
-//    private void addBusMarkers(){
-//        List<LatLng> busLocations = new ArrayList<>();
-//        LatLng latLng1 = new LatLng(10.98335004747691, 106.67431075125997);
-//        LatLng latLng2 = new LatLng(10.980180239846662, 106.6756130977606);
-//        LatLng latLng3 = new LatLng(10.978769631402264, 106.6757348698315);
-//        busLocations.add(latLng1);
-//        busLocations.add(latLng2);
-//        busLocations.add(latLng3);
-//
-//        for (LatLng location : busLocations) {
-//            mMap.addMarker(new MarkerOptions()
-//                    .position(location)
-//                    .title("Điểm Xe Bus")
-//                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))); // Tùy chỉnh icon nếu cần
-//        }
-//
-//        PolylineOptions polylineOptions = new PolylineOptions()
-//                .add(latLng1).add(latLng2).add(latLng3)
-//                .color(Color.GREEN)
-//                .width(7);
-//        Polyline polyline = mMap.addPolyline(polylineOptions);
-//        // Di chuyển camera đến vị trí đầu tiên
-//        if (!busLocations.isEmpty()) {
-//            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(busLocations.get(0), 12));
-//        }
-//    }
 
     @Nullable
     @Override
@@ -118,28 +95,36 @@ public class MapsFragment extends Fragment {
         });
     }
 
-    private void loadBusStations(){
+    private void loadBusStations() {
         databaseReference.child("station").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<LatLng> busStations = new ArrayList<>();
-                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+
+                // Chuyển drawable thành Bitmap
+                Drawable drawable = getContext().getDrawable(R.drawable.ic_station_big);
+                int width = drawable.getIntrinsicWidth();
+                int height = drawable.getIntrinsicHeight();
+                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                drawable.setBounds(0, 0, width, height);
+                drawable.draw(canvas);
+
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     double lat = snapshot1.child("lat").getValue(Double.class);
                     double lng = snapshot1.child("lng").getValue(Double.class);
                     String name = snapshot1.child("name").getValue(String.class);
 
-                    //thêm station vào List
-                    LatLng stationLocation = new LatLng(lat,lng);
+                    // Thêm station vào List
+                    LatLng stationLocation = new LatLng(lat, lng);
                     busStations.add(stationLocation);
-                    //thêm marker
+
+                    // Thêm marker với bitmap đã chuyển đổi
                     mMap.addMarker(new MarkerOptions()
                             .position(stationLocation)
                             .title(name)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                            .icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
                 }
-//                if (!busStations.isEmpty()) {
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(busStations.get(0), 12));
-//                }
             }
 
             @Override
@@ -148,6 +133,7 @@ public class MapsFragment extends Fragment {
             }
         });
     }
+
 
     private void setMapStyle() {
         try {

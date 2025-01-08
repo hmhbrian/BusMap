@@ -3,6 +3,6 @@
 <vector android:height="8dp" android:width="6dp"
     android:viewportHeight="8" android:viewportWidth="6"
     xmlns:android="http://schemas.android.com/apk/res/android" >
-    <path android:fillColor="@color/teal_200"
+    <path android:fillColor="@color/xanhdam"
         android:pathData="M1,0 L5,0 L3,8 z"/>
 </vector>
