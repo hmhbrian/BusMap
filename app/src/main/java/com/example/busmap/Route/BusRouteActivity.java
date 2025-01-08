@@ -1,5 +1,8 @@
 package com.example.busmap.Route;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -131,6 +135,13 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onDataChange(@NonNull DataSnapshot stationSnapshot) {
                 Map<Integer, station> stationMap = new HashMap<>();
+                Drawable drawable = getDrawable(R.drawable.ic_station_big);
+                int width = drawable.getIntrinsicWidth();
+                int height = drawable.getIntrinsicHeight();
+                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                drawable.setBounds(0, 0, width, height);
+                drawable.draw(canvas);
                 for (DataSnapshot snapshot : stationSnapshot.getChildren()) {
                     int id = snapshot.child("id").getValue(Integer.class);
 
@@ -144,7 +155,11 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
 
                         LatLng location = new LatLng(lat, lng);
                         // Add marker
-                        mMap.addMarker(new MarkerOptions().position(location).title(name));
+//                        mMap.addMarker(new MarkerOptions().position(location).title(name));
+                        mMap.addMarker(new MarkerOptions()
+                                .position(location)
+                                .title(name)
+                                .icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
                     }
                 }
 
@@ -182,7 +197,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
             PolylineOptions polylineOptions = new PolylineOptions()
                     .addAll(stationLocations)
                     .width(8)
-                    .color(getResources().getColor(R.color.red)); // Set màu tùy ý
+                    .color(getResources().getColor(R.color.primary_600)); // Set màu tùy ý
             mMap.addPolyline(polylineOptions);
         }
     }
