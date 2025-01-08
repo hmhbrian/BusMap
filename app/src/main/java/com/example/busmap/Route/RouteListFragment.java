@@ -26,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StationListFragment extends Fragment {
+public class RouteListFragment extends Fragment {
     private RecyclerView rVRouteList;
     private RouteAdapter routeAdapter;
     private ArrayList<route> routeList = new ArrayList<>();
@@ -41,7 +41,7 @@ public class StationListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_station_list, container, false);
+        return inflater.inflate(R.layout.activity_route_list, container, false);
     }
 
     @Override

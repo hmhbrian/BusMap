@@ -2,19 +2,23 @@ package com.example.busmap.Route;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busmap.R;
+import com.example.busmap.entities.station;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,25 +27,73 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private DatabaseReference databaseRef;
     private String routeId;
     private List<LatLng> stationLocations = new ArrayList<>();
+    private View bottomSheet;
+    private BottomSheetBehavior<View> bottomSheetBehavior;
+    private RecyclerView rVStationList;
+    private StationAdapter StationAdapter;
+    private ArrayList<station> StationList = new ArrayList<>();
+
+    void init(){
+        rVStationList = findViewById(R.id.rv_RouteDetail);
+        rVStationList.setLayoutManager(new LinearLayoutManager(this));
+        bottomSheet = findViewById(R.id.bottom_sheet_layout);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bus_route);
+        setContentView(R.layout.activity_route_detail);
+        init();
         routeId = getIntent().getStringExtra("route_id");
-
         databaseRef = FirebaseDatabase.getInstance().getReference();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.maproute);
         mapFragment.getMapAsync(this);
+
+
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+        bottomSheetBehavior.setPeekHeight(350);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheetBehavior.setHideable(true);
+
+        setupBottomSheetCallback();
+    }
+
+    private void setupBottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        Log.d("BottomSheet", "Expanded");
+                        break;
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        Log.d("BottomSheet", "Collapsed");
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        Log.d("BottomSheet", "Hidden");
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                if (mMap != null) {
+                    mMap.setPadding(0, 0, 0, (int) (slideOffset * bottomSheet.getHeight()));
+                }
+            }
+        });
     }
 
     @Override
@@ -49,6 +101,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
         mMap = googleMap;
         loadRouteStations();
     }
+
     private void loadRouteStations() {
         databaseRef.child("busstop").orderByChild("route_id").equalTo(routeId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -61,8 +114,6 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
                             stationIds.add(stationId);
                         }
 
-                        // Sort by order
-                        Collections.sort(stationIds);
 
                         // Fetch station details
                         loadStationDetails(stationIds);
@@ -79,6 +130,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
         databaseRef.child("station").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot stationSnapshot) {
+                Map<Integer, station> stationMap = new HashMap<>();
                 for (DataSnapshot snapshot : stationSnapshot.getChildren()) {
                     int id = snapshot.child("id").getValue(Integer.class);
 
@@ -87,12 +139,26 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
                         double lng = snapshot.child("lng").getValue(Double.class);
                         String name = snapshot.child("name").getValue(String.class);
 
-                        LatLng location = new LatLng(lat, lng);
-                        stationLocations.add(location);
+                        station station = new station(id, name, lat, lng);
+                        stationMap.put(id, station);
 
+                        LatLng location = new LatLng(lat, lng);
                         // Add marker
                         mMap.addMarker(new MarkerOptions().position(location).title(name));
                     }
+                }
+
+                for (int id : stationIds) {
+                    if (stationMap.containsKey(id)) {
+                        StationList.add(stationMap.get(id));
+                    }
+                }
+                StationAdapter = new StationAdapter(StationList);
+                rVStationList.setAdapter(StationAdapter);
+
+                stationLocations.clear(); // Làm trống danh sách trước
+                for (station sta : StationList) {
+                    stationLocations.add(new LatLng(sta.getLatitude(), sta.getLongitude()));
                 }
 
                 // Draw polyline
@@ -110,6 +176,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
             }
         });
     }
+
     private void drawPolyline() {
         if (stationLocations.size() > 1) {
             PolylineOptions polylineOptions = new PolylineOptions()
