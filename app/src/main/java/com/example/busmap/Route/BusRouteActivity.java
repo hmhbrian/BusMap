@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -168,13 +169,15 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
         });
     }
 
+
     private void drawPolyline() {
         if (stationLocations.size() > 1) {
             PolylineOptions polylineOptions = new PolylineOptions()
                     .addAll(stationLocations)
                     .width(8)
-                    .color(getResources().getColor(R.color.red));
+                    .color(ContextCompat.getColor(this, R.color.red));  // Use ContextCompat for compatibility
             mMap.addPolyline(polylineOptions);
         }
     }
+
 }
