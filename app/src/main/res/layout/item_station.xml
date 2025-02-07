@@ -38,5 +38,18 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"/>
+
+        <!-- Nút "Chi tiết" -->
+        <Button
+            android:id="@+id/btnDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chi tiết"
+            android:padding="8dp"
+            android:textSize="14sp"
+            android:backgroundTint="@color/green"
+            android:textColor="@android:color/white"
+            android:visibility="gone"/> <!-- Ẩn nút ban đầu -->
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

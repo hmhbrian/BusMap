@@ -3,6 +3,7 @@ package com.example.busmap.Route;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,18 +17,20 @@ import java.util.List;
 
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
     private List<station> stationList;
-    private OnItemClickListener listener;
-    private int selectedPosition = RecyclerView.NO_POSITION; // Không giữ vị trí cố định
+    private OnStationClickListener listener;
+    private int selectedPosition = RecyclerView.NO_POSITION; // Vị trí item được chọn
 
-    public interface OnItemClickListener {
+    // Interface để bắt sự kiện click
+    public interface OnStationClickListener {
         void onItemClick(station station);
+        void onDetailsClick(int stationId);
     }
 
     public StationAdapter(List<station> stationList) {
         this.stationList = stationList;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnStationClickListener(OnStationClickListener listener) {
         this.listener = listener;
     }
 
@@ -41,31 +44,37 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        station currentStation = stationList.get(holder.getAdapterPosition()); // Lấy vị trí động
+        station currentStation = stationList.get(holder.getAdapterPosition());
         holder.stationName.setText(currentStation.getName());
         holder.stationNumber.setText(String.valueOf(holder.getAdapterPosition() + 1)); // Số thứ tự trạm
 
-        // Đổi màu nếu được chọn
-        if (selectedPosition == holder.getAdapterPosition()) {
-            holder.cardView.setCardBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.teal_700));
-            holder.stationName.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.white));
-        } else {
-            holder.cardView.setCardBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.white));
-            holder.stationName.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.black));
-        }
+        // Ẩn nút "Chi tiết" mặc định
+        holder.btnDetails.setVisibility(selectedPosition == position ? View.VISIBLE : View.GONE);
 
+        // Bắt sự kiện khi nhấn vào item
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(currentStation);
             }
 
-            // Cập nhật vị trí được chọn
-            int previousPosition = selectedPosition;
-            selectedPosition = holder.getAdapterPosition();
+            // Nếu nhấn vào cùng item đang chọn, ẩn nút "Chi tiết"
+            if (selectedPosition == position) {
+                selectedPosition = RecyclerView.NO_POSITION;
+            } else {
+                int previousPosition = selectedPosition;
+                selectedPosition = position;
 
-            // Cập nhật lại chỉ hai item thay đổi, tránh lỗi RecyclerView
-            notifyItemChanged(previousPosition);
-            notifyItemChanged(selectedPosition);
+                // Cập nhật lại chỉ hai item thay đổi
+                notifyItemChanged(previousPosition);
+                notifyItemChanged(selectedPosition);
+            }
+        });
+
+        // Bắt sự kiện khi nhấn vào nút "Chi tiết"
+        holder.btnDetails.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onDetailsClick(currentStation.getId());
+            }
         });
     }
 
@@ -77,12 +86,14 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView stationName, stationNumber;
         CardView cardView;
+        Button btnDetails; // Thêm tham chiếu nút "Chi tiết"
 
         public ViewHolder(View itemView) {
             super(itemView);
             stationName = itemView.findViewById(R.id.txtStationName);
             stationNumber = itemView.findViewById(R.id.txtStationNumber);
             cardView = (CardView) itemView;
+            btnDetails = itemView.findViewById(R.id.btnDetails); // Ánh xạ nút "Chi tiết"
         }
     }
 }

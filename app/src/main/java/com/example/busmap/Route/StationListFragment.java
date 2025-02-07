@@ -5,13 +5,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.busmap.R;
 import com.example.busmap.entities.station;
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +18,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,12 +58,19 @@ public class StationListFragment extends Fragment {
         recyclerView.setAdapter(stationAdapter);
 
         // Xử lý khi nhấn vào một trạm
-        stationAdapter.setOnItemClickListener(station -> {
-            if (getActivity() instanceof BusRouteActivity) {
-                ((BusRouteActivity) getActivity()).moveToStation(station.getLatitude(), station.getLongitude(), station.getId());
+        stationAdapter.setOnStationClickListener(new StationAdapter.OnStationClickListener() {
+            @Override
+            public void onItemClick(station station) {
+                if (getActivity() instanceof BusRouteActivity) {
+                    ((BusRouteActivity) getActivity()).moveToStation(station.getLatitude(), station.getLongitude(), station.getId());
+                }
+            }
+
+            @Override
+            public void onDetailsClick(int stationId) {
+                showRoutesForStation(stationId);
             }
         });
-
 
         if (routeId != null) {
             fetchStationsForRoute(routeId);
@@ -76,11 +81,10 @@ public class StationListFragment extends Fragment {
         return view;
     }
 
-
     private void fetchStationsForRoute(String routeId) {
         databaseRef = FirebaseDatabase.getInstance().getReference();
 
-        // Bước 1: Lấy danh sách station_id theo route_id từ busstop
+        // Lấy danh sách station_id theo route_id từ busstop
         databaseRef.child("busstop").orderByChild("route_id").equalTo(routeId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -93,7 +97,7 @@ public class StationListFragment extends Fragment {
                             }
                         }
 
-                        // Gọi bước 2: Lấy chi tiết thông tin các trạm từ "station"
+                        // Gọi lấy chi tiết trạm từ "station"
                         fetchStationDetails(stationIds);
                     }
 
@@ -143,5 +147,73 @@ public class StationListFragment extends Fragment {
                 Log.e("Firebase", "Không thể lấy dữ liệu station", error.toException());
             }
         });
+    }
+
+    // Lấy danh sách tuyến bus đi qua trạm
+    private void showRoutesForStation(int stationId) {
+        databaseRef = FirebaseDatabase.getInstance().getReference();
+
+        databaseRef.child("busstop").orderByChild("station_id").equalTo(stationId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        List<String> routeIds = new ArrayList<>();
+                        for (DataSnapshot busStopSnapshot : snapshot.getChildren()) {
+                            String routeId = busStopSnapshot.child("route_id").getValue(String.class);
+                            if (routeId != null) {
+                                routeIds.add(routeId);
+                            }
+                        }
+                        fetchRouteDetails(routeIds);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Firebase", "Lỗi lấy dữ liệu trạm", error.toException());
+                    }
+                });
+    }
+
+    // Lấy chi tiết tuyến bus
+    private void fetchRouteDetails(List<String> routeIds) {
+        databaseRef.child("route").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<String> routeDetails = new ArrayList<>();
+                for (DataSnapshot routeSnapshot : snapshot.getChildren()) {
+                    String id = routeSnapshot.child("id").getValue(String.class);
+                    String name = routeSnapshot.child("name").getValue(String.class);
+                    String operation = routeSnapshot.child("operation").getValue(String.class);
+
+                    if (id != null && name != null && operation != null && routeIds.contains(id)) {
+                        routeDetails.add("🚏 " + name + " (Hoạt động: " + operation + ")");
+                    }
+                }
+
+                // Hiển thị danh sách tuyến bus
+                showRouteDialog(routeDetails);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Lỗi lấy dữ liệu tuyến bus", error.toException());
+            }
+        });
+    }
+
+    // Hiển thị danh sách tuyến bus trong `AlertDialog`
+    private void showRouteDialog(List<String> routeDetails) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Các tuyến bus đi qua trạm");
+
+        if (routeDetails.isEmpty()) {
+            builder.setMessage("Không có tuyến bus nào đi qua trạm này.");
+        } else {
+            String[] routesArray = routeDetails.toArray(new String[0]);
+            builder.setItems(routesArray, null);
+        }
+
+        builder.setPositiveButton("Đóng", (dialog, which) -> dialog.dismiss());
+        builder.show();
     }
 }
