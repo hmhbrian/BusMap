@@ -62,9 +62,10 @@ public class StationListFragment extends Fragment {
         // Xử lý khi nhấn vào một trạm
         stationAdapter.setOnItemClickListener(station -> {
             if (getActivity() instanceof BusRouteActivity) {
-                ((BusRouteActivity) getActivity()).moveToStation(station.getLatitude(), station.getLongitude());
+                ((BusRouteActivity) getActivity()).moveToStation(station.getLatitude(), station.getLongitude(), station.getId());
             }
         });
+
 
         if (routeId != null) {
             fetchStationsForRoute(routeId);

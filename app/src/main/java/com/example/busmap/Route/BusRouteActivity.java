@@ -2,6 +2,7 @@ package com.example.busmap.Route;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,9 +21,12 @@ import com.example.busmap.entities.station;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -49,6 +53,9 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
     private ViewPager2 viewPager;
     private RoutePagerAdapter pagerAdapter;
     private ArrayList<station> StationList = new ArrayList<>();
+    private Map<Integer, Marker> stationMarkers = new HashMap<>();
+    private int selectedStationId = -1; // Lưu ID của trạm đang chọn
+    private Marker currentMarker;
 
     void init() {
         viewPager = findViewById(R.id.view_pager);
@@ -82,14 +89,57 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
         });
     }
 
-    public void moveToStation(double latitude, double longitude) {
+    private BitmapDescriptor bitmapDescriptorFromVector(int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(this, vectorResId);
+        if (vectorDrawable == null) {
+            Log.e("BusRouteActivity", "Không tìm thấy icon: " + vectorResId);
+            return BitmapDescriptorFactory.defaultMarker(); // Trả về marker mặc định nếu lỗi
+        }
+
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+
+    public void moveToStation(double latitude, double longitude, int stationId) {
         if (mMap != null) {
             LatLng stationLocation = new LatLng(latitude, longitude);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(stationLocation, 15)); // Zoom gần vào trạm
+            float zoomLevel = 15;
+
+            // Điều chỉnh vị trí camera để marker nằm cao hơn trên màn hình
+            LatLng adjustedPosition = adjustCameraPosition(stationLocation);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(adjustedPosition, zoomLevel));
+
+            // Cập nhật marker
+            if (stationMarkers.containsKey(stationId)) {
+                if (selectedStationId != -1 && stationMarkers.containsKey(selectedStationId)) {
+                    stationMarkers.get(selectedStationId).setIcon(bitmapDescriptorFromVector(R.drawable.ic_station_big));
+                }
+
+                stationMarkers.get(stationId).setIcon(bitmapDescriptorFromVector(R.drawable.ic_station_focus));
+                selectedStationId = stationId;
+            }
         } else {
             Log.e("BusRouteActivity", "Google Map chưa sẵn sàng!");
         }
     }
+
+
+
+    private LatLng adjustCameraPosition(LatLng originalPosition) {
+        Projection projection = mMap.getProjection();
+        Point screenPoint = projection.toScreenLocation(originalPosition);
+
+        int offsetY = -300; // Dịch bản đồ xuống 300 pixel (có thể điều chỉnh)
+        screenPoint.set(screenPoint.x, screenPoint.y - offsetY);
+
+        return projection.fromScreenLocation(screenPoint);
+    }
+
 
     private void setupBottomSheetCallback() {
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -177,26 +227,12 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
             public void onDataChange(@NonNull DataSnapshot stationSnapshot) {
                 Map<Integer, station> stationMap = new HashMap<>();
 
-                // Kiểm tra nếu Activity đã bị hủy hoặc Google Map chưa sẵn sàng
                 if (BusRouteActivity.this.isFinishing() || mMap == null) {
                     Log.e("BusRouteActivity", "Activity đã bị hủy hoặc Google Map chưa sẵn sàng.");
                     return;
                 }
 
-                // Lấy icon trạm dừng từ drawable
-                Drawable drawable = ContextCompat.getDrawable(BusRouteActivity.this, R.drawable.ic_station_big);
-                if (drawable == null) {
-                    Log.e("BusRouteActivity", "Không tìm thấy ic_station_big trong drawable!");
-                    return;
-                }
-
-                // Chuyển drawable thành Bitmap
-                int width = drawable.getIntrinsicWidth();
-                int height = drawable.getIntrinsicHeight();
-                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(bitmap);
-                drawable.setBounds(0, 0, width, height);
-                drawable.draw(canvas);
+                stationMarkers.clear(); // Xóa các marker cũ trước khi tải mới
 
                 for (DataSnapshot snapshot : stationSnapshot.getChildren()) {
                     Integer id = snapshot.child("id").getValue(Integer.class);
@@ -214,19 +250,22 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
 
                         LatLng location = new LatLng(lat, lng);
 
-                        // Chạy trên UI Thread để tránh lỗi Firebase
+                        // Chạy trên UI Thread để cập nhật giao diện
                         new Handler(Looper.getMainLooper()).post(() -> {
                             if (mMap != null) {
-                                mMap.addMarker(new MarkerOptions()
+                                Marker marker = mMap.addMarker(new MarkerOptions()
                                         .position(location)
                                         .title(name)
-                                        .icon(BitmapDescriptorFactory.fromBitmap(bitmap))); // Sử dụng icon mới
+                                        .icon(bitmapDescriptorFromVector(R.drawable.ic_station_big))); // Sử dụng icon mới
+
+                                if (marker != null) {
+                                    stationMarkers.put(id, marker);
+                                }
                             }
                         });
                     }
                 }
 
-                // Cập nhật danh sách trạm dừng
                 StationList.clear();
                 for (int id : stationIds) {
                     if (stationMap.containsKey(id)) {
@@ -234,16 +273,13 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
                     }
                 }
 
-                // Cập nhật danh sách vị trí các trạm
                 stationLocations.clear();
                 for (station sta : StationList) {
                     stationLocations.add(new LatLng(sta.getLatitude(), sta.getLongitude()));
                 }
 
-                // Vẽ tuyến đường sau khi có danh sách trạm
                 drawPolyline();
 
-                // Di chuyển camera đến trạm đầu tiên
                 if (!stationLocations.isEmpty()) {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(stationLocations.get(0), 14));
                 }
@@ -255,7 +291,6 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
             }
         });
     }
-
 
     private void drawPolyline() {
         if (stationLocations.size() > 1) {
