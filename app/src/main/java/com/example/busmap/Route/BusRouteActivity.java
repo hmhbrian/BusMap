@@ -1,6 +1,11 @@
 package com.example.busmap.Route;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 
@@ -8,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.busmap.R;
 import com.example.busmap.entities.station;
@@ -16,10 +21,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +35,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,13 +46,12 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
     private List<LatLng> stationLocations = new ArrayList<>();
     private View bottomSheet;
     private BottomSheetBehavior<View> bottomSheetBehavior;
-    private RecyclerView rVStationList;
-    private StationAdapter StationAdapter;
+    private ViewPager2 viewPager;
+    private RoutePagerAdapter pagerAdapter;
     private ArrayList<station> StationList = new ArrayList<>();
 
     void init() {
-        rVStationList = findViewById(R.id.rv_RouteDetail);
-        rVStationList.setLayoutManager(new LinearLayoutManager(this));
+        viewPager = findViewById(R.id.view_pager);
         bottomSheet = findViewById(R.id.bottom_sheet_layout);
     }
 
@@ -59,39 +65,85 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.maproute);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-        bottomSheetBehavior.setPeekHeight(350);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheetBehavior.setHideable(false); // Prevent hiding completely
-
+        setHalfScreenHeight(); // Đặt Bottom Sheet chiếm 1/2 màn hình
         setupBottomSheetCallback();
+        setupTabLayout();
+    }
+    private void setHalfScreenHeight() {
+        bottomSheet.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            int screenHeight = getResources().getDisplayMetrics().heightPixels;
+            int halfScreenHeight = screenHeight / 2; // Lấy 50% chiều cao màn hình
+            bottomSheetBehavior.setPeekHeight(halfScreenHeight); // Mở 1/2 màn hình
+        });
+    }
+
+    public void moveToStation(double latitude, double longitude) {
+        if (mMap != null) {
+            LatLng stationLocation = new LatLng(latitude, longitude);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(stationLocation, 15)); // Zoom gần vào trạm
+        } else {
+            Log.e("BusRouteActivity", "Google Map chưa sẵn sàng!");
+        }
     }
 
     private void setupBottomSheetCallback() {
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        Log.d("BottomSheet", "Expanded");
-                        break;
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        Log.d("BottomSheet", "Collapsed");
-                        break;
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    Log.d("BottomSheet", "Mở toàn màn hình");
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    Log.d("BottomSheet", "Thu nhỏ");
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 if (mMap != null) {
-                    mMap.setPadding(0, 0, 0, (int) (slideOffset * bottomSheet.getHeight()));
+                    mMap.setPadding(0, 0, 0, (int) (slideOffset * bottomSheet.getHeight() / 2));
                 }
             }
         });
     }
+
+
+
+    private void setupTabLayout() {
+        ViewPager2 viewPager = findViewById(R.id.view_pager);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+
+        // Lấy routeId từ Intent
+        String routeId = getIntent().getStringExtra("route_id");
+        if (routeId == null) {
+            Log.e("BusRouteActivity", "routeId không tìm thấy");
+            return;
+        }
+
+        // Truyền routeId vào Adapter
+        RoutePagerAdapter adapter = new RoutePagerAdapter(this, routeId);
+        viewPager.setAdapter(adapter);
+
+        // Kết nối TabLayout với ViewPager2
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            switch (position) {
+                case 0:
+                    tab.setText("Biểu đồ giờ");
+                    break;
+                case 1:
+                    tab.setText("Trạm dừng");
+                    break;
+                case 2:
+                    tab.setText("Thông tin");
+                    break;
+            }
+        }).attach();
+    }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -105,12 +157,10 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
                     @Override
                     public void onDataChange(@NonNull DataSnapshot busStopSnapshot) {
                         List<Integer> stationIds = new ArrayList<>();
-
                         for (DataSnapshot snapshot : busStopSnapshot.getChildren()) {
                             int stationId = snapshot.child("station_id").getValue(Integer.class);
                             stationIds.add(stationId);
                         }
-
                         loadStationDetails(stationIds);
                     }
 
@@ -126,37 +176,74 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onDataChange(@NonNull DataSnapshot stationSnapshot) {
                 Map<Integer, station> stationMap = new HashMap<>();
+
+                // Kiểm tra nếu Activity đã bị hủy hoặc Google Map chưa sẵn sàng
+                if (BusRouteActivity.this.isFinishing() || mMap == null) {
+                    Log.e("BusRouteActivity", "Activity đã bị hủy hoặc Google Map chưa sẵn sàng.");
+                    return;
+                }
+
+                // Lấy icon trạm dừng từ drawable
+                Drawable drawable = ContextCompat.getDrawable(BusRouteActivity.this, R.drawable.ic_station_big);
+                if (drawable == null) {
+                    Log.e("BusRouteActivity", "Không tìm thấy ic_station_big trong drawable!");
+                    return;
+                }
+
+                // Chuyển drawable thành Bitmap
+                int width = drawable.getIntrinsicWidth();
+                int height = drawable.getIntrinsicHeight();
+                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                drawable.setBounds(0, 0, width, height);
+                drawable.draw(canvas);
+
                 for (DataSnapshot snapshot : stationSnapshot.getChildren()) {
-                    int id = snapshot.child("id").getValue(Integer.class);
+                    Integer id = snapshot.child("id").getValue(Integer.class);
+                    Double lat = snapshot.child("lat").getValue(Double.class);
+                    Double lng = snapshot.child("lng").getValue(Double.class);
+                    String name = snapshot.child("name").getValue(String.class);
+
+                    if (id == null || lat == null || lng == null || name == null) {
+                        Log.e("Firebase", "Dữ liệu trạm không hợp lệ, bỏ qua.");
+                        continue;
+                    }
 
                     if (stationIds.contains(id)) {
-                        double lat = snapshot.child("lat").getValue(Double.class);
-                        double lng = snapshot.child("lng").getValue(Double.class);
-                        String name = snapshot.child("name").getValue(String.class);
-
-                        station station = new station(id, name, lat, lng);
-                        stationMap.put(id, station);
+                        stationMap.put(id, new station(id, name, lat, lng));
 
                         LatLng location = new LatLng(lat, lng);
-                        mMap.addMarker(new MarkerOptions().position(location).title(name));
+
+                        // Chạy trên UI Thread để tránh lỗi Firebase
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            if (mMap != null) {
+                                mMap.addMarker(new MarkerOptions()
+                                        .position(location)
+                                        .title(name)
+                                        .icon(BitmapDescriptorFactory.fromBitmap(bitmap))); // Sử dụng icon mới
+                            }
+                        });
                     }
                 }
 
+                // Cập nhật danh sách trạm dừng
+                StationList.clear();
                 for (int id : stationIds) {
                     if (stationMap.containsKey(id)) {
                         StationList.add(stationMap.get(id));
                     }
                 }
-                StationAdapter = new StationAdapter(StationList);
-                rVStationList.setAdapter(StationAdapter);
 
+                // Cập nhật danh sách vị trí các trạm
                 stationLocations.clear();
                 for (station sta : StationList) {
                     stationLocations.add(new LatLng(sta.getLatitude(), sta.getLongitude()));
                 }
 
+                // Vẽ tuyến đường sau khi có danh sách trạm
                 drawPolyline();
 
+                // Di chuyển camera đến trạm đầu tiên
                 if (!stationLocations.isEmpty()) {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(stationLocations.get(0), 14));
                 }
@@ -175,7 +262,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
             PolylineOptions polylineOptions = new PolylineOptions()
                     .addAll(stationLocations)
                     .width(8)
-                    .color(ContextCompat.getColor(this, R.color.red));  // Use ContextCompat for compatibility
+                    .color(ContextCompat.getColor(this, R.color.green));  // Use ContextCompat for compatibility
             mMap.addPolyline(polylineOptions);
         }
     }

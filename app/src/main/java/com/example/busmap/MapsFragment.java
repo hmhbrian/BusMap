@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,8 +103,19 @@ public class MapsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<LatLng> busStations = new ArrayList<>();
 
-                // Chuyển drawable thành Bitmap
-                Drawable drawable = getContext().getDrawable(R.drawable.ic_station_big);
+                // Kiểm tra Fragment đã gắn với Activity chưa
+                if (!isAdded() || getActivity() == null) {
+                    Log.e("MapsFragment", "Fragment chưa được gắn với Activity, bỏ qua loadBusStations()");
+                    return;
+                }
+
+                // Chuyển drawable thành Bitmap (Kiểm tra null để tránh crash)
+                Drawable drawable = getActivity().getDrawable(R.drawable.ic_station_big);
+                if (drawable == null) {
+                    Log.e("MapsFragment", "Không tìm thấy ic_station_big trong drawable!");
+                    return;
+                }
+
                 int width = drawable.getIntrinsicWidth();
                 int height = drawable.getIntrinsicHeight();
                 Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -111,19 +124,29 @@ public class MapsFragment extends Fragment {
                 drawable.draw(canvas);
 
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    double lat = snapshot1.child("lat").getValue(Double.class);
-                    double lng = snapshot1.child("lng").getValue(Double.class);
+                    Double lat = snapshot1.child("lat").getValue(Double.class);
+                    Double lng = snapshot1.child("lng").getValue(Double.class);
                     String name = snapshot1.child("name").getValue(String.class);
+
+                    // Kiểm tra lat/lng có null không để tránh crash
+                    if (lat == null || lng == null || name == null) {
+                        Log.e("FirebaseError", "Dữ liệu station bị thiếu! Bỏ qua.");
+                        continue;
+                    }
 
                     // Thêm station vào List
                     LatLng stationLocation = new LatLng(lat, lng);
                     busStations.add(stationLocation);
 
-                    // Thêm marker với bitmap đã chuyển đổi
-                    mMap.addMarker(new MarkerOptions()
-                            .position(stationLocation)
-                            .title(name)
-                            .icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+                    // Thêm marker với bitmap đã chuyển đổi (Chạy trên UI thread để tránh lỗi)
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        if (mMap != null) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(stationLocation)
+                                    .title(name)
+                                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+                        }
+                    });
                 }
             }
 
@@ -133,6 +156,7 @@ public class MapsFragment extends Fragment {
             }
         });
     }
+
 
 
     private void setMapStyle() {

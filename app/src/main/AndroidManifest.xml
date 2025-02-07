@@ -42,7 +42,7 @@
 
 
         <activity
-            android:name=".User.Login"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,7 +50,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
+<!--        <activity android:name=".MainActivity"/>-->
         <activity android:name=".Route.FindRoadActivity"/>
         <activity android:name=".Route.BusRouteActivity"/>
         <activity android:name=".User.Register"/>
