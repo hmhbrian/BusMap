@@ -1,5 +1,6 @@
 package com.example.busmap;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.busmap.User.ProfileActivity;
 import com.example.busmap.Route.RouteListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -67,7 +69,10 @@ public class MainActivity extends AppCompatActivity {
             }else if (item.getItemId() == R.id.route) {
                 replaceFragment(new RouteListFragment());
             }else if (item.getItemId() == R.id.library) {
-                replaceFragment(new MapsFragment());
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                intent.putExtra("USER_EMAIL", getIntent().getStringExtra("USER_EMAIL")); // Truyền email
+                startActivity(intent);
+                return true;
             }
             return true;
         });

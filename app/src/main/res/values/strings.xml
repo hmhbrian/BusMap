@@ -9,10 +9,10 @@
     <string name="logout">Logout</string>
     <string name="settings">Settings</string>
     <string name="share">Share</string>
-    <string name="home">Home</string>
-    <string name="library">Library</string>
-    <string name="shorts">Shorts</string>
-    <string name="route">Route</string>
+    <string name="home">Trang Chủ</string>
+    <string name="profile">Cá Nhân</string>
+    <string name="nearby">Trạm Gần Bạn</string>
+    <string name="route">Tuyến Xe</string>
     <string name="map_direction_api">AIzaSyCn9kI97-3ktdV8HESIOQsYb5ULODunK8A</string>
 
 

@@ -109,7 +109,7 @@ public class Register extends AppCompatActivity {
                 databaseRef.child(userId).setValue(user).addOnCompleteListener(dbTask -> {
                     if (dbTask.isSuccessful()) {
                         Toast.makeText(Register.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Register.this,Login.class));
+                        startActivity(new Intent(Register.this, Login.class));
                         finish();
                     } else {
                         Toast.makeText(Register.this, "Lỗi lưu dữ liệu: " + dbTask.getException().getMessage(), Toast.LENGTH_SHORT).show();

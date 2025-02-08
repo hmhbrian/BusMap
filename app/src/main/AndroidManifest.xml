@@ -42,7 +42,7 @@
 
 
         <activity
-            android:name=".MainActivity"
+            android:name=".User.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,10 +50,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity android:name=".MainActivity"/>-->
+        <activity android:name=".MainActivity"/>
         <activity android:name=".Route.FindRoadActivity"/>
         <activity android:name=".Route.BusRouteActivity"/>
         <activity android:name=".User.Register"/>
+        <activity android:name=".User.ProfileActivity"/>
+        <activity android:name=".account.RatingActivity"/>
+        <activity android:name=".account.infocompany"/>
+        <activity android:name=".User.AccountActivity"/>
     </application>
 
 </manifest>

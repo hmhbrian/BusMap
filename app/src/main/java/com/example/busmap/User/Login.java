@@ -13,34 +13,41 @@ import android.widget.Toast;
 import com.example.busmap.MainActivity;
 import com.example.busmap.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends Activity {
     private EditText edtEmail, edtPassword;
     private Button btnLogin;
     private TextView tvRegister;
     private FirebaseAuth auth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         edtEmail = findViewById(R.id.edt_email);
         edtPassword = findViewById(R.id.edt_password);
         btnLogin = findViewById(R.id.btn_login);
         tvRegister = findViewById(R.id.tv_register);
+
         // Khởi tạo FirebaseAuth
         auth = FirebaseAuth.getInstance();
-        btnLogin.setOnClickListener(view ->{
-            loginUser();
+
+        btnLogin.setOnClickListener(view -> {
+            // Gọi phương thức signIn khi nhấn nút đăng nhập
+            String email = edtEmail.getText().toString().trim();
+            String password = edtPassword.getText().toString().trim();
+            signIn(email, password); // Gọi phương thức đăng nhập
         });
-        tvRegister.setOnClickListener(view ->{
-            startActivity(new Intent(Login.this,Register.class));
+
+        tvRegister.setOnClickListener(view -> {
+            startActivity(new Intent(Login.this, Register.class));
         });
     }
 
-    private void loginUser() {
-        String email = edtEmail.getText().toString().trim();
-        String password = edtPassword.getText().toString().trim();
-
+    // Phương thức đăng nhập nhận email và mật khẩu
+    private void signIn(String email, String password) {
         // Kiểm tra các trường hợp nhập liệu
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
@@ -48,13 +55,20 @@ public class Login extends Activity {
         }
 
         // Đăng nhập người dùng với Firebase Authentication
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                startActivity(new Intent(Login.this, MainActivity.class));
-                finish(); // Đóng màn hình đăng nhập
-            } else {
-                Toast.makeText(Login.this, "Đăng nhập thất bại: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Đăng nhập thành công
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user != null) {
+                            // Đăng nhập thành công, chuyển đến MainActivity
+                            startActivity(new Intent(Login.this, MainActivity.class));
+                            finish(); // Đóng màn hình đăng nhập
+                        }
+                    } else {
+                        // Đăng nhập thất bại, hiển thị thông báo lỗi
+                        Toast.makeText(Login.this, "Đăng nhập thất bại: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

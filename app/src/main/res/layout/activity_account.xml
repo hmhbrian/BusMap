@@ -1,150 +1,81 @@
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/xam">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
 
-    <!-- Header section -->
-    <ImageView
-        android:id="@+id/imgHeader"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/headerbkg"
-        android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-
-    <ImageView
-        android:id="@+id/imgProfile"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="152dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_profile"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-<!--    </FrameLayout>-->
-
+    <!-- Họ và tên -->
     <TextView
-        android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tài khoản"
-        android:textSize="24sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/imgProfile"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:text="Họ và tên:" />
 
-    <!-- Upgrade button -->
-    <LinearLayout
-        android:id="@+id/btnUpgrade"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/custom_edittext"
-        android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/txtTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp">
+        android:textSize="18sp" />
 
-        <ImageView
-            android:id="@+id/imgUpgradeIcon"
-            android:layout_width="44dp"
-            android:layout_height="32dp"
-            android:src="@drawable/bus_notification" />
-
-        <TextView
-            android:id="@+id/txtUpgrade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nâng cấp lên BusMap Plus"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:layout_marginStart="8dp"/>
-    </LinearLayout>
-
-    <!-- Menu items -->
-    <LinearLayout
-        android:id="@+id/linearMenu"
-        android:layout_width="0dp"
+    <!-- Email -->
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/btnUpgrade"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp">
+        android:text="Email:" />
 
-        <TextView
-            android:id="@+id/txtPersonalInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Thông tin cá nhân"
-            android:textSize="16sp"
-            android:drawableStart="@drawable/baseline_info_24"
-            android:drawablePadding="8dp"
-            android:padding="16dp" />
+    <TextView
+        android:id="@+id/txtEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/txtSettings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cài đặt"
-            android:textSize="16sp"
-            android:drawableStart="@drawable/baseline_settings_24"
-            android:drawablePadding="8dp"
-            android:padding="16dp" />
+    <!-- Số điện thoại -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Số điện thoại:" />
 
-        <TextView
-            android:id="@+id/txtChangeArea"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Thay đổi khu vực"
-            android:textSize="16sp"
-            android:drawableStart="@drawable/baseline_location_on_24"
-            android:drawablePadding="8dp"
-            android:padding="16dp" />
+    <TextView
+        android:id="@+id/txtPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/txtUpdateData"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cập nhật dữ liệu"
-            android:textSize="16sp"
-            android:drawableStart="@drawable/baseline_refresh_24"
-            android:drawablePadding="8dp"
-            android:padding="16dp" />
+    <!-- Ngày sinh -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ngày sinh:" />
 
-        <TextView
-            android:id="@+id/txtRateApp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Đánh giá ứng dụng"
-            android:textSize="16sp"
-            android:drawableStart="@drawable/baseline_star_rate_24"
-            android:drawablePadding="8dp"
-            android:padding="16dp"
-            />
+    <TextView
+        android:id="@+id/txtBirthday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"/>
 
-        <TextView
-            android:id="@+id/txtCompanyInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Thông tin công ty"
-            android:textSize="16sp"
-            android:drawableStart="@drawable/baseline_info_24"
-            android:drawablePadding="8dp"
-            android:padding="16dp" />
-    </LinearLayout>
+    <!-- Giới tính -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Giới tính:" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/txtGender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"/>
+
+    <!-- Vai trò -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vai trò:" />
+
+    <TextView
+        android:id="@+id/txtRole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"/>
+
+</LinearLayout>

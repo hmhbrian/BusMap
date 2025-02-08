@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.busmap.R;
+import com.example.busmap.User.ProfileActivity;
 
 public class RatingActivity extends AppCompatActivity {
 
@@ -45,7 +46,7 @@ public class RatingActivity extends AppCompatActivity {
         // Xử lý sự kiện khi nhấn vào nút "Đóng"
         closeButton.setOnClickListener(v -> {
             // Tạo Intent để chuyển sang MainActivity (hoặc activity khác)
-            Intent intent = new Intent(RatingActivity.this, AccountActivity.class);
+            Intent intent = new Intent(RatingActivity.this, ProfileActivity.class);
             // Xóa activity hiện tại khỏi stack và quay lại activity mới
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
