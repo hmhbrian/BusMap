@@ -85,13 +85,13 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/TramXungQuanh"
+                android:id="@+id/linear_NearStation"
                 style="@style/itemrow">
 
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:contentDescription="Tìm đường"
+                    android:contentDescription="Trạm Xung Quanh"
                     android:src="@drawable/ic_swap"
                     android:background="@drawable/rounded_background2"/>
 

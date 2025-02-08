@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.busmap.Route.BusnearActivity;
 import com.example.busmap.Route.FindRoadActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -92,7 +93,15 @@ public class MapsFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), FindRoadActivity.class);
                 startActivity(intent);
+            }
+        });
 
+        LinearLayout NearStationLayout = view.findViewById(R.id.linear_NearStation);
+        NearStationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent (getContext(), BusnearActivity.class);
+                startActivity(intent);
             }
         });
     }

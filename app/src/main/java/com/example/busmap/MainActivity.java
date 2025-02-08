@@ -65,14 +65,12 @@ public class MainActivity extends AppCompatActivity {
             if(item.getItemId() == R.id.home)
             {
                 replaceFragment(new MapsFragment());
-            } else if (item.getItemId() == R.id.shorts) {
-                Intent intent = new Intent (MainActivity.this, BusnearActivity.class);
-                intent.putExtra("USER_EMAIL", getIntent().getStringExtra("USER_EMAIL")); // Truyền email
-                startActivity(intent);
-                replaceFragment(new MapsFragment());
+            } else if (item.getItemId() == R.id.near_station) {
+//                Intent intent = new Intent (MainActivity.this, BusnearActivity.class);
+//                startActivity(intent);
             }else if (item.getItemId() == R.id.route) {
                 replaceFragment(new RouteListFragment());
-            }else if (item.getItemId() == R.id.library) {
+            }else if (item.getItemId() == R.id.ìnfo) {
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                 intent.putExtra("USER_EMAIL", getIntent().getStringExtra("USER_EMAIL")); // Truyền email
                 startActivity(intent);

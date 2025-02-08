@@ -65,51 +65,45 @@ public class BusnearActivity extends AppCompatActivity {
             if (location != null) {
                 double userLat = location.getLatitude();
                 double userLng = location.getLongitude();
-                findNearestRoutes(userLat, userLng);
+                findStationsInBoundingBox(10.980745592815111, 106.67550668123549,2.0);
             } else {
                 Toast.makeText(this, "Không thể lấy vị trí", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void findNearestRoutes(double userLat, double userLng) {
-        DatabaseReference stationsRef = FirebaseDatabase.getInstance().getReference("station");
-        stationsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    //Tính giới hạn tọa độ
+    public double[] getBoundingBox(double userLat, double userLng, double radiusKm) {
+        double earthRadius = 6371.0; // Bán kính Trái Đất (km)
+        double deltaLat = radiusKm / earthRadius;
+        double deltaLng = radiusKm / (earthRadius * Math.cos(Math.toRadians(userLat)));
+
+        double latMin = userLat - Math.toDegrees(deltaLat);
+        double latMax = userLat + Math.toDegrees(deltaLat);
+        double lngMin = userLng - Math.toDegrees(deltaLng);
+        double lngMax = userLng + Math.toDegrees(deltaLng);
+
+        return new double[]{latMin, latMax, lngMin, lngMax};
+    }
+
+    //Lọc các trạm trong giới hạn tọa độ
+    public void findStationsInBoundingBox(double userLat, double userLng, double radiusKm) {
+        double[] boundingBox = getBoundingBox(userLat, userLng, radiusKm);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("station");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<station> nearbyStations = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Debug dữ liệu Firebase
-                    Log.d("Firebase", "Dữ liệu nhận từ Firebase: " + snapshot.getValue());
+                    double lat = snapshot.child("lat").getValue(Double.class);
+                    double lng = snapshot.child("lng").getValue(Double.class);
 
-                    Double latValue = snapshot.child("latitude").getValue(Double.class);
-                    Double lngValue = snapshot.child("longitude").getValue(Double.class);
-                    Integer stationId = snapshot.child("id").getValue(Integer.class);
-                    String stationName = snapshot.child("name").getValue(String.class);
-
-                    // Kiểm tra nếu dữ liệu bị null
-                    if (latValue == null || lngValue == null) {
-                        // Thử lấy dưới dạng String và chuyển thành Double
-                        String latStr = snapshot.child("latitude").getValue(String.class);
-                        String lngStr = snapshot.child("longitude").getValue(String.class);
-
-                        if (latStr != null && lngStr != null) {
-                            try {
-                                latValue = Double.parseDouble(latStr);
-                                lngValue = Double.parseDouble(lngStr);
-                            } catch (NumberFormatException e) {
-                                Log.w("BusnearActivity", "⚠️ Không thể chuyển latitude/longitude từ String sang Double: " + snapshot.getKey());
-                                continue;
-                            }
-                        } else {
-                            Log.w("BusnearActivity", "❌ Latitude or Longitude is null for station: " + snapshot.getKey());
-                            continue;
-                        }
-                    }
-
-                    // Kiểm tra nếu trạm xe nằm trong bán kính 140m
-                    if (isWithinRadius(userLat, userLng, latValue, lngValue, 0.14)) {
-                        nearbyStations.add(new station(stationId, stationName, latValue, lngValue));
+                    if (lat >= boundingBox[0] && lat <= boundingBox[1]
+                            && lng >= boundingBox[2] && lng <= boundingBox[3]) {
+                        int id = snapshot.child("id").getValue(Integer.class);
+                        String name = snapshot.child("name").getValue(String.class);
+                        nearbyStations.add(new station(id, name, lat, lng));
                     }
                 }
                 fetchRoutesForStations(nearbyStations);
@@ -122,6 +116,58 @@ public class BusnearActivity extends AppCompatActivity {
             }
         });
     }
+
+
+//    private void findNearestRoutes(double userLat, double userLng) {
+//        DatabaseReference stationsRef = FirebaseDatabase.getInstance().getReference("station");
+//        stationsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                List<station> nearbyStations = new ArrayList<>();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    // Debug dữ liệu Firebase
+//                    Log.d("Firebase", "Dữ liệu nhận từ Firebase: " + snapshot.getValue());
+//
+//                    Double latValue = snapshot.child("lat").getValue(Double.class);
+//                    Double lngValue = snapshot.child("lng").getValue(Double.class);
+//                    Integer stationId = snapshot.child("id").getValue(Integer.class);
+//                    String stationName = snapshot.child("name").getValue(String.class);
+//
+//                    // Kiểm tra nếu dữ liệu bị null
+//                    if (latValue == null || lngValue == null) {
+//                        // Thử lấy dưới dạng String và chuyển thành Double
+//                        String latStr = snapshot.child("latitude").getValue(String.class);
+//                        String lngStr = snapshot.child("longitude").getValue(String.class);
+//
+//                        if (latStr != null && lngStr != null) {
+//                            try {
+//                                latValue = Double.parseDouble(latStr);
+//                                lngValue = Double.parseDouble(lngStr);
+//                            } catch (NumberFormatException e) {
+//                                Log.w("BusnearActivity", "⚠️ Không thể chuyển latitude/longitude từ String sang Double: " + snapshot.getKey());
+//                                continue;
+//                            }
+//                        } else {
+//                            Log.w("BusnearActivity", "❌ Latitude or Longitude is null for station: " + snapshot.getKey());
+//                            continue;
+//                        }
+//                    }
+//
+//                    // Kiểm tra nếu trạm xe nằm trong bán kính 140m
+//                    if (isWithinRadius(userLat, userLng, latValue, lngValue, 0.14)) {
+//                        nearbyStations.add(new station(stationId, stationName, latValue, lngValue));
+//                    }
+//                }
+//                fetchRoutesForStations(nearbyStations);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.e("Firebase", "Error reading stations", databaseError.toException());
+//                Toast.makeText(BusnearActivity.this, "Lỗi kết nối với Firebase", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     private boolean isWithinRadius(double userLat, double userLng, double stationLat, double stationLng, double radiusKm) {
         float[] results = new float[1];
