@@ -57,7 +57,7 @@ public class StationListFragment extends Fragment {
         stationAdapter = new StationAdapter(stationList);
         recyclerView.setAdapter(stationAdapter);
 
-        // Xử lý khi nhấn vào một trạm
+        // Handle item click
         stationAdapter.setOnStationClickListener(new StationAdapter.OnStationClickListener() {
             @Override
             public void onItemClick(station station) {
@@ -84,7 +84,6 @@ public class StationListFragment extends Fragment {
     private void fetchStationsForRoute(String routeId) {
         databaseRef = FirebaseDatabase.getInstance().getReference();
 
-        // Lấy danh sách station_id theo route_id từ busstop
         databaseRef.child("busstop").orderByChild("route_id").equalTo(routeId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -97,7 +96,6 @@ public class StationListFragment extends Fragment {
                             }
                         }
 
-                        // Gọi lấy chi tiết trạm từ "station"
                         fetchStationDetails(stationIds);
                     }
 
@@ -130,7 +128,6 @@ public class StationListFragment extends Fragment {
                     }
                 }
 
-                // Cập nhật danh sách stationList
                 stationList.clear();
                 for (int id : stationIds) {
                     if (stationMap.containsKey(id)) {
@@ -138,7 +135,6 @@ public class StationListFragment extends Fragment {
                     }
                 }
 
-                // Cập nhật RecyclerView
                 stationAdapter.notifyDataSetChanged();
             }
 
@@ -149,10 +145,7 @@ public class StationListFragment extends Fragment {
         });
     }
 
-    // Lấy danh sách tuyến bus đi qua trạm
     private void showRoutesForStation(int stationId) {
-        databaseRef = FirebaseDatabase.getInstance().getReference();
-
         databaseRef.child("busstop").orderByChild("station_id").equalTo(stationId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -164,56 +157,18 @@ public class StationListFragment extends Fragment {
                                 routeIds.add(routeId);
                             }
                         }
-                        fetchRouteDetails(routeIds);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Các tuyến xe chạy qua trạm");
+                        builder.setMessage("Tuyến xe: " + String.join(", ", routeIds));
+                        builder.setPositiveButton("OK", null);
+                        builder.show();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Firebase", "Lỗi lấy dữ liệu trạm", error.toException());
+                        Log.e("Firebase", "Không thể lấy dữ liệu route cho trạm", error.toException());
                     }
                 });
-    }
-
-    // Lấy chi tiết tuyến bus
-    private void fetchRouteDetails(List<String> routeIds) {
-        databaseRef.child("route").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<String> routeDetails = new ArrayList<>();
-                for (DataSnapshot routeSnapshot : snapshot.getChildren()) {
-                    String id = routeSnapshot.child("id").getValue(String.class);
-                    String name = routeSnapshot.child("name").getValue(String.class);
-                    String operation = routeSnapshot.child("operation").getValue(String.class);
-
-                    if (id != null && name != null && operation != null && routeIds.contains(id)) {
-                        routeDetails.add("🚏 " + name + " (Hoạt động: " + operation + ")");
-                    }
-                }
-
-                // Hiển thị danh sách tuyến bus
-                showRouteDialog(routeDetails);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Lỗi lấy dữ liệu tuyến bus", error.toException());
-            }
-        });
-    }
-
-    // Hiển thị danh sách tuyến bus trong `AlertDialog`
-    private void showRouteDialog(List<String> routeDetails) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Các tuyến bus đi qua trạm");
-
-        if (routeDetails.isEmpty()) {
-            builder.setMessage("Không có tuyến bus nào đi qua trạm này.");
-        } else {
-            String[] routesArray = routeDetails.toArray(new String[0]);
-            builder.setItems(routesArray, null);
-        }
-
-        builder.setPositiveButton("Đóng", (dialog, which) -> dialog.dismiss());
-        builder.show();
     }
 }

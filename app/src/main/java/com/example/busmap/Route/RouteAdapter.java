@@ -11,12 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busmap.R;
 import com.example.busmap.entities.route;
+import com.squareup.okhttp.Route;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHolder> {
     private ArrayList<route> routeList;
     private OnItemClickListener onItemClickListener;
+
 
     public interface OnItemClickListener {
         void onItemClick(route route);
@@ -55,4 +58,9 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             //tvRouteDetails = itemView.findViewById(R.id.tv_routeDetails);
         }
     }
+
+
+
+
+
 }

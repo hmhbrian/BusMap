@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.busmap.Route.BusnearActivity;
 import com.example.busmap.User.ProfileActivity;
 import com.example.busmap.Route.RouteListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
             {
                 replaceFragment(new MapsFragment());
             } else if (item.getItemId() == R.id.shorts) {
+                Intent intent = new Intent (MainActivity.this, BusnearActivity.class);
+                intent.putExtra("USER_EMAIL", getIntent().getStringExtra("USER_EMAIL")); // Truyền email
+                startActivity(intent);
                 replaceFragment(new MapsFragment());
             }else if (item.getItemId() == R.id.route) {
                 replaceFragment(new RouteListFragment());

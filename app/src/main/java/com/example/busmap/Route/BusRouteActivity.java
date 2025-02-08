@@ -77,15 +77,15 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
         }
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        setHalfScreenHeight(); // Đặt Bottom Sheet chiếm 1/2 màn hình
+        setHalfScreenHeight(); // Đặt Bottom Sheet chiếm 1/3 màn hình
         setupBottomSheetCallback();
         setupTabLayout();
     }
     private void setHalfScreenHeight() {
         bottomSheet.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             int screenHeight = getResources().getDisplayMetrics().heightPixels;
-            int halfScreenHeight = screenHeight / 2; // Lấy 50% chiều cao màn hình
-            bottomSheetBehavior.setPeekHeight(halfScreenHeight); // Mở 1/2 màn hình
+            int halfScreenHeight = screenHeight / 3; // Lấy 33% chiều cao màn hình
+            bottomSheetBehavior.setPeekHeight(halfScreenHeight); // Mở 1/3 màn hình
         });
     }
 

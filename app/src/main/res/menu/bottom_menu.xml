@@ -16,6 +16,6 @@
         android:icon="@drawable/baseline_directions_bus_24"/>
     <item
         android:id="@+id/library"
-        android:title="@string/profile"
-        android:icon="@drawable/ic_profile"/>
+        android:title="Cá Nhân"
+        android:icon="@drawable/baseline_info_24"/>
 </menu>

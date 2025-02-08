@@ -57,7 +57,7 @@
         <activity android:name=".User.ProfileActivity"/>
         <activity android:name=".account.RatingActivity"/>
         <activity android:name=".account.infocompany"/>
-        <activity android:name=".User.AccountActivity"/>
+        <activity android:name=".Route.BusnearActivity"/>
     </application>
 
 </manifest>
