@@ -11,10 +11,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.busmap.Route.BusnearActivity;
+import com.example.busmap.User.Login;
 import com.example.busmap.User.ProfileActivity;
 import com.example.busmap.Route.RouteListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,7 +55,9 @@ public class MainActivity extends AppCompatActivity {
             }else if(item.getItemId() == R.id.nav_about){
                 replaceFragment(new AboutFragment());
             }else if(item.getItemId() == R.id.nav_logout){
-                replaceFragment(new MapsFragment());
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, Login.class)); // Chuyển về màn hình đăng nhập
+                finish();
             }else if(item.getItemId() == R.id.nav_home){
                 replaceFragment(new MapsFragment());
             }

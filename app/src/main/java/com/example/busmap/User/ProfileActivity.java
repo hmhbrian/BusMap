@@ -12,13 +12,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.busmap.R;
+import com.example.busmap.UserManager;
 import com.example.busmap.account.RatingActivity;
 import com.example.busmap.account.infocompany;
+import com.example.busmap.entities.user;
 
 public class ProfileActivity extends AppCompatActivity {
 
     private LinearLayout btnUpgrade;
-    private TextView txtPersonalInfo, txtSettings, txtRateApp, txtCompanyInfo;
+    private TextView txtPersonalInfo, txtSettings, txtRateApp, txtCompanyInfo, txtTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,6 +33,10 @@ public class ProfileActivity extends AppCompatActivity {
         txtSettings = findViewById(R.id.txtSettings);
         txtRateApp = findViewById(R.id.txtRateApp);
         txtCompanyInfo = findViewById(R.id.txtCompanyInfo);
+        txtTitle = findViewById(R.id.txtTitle);
+
+        user user_info = UserManager.getUserFromSharedPreferences(this);
+        txtTitle.setText(user_info.getName());
 
         // Xử lý sự kiện khi nhấn vào "Nâng cấp"
         btnUpgrade.setOnClickListener(v -> {
@@ -40,7 +46,6 @@ public class ProfileActivity extends AppCompatActivity {
         // Khi nhấn vào "Thông tin cá nhân" → mở `AccountActivity`
         txtPersonalInfo.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, AccountActivity.class);
-            intent.putExtra("USER_EMAIL", getIntent().getStringExtra("USER_EMAIL")); // Truyền email
             startActivity(intent);
         });
 
