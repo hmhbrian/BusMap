@@ -1,7 +1,10 @@
 package com.example.busmap;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,6 +20,8 @@ import com.example.busmap.Route.RouteListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +32,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Kiểm tra trạng thái đăng nhập
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        boolean isLoggedIn = preferences.getBoolean("isLoggedIn", false);
+
+        if (isLoggedIn) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                Log.d("FirebaseAuth", "Người dùng vẫn đăng nhập: " + user.getEmail());
+            } else {
+                Log.d("FirebaseAuth", "Phiên đăng nhập đã hết hạn");
+                startActivity(new Intent(MainActivity.this, Login.class));
+            }
+        }
+
         // Gán view cho DrawerLayout, Toolbar và BottomNavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -55,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             }else if(item.getItemId() == R.id.nav_about){
                 replaceFragment(new AboutFragment());
             }else if(item.getItemId() == R.id.nav_logout){
-                FirebaseAuth.getInstance().signOut();
+                Logout();
                 startActivity(new Intent(MainActivity.this, Login.class)); // Chuyển về màn hình đăng nhập
                 finish();
             }else if(item.getItemId() == R.id.nav_home){
@@ -70,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
             {
                 replaceFragment(new MapsFragment());
             } else if (item.getItemId() == R.id.near_station) {
-//                Intent intent = new Intent (MainActivity.this, BusnearActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent (MainActivity.this, TestMap.class);
+                startActivity(intent);
             }else if (item.getItemId() == R.id.route) {
                 replaceFragment(new RouteListFragment());
             }else if (item.getItemId() == R.id.ìnfo) {
@@ -90,5 +110,14 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_layout, fragment);
         fragmentTransaction.commit();
+    }
+
+    public void Logout(){
+        FirebaseAuth.getInstance().signOut();
+        // Xóa trạng thái đăng nhập
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("isLoggedIn", false);
+        editor.apply();
     }
 }

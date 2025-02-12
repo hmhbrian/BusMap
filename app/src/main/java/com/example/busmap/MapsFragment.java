@@ -21,7 +21,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.busmap.Route.BusnearActivity;
-import com.example.busmap.Route.FindRoadActivity;
+import com.example.busmap.Route.FindRoute.FindRouteActivity;
+import com.example.busmap.Route.FindRoute.ResultFindRouteActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -91,7 +92,7 @@ public class MapsFragment extends Fragment {
         FindRouteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), FindRoadActivity.class);
+                Intent intent = new Intent(getContext(), FindRouteActivity.class);
                 startActivity(intent);
             }
         });

@@ -18,7 +18,7 @@
         android:background="@color/primary_600"
         android:padding="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -45,7 +45,7 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/ic_current_location"
+                    android:src="@drawable/ic_location"
                     app:tint="@color/secondary_900" />
                 <EditText
                     android:id="@+id/tv_from"
@@ -118,8 +118,9 @@
             android:layout_gravity="center_horizontal"/>
         <TextView
             android:paddingVertical="8dp"
-            android:text="danh sách các tuyến xe phù hợp"
+            android:text="Các cách di chuyển phù hợp"
             android:textSize="18sp"
+            android:textStyle="bold"
             android:fontFamily="@font/quicksand_semi_bold"
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
@@ -130,6 +131,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_routList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:padding="14dp"
+            android:background="@drawable/rounded_background"/>
     </LinearLayout>
 </LinearLayout>

@@ -5,10 +5,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/bus_notification"
         android:label="busmap"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -42,7 +43,7 @@
 
 
         <activity
-            android:name=".User.Login"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,14 +51,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".Route.FindRoadActivity"/>
+        <activity android:name=".User.Login"/>
+        <activity android:name=".Route.FindRoute.FindRouteActivity"/>
+        <activity android:name=".Route.FindRoute.ResultFindRouteActivity"/>
         <activity android:name=".Route.BusRouteActivity"/>
         <activity android:name=".User.Register"/>
         <activity android:name=".User.ProfileActivity"/>
         <activity android:name=".account.RatingActivity"/>
         <activity android:name=".account.infocompany"/>
         <activity android:name=".Route.BusnearActivity"/>
+        <activity android:name=".TestMap"/>
     </application>
 
 </manifest>

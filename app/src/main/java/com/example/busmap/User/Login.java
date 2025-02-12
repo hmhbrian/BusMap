@@ -2,6 +2,7 @@ package com.example.busmap.User;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -76,12 +77,15 @@ public class Login extends Activity {
                         // Đăng nhập thành công
                         FirebaseUser user = auth.getCurrentUser();
                         if (user != null) {
+                            //Lưu trạng thái đăng nhập
+                            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putBoolean("isLoggedIn", true);
+                            editor.apply();
                             // Đăng nhập thành công, chuyển đến MainActivity
                             startActivity(new Intent(Login.this, MainActivity.class));
                             finish(); // Đóng màn hình đăng nhập
                         }
-                        Log.d("Information","Id: " + user.getUid() + user.getDisplayName() + user.getPhoneNumber());
-                        //fetchInformation(user.getUid());
                         UserManager.fetchAndSaveUser(this);
                     } else {
                         // Đăng nhập thất bại, hiển thị thông báo lỗi
@@ -90,34 +94,4 @@ public class Login extends Activity {
                 });
     }
 
-    private void fetchInformation(String userId){
-        databaseRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    user user = snapshot.getValue(user.class);
-                    String name = snapshot.child("name").getValue(String.class);
-                    String email = snapshot.child("email").getValue(String.class);
-                    String phone = snapshot.child("phone").getValue(String.class);
-                    String birthday = snapshot.child("birthday").getValue(String.class);
-                    String gender = snapshot.child("gender").getValue(String.class);
-                    String role = snapshot.child("role").getValue(String.class);
-
-                    Log.d("UserInfo", "Name: " + name);
-                    Log.d("UserInfo", "Email: " + email);
-                    Log.d("UserInfo", "Phone: " + phone);
-                    Log.d("UserInfo", "Birthday: " + birthday);
-                    Log.d("UserInfo", "Gender: " + gender);
-                    Log.d("UserInfo", "Role: " + role);
-                } else {
-                    Log.d("UserInfo", "Không tìm thấy thông tin người dùng!");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Lỗi khi lấy dữ liệu", error.toException());
-            }
-        });
-    }
 }
