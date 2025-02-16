@@ -60,7 +60,8 @@
         <activity android:name=".account.RatingActivity"/>
         <activity android:name=".account.infocompany"/>
         <activity android:name=".Route.BusnearActivity"/>
-        <activity android:name=".TestMap"/>
+        <activity android:name=".User.AccountActivity"/>
+        <activity android:name=".User.EditAccountActivity"/>
     </application>
 
 </manifest>

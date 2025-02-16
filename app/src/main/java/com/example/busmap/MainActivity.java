@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 replaceFragment(new MapsFragment());
             } else if (item.getItemId() == R.id.near_station) {
-                Intent intent = new Intent (MainActivity.this, TestMap.class);
+                Intent intent = new Intent (MainActivity.this, ProfileActivity.class);
                 startActivity(intent);
             }else if (item.getItemId() == R.id.route) {
                 replaceFragment(new RouteListFragment());
