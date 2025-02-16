@@ -3,45 +3,77 @@ package com.example.busmap.Route;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busmap.R;
 import com.example.busmap.entities.route;
-import com.squareup.okhttp.Route;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
-public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHolder> {
+public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> {
+
     private ArrayList<route> routeList;
-    private OnItemClickListener onItemClickListener;
+    private Set<String> favoriteRoutes;
+    private OnFavoriteClickListener favoriteClickListener;
+    private OnItemClickListener itemClickListener;
 
+    public interface OnFavoriteClickListener {
+        void onFavoriteClick(route routeItem, boolean isFavorite);
+    }
 
     public interface OnItemClickListener {
-        void onItemClick(route route);
+        void onItemClick(route routeItem);
     }
-    public RouteAdapter(ArrayList<route> routeList, OnItemClickListener onItemClickListener) {
+
+    public RouteAdapter(ArrayList<route> routeList,
+                        Set<String> favoriteRoutes,
+                        OnFavoriteClickListener favoriteClickListener,
+                        OnItemClickListener itemClickListener) {
         this.routeList = routeList;
-        this.onItemClickListener = onItemClickListener;
+        this.favoriteRoutes = favoriteRoutes;
+        this.favoriteClickListener = favoriteClickListener;
+        this.itemClickListener = itemClickListener;
     }
 
-    @NonNull
     @Override
-    public RouteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_route, parent, false);
-        return new RouteViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RouteViewHolder holder, int position) {
-        route currentRoute = routeList.get(position);
-        holder.tvRouteName.setText(currentRoute.getName());
-        //holder.tvRouteDetails.setText("Price: " + route.getPrice() + " VND\nOperation: " + route.getOperation());
-        holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(currentRoute));
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        route routeItem = routeList.get(position);
+        holder.tvRouteName.setText(routeItem.getName());
+
+        // Kiểm tra xem tuyến có nằm trong danh sách yêu thích hay không để set icon tương ứng
+        if (favoriteRoutes.contains(routeItem.getId())) {
+            holder.ivFavorite.setImageResource(R.drawable.ic_heart_filled);
+        } else {
+            holder.ivFavorite.setImageResource(R.drawable.ic_heart_outline);
+        }
+
+        // Lắng nghe sự kiện click vào icon trái tim
+        holder.ivFavorite.setOnClickListener(v -> {
+            boolean isCurrentlyFavorite = favoriteRoutes.contains(routeItem.getId());
+            boolean newFavoriteState = !isCurrentlyFavorite;
+            favoriteClickListener.onFavoriteClick(routeItem, newFavoriteState);
+            // Cập nhật giao diện ngay lập tức
+            if (newFavoriteState) {
+                favoriteRoutes.add(routeItem.getId());
+                holder.ivFavorite.setImageResource(R.drawable.ic_heart_filled);
+            } else {
+                favoriteRoutes.remove(routeItem.getId());
+                holder.ivFavorite.setImageResource(R.drawable.ic_heart_outline);
+            }
+        });
+
+        // Sự kiện click vào cả item (để chuyển sang BusRouteActivity)
+        holder.itemView.setOnClickListener(v -> itemClickListener.onItemClick(routeItem));
     }
 
     @Override
@@ -49,18 +81,14 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         return routeList.size();
     }
 
-    public static class RouteViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRouteName, tvRouteDetails;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView tvRouteName;
+        public ImageView ivFavorite;
 
-        public RouteViewHolder(@NonNull View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             tvRouteName = itemView.findViewById(R.id.tv_routeName);
-            //tvRouteDetails = itemView.findViewById(R.id.tv_routeDetails);
+            ivFavorite = itemView.findViewById(R.id.iv_favorite);
         }
     }
-
-
-
-
-
 }

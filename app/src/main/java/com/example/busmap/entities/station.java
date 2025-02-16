@@ -8,6 +8,8 @@ public class station implements Serializable {
     private double latitude;
     private double longitude;
 
+    public station() {
+    }
     public station(int id, String name, double latitude, double longitude) {
         this.id = id;
         this.name = name;

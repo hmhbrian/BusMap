@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.busmap.Favorites.FavoriteFragment;
 import com.example.busmap.Route.BusnearActivity;
 import com.example.busmap.User.Login;
 import com.example.busmap.User.ProfileActivity;
@@ -90,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
             {
                 replaceFragment(new MapsFragment());
             } else if (item.getItemId() == R.id.near_station) {
-                Intent intent = new Intent (MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent (MainActivity.this, ProfileActivity.class);
+//                startActivity(intent);
+                replaceFragment(new FavoriteFragment());
             }else if (item.getItemId() == R.id.route) {
                 replaceFragment(new RouteListFragment());
             }else if (item.getItemId() == R.id.ìnfo) {

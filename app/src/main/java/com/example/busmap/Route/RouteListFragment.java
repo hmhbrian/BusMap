@@ -2,7 +2,6 @@ package com.example.busmap.Route;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,26 +15,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busmap.R;
 import com.example.busmap.entities.route;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RouteListFragment extends Fragment {
     private RecyclerView rVRouteList;
     private RouteAdapter routeAdapter;
     private ArrayList<route> routeList = new ArrayList<>();
+    private Set<String> favoriteRoutes = new HashSet<>();
     private DatabaseReference databaseReference;
-    void init(View view){
-        rVRouteList = view.findViewById(R.id.rv_routList);
-        rVRouteList.setLayoutManager(new LinearLayoutManager(getContext()));
+    private String userId;
 
-    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,44 +43,86 @@ public class RouteListFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        init(view);
+        rVRouteList = view.findViewById(R.id.rv_routList);
+        rVRouteList.setLayoutManager(new LinearLayoutManager(getContext()));
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        loadFavoriteRoutes();
         fetchRoutesFromFirebase();
-
     }
-    private void fetchRoutesFromFirebase(){
+
+    private void fetchRoutesFromFirebase() {
         databaseReference = FirebaseDatabase.getInstance().getReference("route");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 routeList.clear();
-//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                    route route = dataSnapshot.getValue(route.class);
-//                    if (route != null) {
-//                        routeList.add(route);
-//                    }
-//                }
-                GenericTypeIndicator<List<route>> typeIndicator = new GenericTypeIndicator<List<route>>() {};
-                List<route> firebaseRouteList = snapshot.getValue(typeIndicator); // Lấy danh sách từ Firebase
-                if (firebaseRouteList != null) {
-                    routeList.addAll(firebaseRouteList);// Thêm tất cả vào danh sách
-                    routeAdapter = new RouteAdapter(routeList, route -> {
-                        // Chuyển qua BusRouteActivity
-                        Intent intent = new Intent(getContext(), BusRouteActivity.class);
-                        intent.putExtra("route_id", route.getId()); // Truyền id qua Intent
-                        startActivity(intent);
-                    });
-                    rVRouteList.setAdapter(routeAdapter);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    route routeItem = dataSnapshot.getValue(route.class);
+                    if (routeItem != null) {
+                        routeList.add(routeItem);
+                    }
                 }
-                routeAdapter.notifyDataSetChanged();
+                routeAdapter = new RouteAdapter(routeList, favoriteRoutes, (routeItem, isFavorite) -> {
+                    toggleFavoriteRoute(routeItem.getId(), isFavorite);
+                }, new RouteAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(route routeItem) {
+                        openBusRouteActivity(routeItem);
+                    }
+                });
+                rVRouteList.setAdapter(routeAdapter);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseError", "Error loading routes: " + error.getMessage());
-                Toast.makeText(getContext(), "Đã xảy ra lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Lỗi tải dữ liệu!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void loadFavoriteRoutes() {
+        DatabaseReference favRef = FirebaseDatabase.getInstance()
+                .getReference("User")
+                .child(userId)
+                .child("favorite_routes");
+        favRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                favoriteRoutes.clear();
+                // Lấy key của từng node (chính là id tuyến đã lưu)
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    favoriteRoutes.add(dataSnapshot.getKey());
+                }
+                if (routeAdapter != null) {
+                    routeAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
+    private void toggleFavoriteRoute(String routeId, boolean isFavorite) {
+        DatabaseReference favRef = FirebaseDatabase.getInstance()
+                .getReference("User")
+                .child(userId)
+                .child("favorite_routes");
+        if (isFavorite) {
+            // Lưu id của tuyến xe thay vì giá trị true
+            favRef.child(routeId).setValue(routeId);
+        } else {
+            favRef.child(routeId).removeValue();
+        }
+    }
+
+    private void openBusRouteActivity(route routeItem) {
+        Intent intent = new Intent(getContext(), BusRouteActivity.class);
+        intent.putExtra("route_id", routeItem.getId());
+        intent.putExtra("route_name", routeItem.getName());
+        startActivity(intent);
     }
 }

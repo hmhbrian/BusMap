@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <!-- Header gồm tiêu đề và icon tim -->
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_background"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_dialog_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Các tuyến qua trạm"
+            android:textSize="30dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/black"
+
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_favorite"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_heart_outline"
+            android:contentDescription="Favorite" />
+    </LinearLayout>
+
+    <!-- Nội dung hiển thị danh sách các tuyến -->
+    <TextView
+        android:id="@+id/tv_route_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Route details..."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/black"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp" />
+
+</LinearLayout>
