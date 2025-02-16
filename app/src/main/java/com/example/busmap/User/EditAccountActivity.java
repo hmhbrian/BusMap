@@ -102,7 +102,7 @@ public class EditAccountActivity extends AppCompatActivity {
                     }
                 }
             }
-
+//test
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(EditAccountActivity.this, "Lỗi tải dữ liệu!", Toast.LENGTH_SHORT).show();
