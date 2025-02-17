@@ -62,6 +62,8 @@
         <activity android:name=".Route.BusnearActivity"/>
         <activity android:name=".User.AccountActivity"/>
         <activity android:name=".User.EditAccountActivity"/>
+        <activity android:name=".Route.RadaBusActivity"/>
+
     </application>
 
 </manifest>

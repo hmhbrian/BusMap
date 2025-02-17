@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.busmap.Favorites.FavoriteFragment;
-import com.example.busmap.Route.BusnearActivity;
 import com.example.busmap.User.Login;
 import com.example.busmap.User.ProfileActivity;
 import com.example.busmap.Route.RouteListFragment;
@@ -22,7 +21,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -90,15 +88,12 @@ public class MainActivity extends AppCompatActivity {
             if(item.getItemId() == R.id.home)
             {
                 replaceFragment(new MapsFragment());
-            } else if (item.getItemId() == R.id.near_station) {
-//                Intent intent = new Intent (MainActivity.this, ProfileActivity.class);
-//                startActivity(intent);
+            } else if (item.getItemId() == R.id.favorite) {
                 replaceFragment(new FavoriteFragment());
             }else if (item.getItemId() == R.id.route) {
                 replaceFragment(new RouteListFragment());
             }else if (item.getItemId() == R.id.ìnfo) {
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                intent.putExtra("USER_EMAIL", getIntent().getStringExtra("USER_EMAIL")); // Truyền email
                 startActivity(intent);
                 return true;
             }
