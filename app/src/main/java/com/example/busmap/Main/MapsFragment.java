@@ -1,4 +1,4 @@
-package com.example.busmap;
+package com.example.busmap.Main;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.busmap.R;
 import com.example.busmap.Route.FindRoute.FindRouteActivity;
 import com.example.busmap.Route.RadaBusActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;

@@ -1,4 +1,4 @@
-package com.example.busmap;
+package com.example.busmap.Main;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,9 +14,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.busmap.Favorites.FavoriteFragment;
+import com.example.busmap.R;
+import com.example.busmap.ShareFragment;
 import com.example.busmap.User.Login;
 import com.example.busmap.User.ProfileActivity;
-import com.example.busmap.Route.RouteListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
