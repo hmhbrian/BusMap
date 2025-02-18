@@ -1,4 +1,4 @@
-package com.example.busmap.Route;
+package com.example.busmap.Route.RouteDetail;
 
 import android.os.Bundle;
 import android.util.Log;

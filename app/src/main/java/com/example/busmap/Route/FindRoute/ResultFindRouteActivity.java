@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busmap.R;
 import com.example.busmap.entities.BusStop;
+import com.example.busmap.entities.LocationData;
 import com.example.busmap.entities.route;
 import com.example.busmap.entities.station;
 import com.google.firebase.database.DataSnapshot;
@@ -40,19 +41,20 @@ import java.util.concurrent.CompletableFuture;
 public class ResultFindRouteActivity extends AppCompatActivity {
     private RecyclerView rVRouteList;
     private Button btnFind;
-    private EditText edtTo;
+    private EditText edtTo, edtFrom;
     double radiusKm;
     private DatabaseReference database;
     Map<String, String> routeMap = new HashMap<>();  // Lưu route_id -> route_name
     List<BusStop> busStops = new ArrayList<>();
+    LocationData from_location, to_location;
     private ArrayList<route> routeList = new ArrayList<>();
 
     void init(){
         rVRouteList = findViewById(R.id.rv_routList);
         rVRouteList.setLayoutManager(new LinearLayoutManager(ResultFindRouteActivity.this));
         rVRouteList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        btnFind = findViewById(R.id.btnFind);
         edtTo = findViewById(R.id.tv_to);
+        edtFrom = findViewById(R.id.tv_from);
         database = FirebaseDatabase.getInstance().getReference();;
     }
     @Override
@@ -62,13 +64,20 @@ public class ResultFindRouteActivity extends AppCompatActivity {
         init();
         LoadData();
         //fetchRoutesFromFirebase();
-        btnFind.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String address = edtTo.getText().toString();
-                getCoordinatesFromAddress(address);
-            }
-        });
+        from_location = getIntent().getParcelableExtra("From_Location");
+        to_location = getIntent().getParcelableExtra("To_Location");
+        if(from_location != null && to_location != null){
+            edtFrom.setText(from_location.getName());
+            edtTo.setText(to_location.getName());
+            FindRouteBetween2Points(from_location,to_location);
+        }
+//        btnFind.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String address = edtTo.getText().toString();
+//                getCoordinatesFromAddress(address);
+//            }
+//        });
 
     }
 
@@ -131,34 +140,53 @@ public class ResultFindRouteActivity extends AppCompatActivity {
 //        });
 //    }
 
-    //chuyển địa chỉ thành tọa độ
-    public void getCoordinatesFromAddress(String address) {
-        Geocoder geocoder = new Geocoder(this);
+    public void FindRouteBetween2Points(LocationData from, LocationData to) {
         try {
-            List<Address> addresses = geocoder.getFromLocationName(address, 1);
-            if (addresses != null && !addresses.isEmpty()) {
-                Address location = addresses.get(0);
-                double userLat = location.getLatitude();
-                double userLng = location.getLongitude();
+            if (from != null && to != null) {
                 double initialRadiusKm = 2.0; // Bán kính ban đầu
                 double incrementKm = 3.0;     // Bước mở rộng bán kính
-                //Toast.makeText(FindRoadActivity.this,"Latitude: " + latitude + ", Longitude: " + longitude,Toast.LENGTH_SHORT).show();
-                Log.d("Coordinates", "Latitude: " + userLat + ", Longitude: " + userLng);
+                //Log.d("Coordinates", "Latitude: " + userLat + ", Longitude: " + userLng);
                 //findNearestStationWithIncrementalRadius(userLat, userLng, initialRadiusKm, incrementKm);
-                findNearestStationsForTwoPoints(10.964776144481784, 106.6676283098276, userLat, userLng, initialRadiusKm, incrementKm)
+                findNearestStationsForTwoPoints(from.getLatitude(), from.getLongitude(), to.getLatitude(), to.getLongitude(), initialRadiusKm, incrementKm)
                         .thenRun(() -> Log.d("Success", "Successfully found both stations"))
                         .exceptionally(e -> {
                             Log.e("Error", "Failed to find stations", e);
                             return null;
                         });
 
-            } else {
-                Log.e("Geocoding", "Không tìm thấy tọa độ cho địa chỉ: " + address);
             }
-        } catch (IOException e) {
-            Log.e("Geocoding", "Lỗi khi xử lý Geocoder: ", e);
+        } catch (Exception e) {
+            Log.e("ERROR", "Lỗi khi xử lý : ", e);
         }
     }
+    //chuyển địa chỉ thành tọa độ
+//    public void getCoordinatesFromAddress(String address) {
+//        Geocoder geocoder = new Geocoder(this);
+//        try {
+//            List<Address> addresses = geocoder.getFromLocationName(address, 1);
+//            if (addresses != null && !addresses.isEmpty()) {
+//                Address location = addresses.get(0);
+//                double userLat = location.getLatitude();
+//                double userLng = location.getLongitude();
+//                double initialRadiusKm = 2.0; // Bán kính ban đầu
+//                double incrementKm = 3.0;     // Bước mở rộng bán kính
+//                //Toast.makeText(FindRoadActivity.this,"Latitude: " + latitude + ", Longitude: " + longitude,Toast.LENGTH_SHORT).show();
+//                Log.d("Coordinates", "Latitude: " + userLat + ", Longitude: " + userLng);
+//                //findNearestStationWithIncrementalRadius(userLat, userLng, initialRadiusKm, incrementKm);
+//                findNearestStationsForTwoPoints(10.964776144481784, 106.6676283098276, userLat, userLng, initialRadiusKm, incrementKm)
+//                        .thenRun(() -> Log.d("Success", "Successfully found both stations"))
+//                        .exceptionally(e -> {
+//                            Log.e("Error", "Failed to find stations", e);
+//                            return null;
+//                        });
+//
+//            } else {
+//                Log.e("Geocoding", "Không tìm thấy tọa độ cho địa chỉ: " + address);
+//            }
+//        } catch (IOException e) {
+//            Log.e("Geocoding", "Lỗi khi xử lý Geocoder: ", e);
+//        }
+//    }
 
     //Tính giới hạn tọa độ
     public double[] getBoundingBox(double userLat, double userLng, double radiusKm) {

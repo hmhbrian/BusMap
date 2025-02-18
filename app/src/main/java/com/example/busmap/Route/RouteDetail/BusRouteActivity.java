@@ -1,4 +1,4 @@
-package com.example.busmap.Route;
+package com.example.busmap.Route.RouteDetail;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,7 +13,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.busmap.R;

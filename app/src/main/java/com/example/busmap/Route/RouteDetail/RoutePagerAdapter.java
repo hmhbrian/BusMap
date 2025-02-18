@@ -1,4 +1,4 @@
-package com.example.busmap.Route;
+package com.example.busmap.Route.RouteDetail;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

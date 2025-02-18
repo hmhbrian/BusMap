@@ -54,7 +54,9 @@
         <activity android:name=".User.Login"/>
         <activity android:name=".Route.FindRoute.FindRouteActivity"/>
         <activity android:name=".Route.FindRoute.ResultFindRouteActivity"/>
-        <activity android:name=".Route.BusRouteActivity"/>
+        <activity android:name=".Route.FindRoute.InputFindActivity"/>
+        <activity android:name=".Route.FindRoute.FindLocationOnMapActivity"/>
+        <activity android:name=".Route.RouteDetail.BusRouteActivity"/>
         <activity android:name=".User.Register"/>
         <activity android:name=".User.ProfileActivity"/>
         <activity android:name=".account.RatingActivity"/>
