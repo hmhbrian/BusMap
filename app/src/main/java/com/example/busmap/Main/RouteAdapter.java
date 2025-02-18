@@ -1,4 +1,4 @@
-package com.example.busmap.Route.RouteDetail;
+package com.example.busmap.Main;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -94,18 +94,28 @@ public class FindRouteActivity extends AppCompatActivity implements OnMapReadyCa
                         if (locationData != null) {
                              // Gán giá trị vào đúng Linear đã được click
                             if ("ll_from".equals(clickedLinearId)) {
-                                if(locationData.getLongitude() != to.getLongitude() && locationData.getLatitude() != to.getLatitude()){
+                                if(to != null){
+                                    if(locationData.getLongitude() != to.getLongitude() && locationData.getLatitude() != to.getLatitude()){
+                                        from = locationData;
+                                        edtFrom.setText(from.getName());
+                                    }else{
+                                        Toast.makeText(this, "Tọa độ điểm xuất phát trùng điểm đến. Vui lòng nhập lại!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }else{
                                     from = locationData;
                                     edtFrom.setText(from.getName());
-                                }else{
-                                    Toast.makeText(this, "Tọa độ điểm xuất phát trùng điểm đến. Vui lòng nhập lại!", Toast.LENGTH_SHORT).show();
                                 }
                             } else if ("ll_to".equals(clickedLinearId)) {
-                                if(locationData.getLongitude() != from.getLongitude() && locationData.getLatitude() != from.getLatitude()){
+                                if(from != null){
+                                    if(locationData.getLongitude() != from.getLongitude() && locationData.getLatitude() != from.getLatitude()){
+                                        to = locationData;
+                                        edtTo.setText(to.getName());
+                                    }else{
+                                        Toast.makeText(this, "Tọa độ điểm đến trùng điểm xuất phát. Vui lòng nhập lại!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }else{
                                     to = locationData;
                                     edtTo.setText(to.getName());
-                                }else{
-                                    Toast.makeText(this, "Tọa độ điểm đến trùng điểm xuất phát. Vui lòng nhập lại!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                             if (from != null && to != null) {

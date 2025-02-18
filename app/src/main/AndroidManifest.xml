@@ -61,7 +61,6 @@
         <activity android:name=".User.ProfileActivity"/>
         <activity android:name=".account.RatingActivity"/>
         <activity android:name=".account.infocompany"/>
-        <activity android:name=".Route.BusnearActivity"/>
         <activity android:name=".User.AccountActivity"/>
         <activity android:name=".User.EditAccountActivity"/>
         <activity android:name=".Route.RadaBusActivity"/>

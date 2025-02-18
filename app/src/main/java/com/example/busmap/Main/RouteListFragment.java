@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busmap.R;
 import com.example.busmap.Route.RouteDetail.BusRouteActivity;
-import com.example.busmap.Route.RouteDetail.RouteAdapter;
 import com.example.busmap.User.Login;
 import com.example.busmap.entities.route;
 import com.google.firebase.auth.FirebaseAuth;
@@ -84,6 +83,7 @@ public class RouteListFragment extends Fragment {
                     @Override
                     public void onItemClick(route routeItem) {
                         openBusRouteActivity(routeItem);
+                        Toast.makeText(getActivity(),routeItem.getName() + "- id: "+ routeItem.getId(),Toast.LENGTH_SHORT).show();
                     }
                 });
                 rVRouteList.setAdapter(routeAdapter);
