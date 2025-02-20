@@ -218,7 +218,7 @@ public class RadaBusActivity extends AppCompatActivity {
     private BitmapDescriptor bitmapDescriptorFromVector(int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(this, vectorResId);
         if (vectorDrawable == null) {
-            Log.e("RadaBusActivity", "Không tìm thấy icon: " + vectorResId);
+            Log.e("RadaBusActivity", "Không tìm thấy  a1 icon: " + vectorResId);
             return BitmapDescriptorFactory.defaultMarker();
         }
         vectorDrawable.setBounds(0, 0,

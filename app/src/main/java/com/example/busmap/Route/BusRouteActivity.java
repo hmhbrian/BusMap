@@ -220,7 +220,6 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
                     }
                 });
     }
-
     private void loadStationDetails(List<Integer> stationIds) {
         databaseRef.child("station").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -240,12 +239,14 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
                     Double lng = snapshot.child("lng").getValue(Double.class);
                     String name = snapshot.child("name").getValue(String.class);
 
+                    // Kiểm tra các giá trị null
                     if (id == null || lat == null || lng == null || name == null) {
                         Log.e("Firebase", "Dữ liệu trạm không hợp lệ, bỏ qua.");
                         continue;
                     }
 
                     if (stationIds.contains(id)) {
+                        // Thêm station vào danh sách
                         stationMap.put(id, new station(id, name, lat, lng));
 
                         LatLng location = new LatLng(lat, lng);
@@ -258,6 +259,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
                                         .title(name)
                                         .icon(bitmapDescriptorFromVector(R.drawable.ic_station_big))); // Sử dụng icon mới
 
+                                // Kiểm tra và gắn marker vào map
                                 if (marker != null) {
                                     stationMarkers.put(id, marker);
                                 }
@@ -266,6 +268,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
                     }
                 }
 
+                // Cập nhật danh sách các trạm
                 StationList.clear();
                 for (int id : stationIds) {
                     if (stationMap.containsKey(id)) {
@@ -273,13 +276,16 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
                     }
                 }
 
+                // Cập nhật danh sách tọa độ
                 stationLocations.clear();
                 for (station sta : StationList) {
                     stationLocations.add(new LatLng(sta.getLatitude(), sta.getLongitude()));
                 }
 
+                // Vẽ polyline sau khi đã có danh sách trạm dừng
                 drawPolyline();
 
+                // Cập nhật camera để hiển thị trạm dừng đầu tiên
                 if (!stationLocations.isEmpty()) {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(stationLocations.get(0), 14));
                 }
@@ -291,6 +297,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
             }
         });
     }
+
 
     private void drawPolyline() {
         if (stationLocations.size() > 1) {
