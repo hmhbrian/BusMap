@@ -54,10 +54,12 @@
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
                     android:textSize="16sp"
-                    android:hint="chọn địa điểm bắt đầu"
                     android:textColorHint="@color/secondary_500"
                     android:textColor="@color/secondary_900"
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:focusableInTouchMode="false"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_below="@id/ll_from"
@@ -90,10 +92,12 @@
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
                     android:textSize="16sp"
-                    android:hint="chọn địa điểm đến"
                     android:textColorHint="@color/secondary_500"
                     android:textColor="@color/secondary_900"
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:focusableInTouchMode="false"/>
             </LinearLayout>
 
             <ImageButton
@@ -109,13 +113,13 @@
                 android:src="@drawable/ic_swap"
                 app:tint="@color/secondary_900" />
         </RelativeLayout>
-        <Button
-            android:id="@+id/btnFind"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Find"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center_horizontal"/>
+<!--        <Button-->
+<!--            android:id="@+id/btnFind"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Find"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:layout_gravity="center_horizontal"/>-->
         <TextView
             android:paddingVertical="8dp"
             android:text="Các cách di chuyển phù hợp"

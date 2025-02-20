@@ -1,7 +1,8 @@
-package com.example.busmap.Route;
+package com.example.busmap.Main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busmap.R;
+import com.example.busmap.Route.RouteDetail.BusRouteActivity;
+import com.example.busmap.User.Login;
 import com.example.busmap.entities.route;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,7 +52,15 @@ public class RouteListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rVRouteList = view.findViewById(R.id.rv_routList);
         rVRouteList.setLayoutManager(new LinearLayoutManager(getContext()));
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            userId = user.getUid();  // Chỉ gọi getUid() khi user != null
+        } else {
+            Log.e("FirebaseAuth", "Người dùng chưa đăng nhập!");
+            Intent intent = new Intent(getActivity(), Login.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
         loadFavoriteRoutes();
         fetchRoutesFromFirebase();
     }
@@ -71,6 +83,7 @@ public class RouteListFragment extends Fragment {
                     @Override
                     public void onItemClick(route routeItem) {
                         openBusRouteActivity(routeItem);
+                        Toast.makeText(getActivity(),routeItem.getName() + "- id: "+ routeItem.getId(),Toast.LENGTH_SHORT).show();
                     }
                 });
                 rVRouteList.setAdapter(routeAdapter);

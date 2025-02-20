@@ -1,4 +1,4 @@
-package com.example.busmap.Route;
+package com.example.busmap.Route.RouteDetail;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,11 +9,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.busmap.R;
@@ -77,7 +77,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
         }
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        setHalfScreenHeight(); // Đặt Bottom Sheet chiếm 1/3 màn hình
+        setHalfScreenHeight(); // Đặt Bottom Sheet chiếm 1/2 màn hình
         setupBottomSheetCallback();
         setupTabLayout();
     }
@@ -85,7 +85,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
         bottomSheet.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             int screenHeight = getResources().getDisplayMetrics().heightPixels;
             int halfScreenHeight = screenHeight / 3; // Lấy 33% chiều cao màn hình
-            bottomSheetBehavior.setPeekHeight(halfScreenHeight); // Mở 1/3 màn hình
+            bottomSheetBehavior.setPeekHeight(halfScreenHeight); // Mở 1/2 màn hình
         });
     }
 
@@ -168,11 +168,12 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         // Lấy routeId từ Intent
-        String routeId = getIntent().getStringExtra("route_id");
+        //String routeId = getIntent().getStringExtra("route_id");
         if (routeId == null) {
             Log.e("BusRouteActivity", "routeId không tìm thấy");
             return;
         }
+        Toast.makeText(this,"Route_id: "+ routeId,Toast.LENGTH_SHORT).show();
 
         // Truyền routeId vào Adapter
         RoutePagerAdapter adapter = new RoutePagerAdapter(this, routeId);
@@ -211,6 +212,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
                             int stationId = snapshot.child("station_id").getValue(Integer.class);
                             stationIds.add(stationId);
                         }
+
                         loadStationDetails(stationIds);
                     }
 

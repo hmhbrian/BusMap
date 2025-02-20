@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!-- Màu nền trắng -->
+    <solid android:color="@android:color/white" />
+
+    <!-- Kích thước hình tròn -->
+    <size android:width="56dp" android:height="56dp" />
+
+    <!-- Bóng đổ -->
+    <corners android:radius="28dp"/>
+    <padding android:left="4dp" android:top="4dp" android:right="4dp" android:bottom="4dp"/>
+
+</shape>
