@@ -44,25 +44,28 @@ public class FavoriteRoutesFragment extends Fragment {
         adapter = new GenericFavoriteAdapter<>(favoriteRoutes, (routeItem, isFavorite) -> { });
         recyclerView.setAdapter(adapter);
 
+        // Tải danh sách các tuyến xe yêu thích
         loadFavoriteRoutes();
         return view;
     }
 
     private void loadFavoriteRoutes() {
+        // Truy vấn từ bảng "Favorite" theo userId
         DatabaseReference favRef = FirebaseDatabase.getInstance()
-                .getReference("User")
-                .child(userId)
-                .child("favorite_routes");
+                .getReference("Favorite")
+                .child(userId); // Lấy các tuyến yêu thích của người dùng theo userId
+
         favRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Xóa danh sách cũ
                 favoriteRoutes.clear();
-                // Duyệt qua các node trong favorite_routes; lưu id tuyến ở key
+                // Duyệt qua các node trong favorite; key là routeId
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    // Lấy id tuyến từ key (do khi lưu, key là id tuyến)
+                    // Lấy id tuyến từ key (vì khi lưu, key là id tuyến)
                     String routeId = dataSnapshot.getKey();
                     if (routeId != null) {
+                        // Lấy chi tiết tuyến xe từ routeId
                         fetchRouteDetails(routeId);
                     }
                 }
@@ -76,14 +79,13 @@ public class FavoriteRoutesFragment extends Fragment {
         });
     }
 
-    // Sử dụng query để tìm kiếm một route có thuộc tính "id" bằng routeId
+    // Lấy chi tiết của một tuyến xe dựa trên routeId
     private void fetchRouteDetails(String routeId) {
         DatabaseReference routeRef = FirebaseDatabase.getInstance().getReference("route");
         Query query = routeRef.orderByChild("id").equalTo(routeId);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Vì nếu có kết quả, snapshot luôn trả về 1 hay nhiều node
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     route routeItem = ds.getValue(route.class);
                     if (routeItem != null) {

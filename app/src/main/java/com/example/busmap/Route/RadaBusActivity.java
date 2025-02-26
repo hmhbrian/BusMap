@@ -152,12 +152,18 @@ public class RadaBusActivity extends AppCompatActivity {
         radiusValue.setText(radius + "m");
 
         if (mMap != null && searchCircle != null) {
+            // Cập nhật bán kính của vòng tròn
             searchCircle.setRadius(radius);
             LatLng center = searchCircle.getCenter();
+
+            // Xóa các marker hiện có trong phạm vi cũ
             removeMarkers();
+
+            // Tải lại các trạm dừng nằm trong phạm vi mới
             loadNearbyStations(center, radius);
         }
     }
+
 
     /**
      * Xóa các marker hiện có.
