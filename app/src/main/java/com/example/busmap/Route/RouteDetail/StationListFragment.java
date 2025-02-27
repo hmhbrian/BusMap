@@ -69,8 +69,8 @@ public class StationListFragment extends Fragment {
                 // Ví dụ: Di chuyển đến vị trí của trạm khi click item (được xử lý trong BusRouteActivity)
                 if (getActivity() instanceof BusRouteActivity) {
                     ((BusRouteActivity) getActivity()).moveToStation(
-                            station.getLatitude(),
-                            station.getLongitude(),
+                            station.getLat(),
+                            station.getLng(),
                             station.getId());
                 }
             }

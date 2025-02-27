@@ -46,7 +46,6 @@ import java.util.Map;
 public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private DatabaseReference databaseRef;
-    private String routeId;
     private List<LatLng> stationLocations = new ArrayList<>();
     private View bottomSheet;
     private BottomSheetBehavior<View> bottomSheetBehavior;
@@ -55,6 +54,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
     private ArrayList<station> StationList = new ArrayList<>();
     private Map<Integer, Marker> stationMarkers = new HashMap<>();
     private int selectedStationId = -1; // Lưu ID của trạm đang chọn
+    String routeId;
     private Marker currentMarker;
 
     void init() {
@@ -67,8 +67,8 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_detail);
         init();
-        routeId = getIntent().getStringExtra("route_id");
         databaseRef = FirebaseDatabase.getInstance().getReference();
+        routeId = getIntent().getStringExtra("route_id");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.maproute);
@@ -203,24 +203,39 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void loadRouteStations() {
-        databaseRef.child("busstop").orderByChild("route_id").equalTo(routeId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot busStopSnapshot) {
-                        List<Integer> stationIds = new ArrayList<>();
-                        for (DataSnapshot snapshot : busStopSnapshot.getChildren()) {
-                            int stationId = snapshot.child("station_id").getValue(Integer.class);
-                            stationIds.add(stationId);
+        if (routeId != null) {
+            Log.e("Firebase_ID_route", "Route_id: "+ routeId);
+            databaseRef.child("busstop").orderByChild("route_id").equalTo(routeId)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot busStopSnapshot) {
+                            if (!busStopSnapshot.exists()) {
+                                Log.e("Firebase", "No data found for route_id: " + routeId);
+                                return;
+                            }
+                            List<Integer> stationIds = new ArrayList<>();
+                            for (DataSnapshot snapshot : busStopSnapshot.getChildren()) {
+                                Log.d("Firebase", "Snapshot: " + snapshot.getValue());
+                                Integer stationId = snapshot.child("station_id").getValue(Integer.class);
+                                if (stationId != null) {
+                                    stationIds.add(stationId);
+                                } else {
+                                    Log.e("Firebase", "Station ID is null for some bus stop.");
+                                }
+                            }
+                            // Use the list of station IDs as needed
+                            Log.d("Firebase", "Station IDs: " + stationIds.toString());
+                            loadStationDetails(stationIds);
                         }
 
-                        loadStationDetails(stationIds);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Firebase", "Failed to fetch bus stops", error.toException());
-                    }
-                });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("Firebase", "Failed to fetch bus stops", error.toException());
+                        }
+                    });
+        } else {
+            Log.e("BusRouteActivity", "Route ID is null.");
+        }
     }
 
     private void loadStationDetails(List<Integer> stationIds) {
@@ -277,7 +292,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
 
                 stationLocations.clear();
                 for (station sta : StationList) {
-                    stationLocations.add(new LatLng(sta.getLatitude(), sta.getLongitude()));
+                    stationLocations.add(new LatLng(sta.getLat(), sta.getLng()));
                 }
 
                 drawPolyline();

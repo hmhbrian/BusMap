@@ -4,9 +4,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -35,20 +39,23 @@ import java.util.List;
 public class FindRouteActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private LinearLayout linear_From, linear_To;
-    private EditText edtFrom, edtTo;
+    private TextView tvFrom, tvTo;
+    private Spinner spn_select_Nroute;
     private Button btnFind;
     private FusedLocationProviderClient fusedLocationClient;
     private ActivityResultLauncher<Intent> resultLauncher;
     private String clickedLinearId; // Lưu ID của TextView được click
     private LocationData from, to;
     private LatLng userLocation;
+    int position = -1;
 
     void init(){
         linear_From = findViewById(R.id.ll_from);
         linear_To = findViewById(R.id.ll_to);
+        spn_select_Nroute = findViewById(R.id.spn_Select_Nroute);
         btnFind = findViewById(R.id.btn_find_road);
-        edtFrom = findViewById(R.id.tv_from);
-        edtTo = findViewById(R.id.tv_to);
+        tvFrom = findViewById(R.id.tv_from);
+        tvTo = findViewById(R.id.tv_to);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
@@ -63,12 +70,26 @@ public class FindRouteActivity extends AppCompatActivity implements OnMapReadyCa
         linear_From.setOnClickListener(listener);
         linear_To.setOnClickListener(listener);
 
+        spn_select_Nroute.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
+                position = i;
+                Toast.makeText(FindRouteActivity.this, "Bạn đã chọn: " + position, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Không làm gì nếu không có gì được chọn
+            }
+        });
+
         btnFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intentResult = new Intent(FindRouteActivity.this, ResultFindRouteActivity.class);
                 intentResult.putExtra("From_Location", from);
                 intentResult.putExtra("To_Location", to);
+                intentResult.putExtra("choice",position);
                 resultLauncher.launch(intentResult);
             }
         });
@@ -84,6 +105,10 @@ public class FindRouteActivity extends AppCompatActivity implements OnMapReadyCa
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+        String[] options = {"Đi tối đa 1 tuyến", "Đi tối đa 2 tuyến", "Đi tối đa 3 tuyến"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_spinner, options);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spn_select_Nroute.setAdapter(adapter);
 
         // Khởi tạo ActivityResultLauncher để nhận dữ liệu từ Activity3
         resultLauncher = registerForActivityResult(
@@ -97,25 +122,25 @@ public class FindRouteActivity extends AppCompatActivity implements OnMapReadyCa
                                 if(to != null){
                                     if(locationData.getLongitude() != to.getLongitude() && locationData.getLatitude() != to.getLatitude()){
                                         from = locationData;
-                                        edtFrom.setText(from.getName());
+                                        tvFrom.setText(from.getName());
                                     }else{
                                         Toast.makeText(this, "Tọa độ điểm xuất phát trùng điểm đến. Vui lòng nhập lại!", Toast.LENGTH_SHORT).show();
                                     }
                                 }else{
                                     from = locationData;
-                                    edtFrom.setText(from.getName());
+                                    tvFrom.setText(from.getName());
                                 }
                             } else if ("ll_to".equals(clickedLinearId)) {
                                 if(from != null){
                                     if(locationData.getLongitude() != from.getLongitude() && locationData.getLatitude() != from.getLatitude()){
                                         to = locationData;
-                                        edtTo.setText(to.getName());
+                                        tvTo.setText(to.getName());
                                     }else{
                                         Toast.makeText(this, "Tọa độ điểm đến trùng điểm xuất phát. Vui lòng nhập lại!", Toast.LENGTH_SHORT).show();
                                     }
                                 }else{
                                     to = locationData;
-                                    edtTo.setText(to.getName());
+                                    tvTo.setText(to.getName());
                                 }
                             }
                             if (from != null && to != null) {

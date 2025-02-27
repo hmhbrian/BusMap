@@ -6,15 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <androidx.appcompat.widget.Toolbar
-        android:theme="@style/ToolbarLight"
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primary_600">
-    </androidx.appcompat.widget.Toolbar>
-
     <LinearLayout
         android:background="@color/primary_600"
         android:padding="8dp"
@@ -51,7 +42,7 @@
                     android:focusable="false"
                     android:clickable="false"
                     android:focusableInTouchMode="false" />
-                <EditText
+                <TextView
                     android:id="@+id/tv_from"
                     android:layout_marginStart="8dp"
                     android:layout_width="match_parent"
@@ -63,7 +54,8 @@
                     android:background="@null"
                     android:focusable="false"
                     android:clickable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:focusableInTouchMode="false"
+                    android:gravity="center"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_below="@id/ll_from"
@@ -92,7 +84,7 @@
                     android:focusable="false"
                     android:clickable="false"
                     android:focusableInTouchMode="false"/>
-                <EditText
+                <TextView
                     android:id="@+id/tv_to"
                     android:layout_marginStart="8dp"
                     android:layout_width="match_parent"
@@ -104,10 +96,23 @@
                     android:background="@null"
                     android:focusable="false"
                     android:clickable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:focusableInTouchMode="false"
+                    android:gravity="center"/>
             </LinearLayout>
+            <Spinner
+                android:id="@+id/spn_Select_Nroute"
+                android:layout_below="@id/ll_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="8dp"
+                android:background="@drawable/spinner_bg"
 
-<!--            <ImageButton-->
+                android:backgroundTint="@color/primary_400"
+                android:textColor="@color/white"/>
+
+
+            <!--            <ImageButton-->
 <!--                android:id="@+id/ib_swap"-->
 <!--                android:layout_width="48dp"-->
 <!--                android:layout_height="wrap_content"-->
@@ -128,6 +133,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:padding="8dp"
             android:textColor="@color/primary_600"
             app:backgroundTint="@color/secondary_900"
             android:background="@drawable/corner_30"/>

@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -25,12 +26,18 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.busmap.R;
 import com.example.busmap.entities.LocationData;
+import com.example.busmap.entities.station;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +46,13 @@ public class InputFindActivity extends AppCompatActivity {
     private LinearLayout linear_CrtLocation, linear_OnMap;
     private ImageView ImgBack;
     private AutoCompleteTextView edtInput;
-    private PlacesClient placesClient;
-    private List<String> placeSuggestions = new ArrayList<>();
     private ActivityResultLauncher<Intent> resultLauncher;
     private FusedLocationProviderClient fusedLocationClient;
+    private DatabaseReference database;
     private LatLng userLocation;
+    private ArrayAdapter<String> adapter;
+    private List<station> stationList = new ArrayList<>();
+    private station selectedStation;
 
     void init(){
         linear_CrtLocation = findViewById(R.id.Linear_CrtLocation);
@@ -51,6 +60,7 @@ public class InputFindActivity extends AppCompatActivity {
         edtInput = findViewById(R.id.searchInput);
         ImgBack = findViewById(R.id.imgback);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        database = FirebaseDatabase.getInstance().getReference();
     }
 
     void initListener(){
@@ -85,23 +95,31 @@ public class InputFindActivity extends AppCompatActivity {
         getCurrentLocation();
         initListener();
 
-//        Places.initialize(getApplicationContext(), "AIzaSyCn9kI97-3ktdV8HESIOQsYb5ULODunK8A");
-//        placesClient = Places.createClient(this);
-//        edtInput.setOnClickListener(v -> edtInput.showDropDown());
-//        edtInput.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (!s.toString().isEmpty()) {
-//                    getPlacePredictions(s.toString());
-//                }
-//            }
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {}
-//        });
+        // Khởi tạo adapter
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
+        edtInput.setAdapter(adapter);
+
+        fetchStationsFromFirebase();
+
+        edtInput.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedName = (String) adapterView.getItemAtPosition(i);
+                for (station station : stationList) {
+                    if (station.getName().equals(selectedName)) {
+                        selectedStation = station; // Lưu trạm được chọn
+                        break;
+
+                    }
+                }
+               Toast.makeText(InputFindActivity.this, "lat: " + selectedStation.getLat() + "\nlng: "+ selectedStation.getLng()+"\nName: "+ selectedStation.getName(), Toast.LENGTH_SHORT).show();
+                LocationData DreamLocation = new LocationData(selectedStation.getLat(), selectedStation.getLng(), selectedStation.getName());
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("Selected_Location", DreamLocation);
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
+        });
 
         resultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -119,6 +137,7 @@ public class InputFindActivity extends AppCompatActivity {
                 });
 
     }
+
     private void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
@@ -137,6 +156,29 @@ public class InputFindActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchStationsFromFirebase() {
+        database.child("station").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<String> stationNames = new ArrayList<>();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    station station = dataSnapshot.getValue(station.class);
+                    if (station != null) {
+                        stationList.add(station);
+                        stationNames.add(station.getName());
+                    }
+                }
+                adapter.clear();
+                adapter.addAll(stationNames);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(InputFindActivity.this, "Lỗi khi lấy dữ liệu", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 //    private void getPlacePredictions(String query) {
 //        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();

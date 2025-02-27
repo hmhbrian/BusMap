@@ -79,12 +79,8 @@ public class RouteListFragment extends Fragment {
                 }
                 routeAdapter = new RouteAdapter(routeList, favoriteRoutes, (routeItem, isFavorite) -> {
                     toggleFavoriteRoute(routeItem.getId(), isFavorite);
-                }, new RouteAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(route routeItem) {
-                        openBusRouteActivity(routeItem);
-                        Toast.makeText(getActivity(),routeItem.getName() + "- id: "+ routeItem.getId(),Toast.LENGTH_SHORT).show();
-                    }
+                },  route -> {
+                    openBusRouteActivity(route.getId());
                 });
                 rVRouteList.setAdapter(routeAdapter);
             }
@@ -132,10 +128,9 @@ public class RouteListFragment extends Fragment {
         }
     }
 
-    private void openBusRouteActivity(route routeItem) {
+    private void openBusRouteActivity(String route_id) {
         Intent intent = new Intent(getContext(), BusRouteActivity.class);
-        intent.putExtra("route_id", routeItem.getId());
-        intent.putExtra("route_name", routeItem.getName());
+        intent.putExtra("route_id", route_id);
         startActivity(intent);
     }
 }
