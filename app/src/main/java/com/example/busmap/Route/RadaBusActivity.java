@@ -152,12 +152,18 @@ public class RadaBusActivity extends AppCompatActivity {
         radiusValue.setText(radius + "m");
 
         if (mMap != null && searchCircle != null) {
+            // Cập nhật bán kính của vòng tròn
             searchCircle.setRadius(radius);
             LatLng center = searchCircle.getCenter();
+
+            // Xóa các marker hiện có trong phạm vi cũ
             removeMarkers();
+
+            // Tải lại các trạm dừng nằm trong phạm vi mới
             loadNearbyStations(center, radius);
         }
     }
+
 
     /**
      * Xóa các marker hiện có.
@@ -218,7 +224,7 @@ public class RadaBusActivity extends AppCompatActivity {
     private BitmapDescriptor bitmapDescriptorFromVector(int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(this, vectorResId);
         if (vectorDrawable == null) {
-            Log.e("RadaBusActivity", "Không tìm thấy icon: " + vectorResId);
+            Log.e("RadaBusActivity", "Không tìm thấy  a1 icon: " + vectorResId);
             return BitmapDescriptorFactory.defaultMarker();
         }
         vectorDrawable.setBounds(0, 0,

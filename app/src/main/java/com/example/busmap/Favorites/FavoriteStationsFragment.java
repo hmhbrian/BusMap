@@ -47,46 +47,36 @@ public class FavoriteStationsFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
+        // Tải danh sách các trạm yêu thích
         loadFavoriteStations();
 
         return view;
     }
 
     private void loadFavoriteStations() {
+        // Truy vấn từ bảng Favorite theo userId
         DatabaseReference favRef = FirebaseDatabase.getInstance()
-                .getReference("User")
-                .child(userId)
-                .child("favorite_stations");
+                .getReference("Favorite")
+                .child(userId); // Lấy các trạm yêu thích của người dùng theo userId
 
         favRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Xóa danh sách cũ
                 favoriteStations.clear();
-                // Duyệt qua các node trong favorite_stations
+                // Duyệt qua các node trong bảng Favorite; key là stationId hoặc station_x
                 for (DataSnapshot ds : snapshot.getChildren()) {
-                    /*
-                     * Nếu bạn lưu ID trạm bằng:
-                     *    favRef.child(String.valueOf(stationId)).setValue(stationId);
-                     *
-                     * thì value của ds sẽ là một Long. Ta lấy value đó dưới dạng Long:
-                     */
-                    Long stationIdLong = ds.getValue(Long.class);
-
-                    // Nếu value không có (hoặc null), bạn có thể thử lấy key
-                    String stationIdStr;
-                    if (stationIdLong != null) {
-                        stationIdStr = String.valueOf(stationIdLong);
-                    } else {
-                        stationIdStr = ds.getKey();
-                    }
+                    String stationIdStr = ds.getKey();  // Lấy ID trạm (station_1, station_30, ...)
 
                     if (stationIdStr != null && !stationIdStr.trim().isEmpty()) {
-                        try {
-                            int stationId = Integer.parseInt(stationIdStr);
-                            fetchStationDetail(stationId);
-                        } catch (NumberFormatException e) {
-                            e.printStackTrace();
+                        // Kiểm tra ID trạm có định dạng station_x
+                        if (stationIdStr.startsWith("station_")) {
+                            try {
+                                int stationId = Integer.parseInt(stationIdStr.replace("station_", ""));
+                                fetchStationDetail(stationId);  // Lấy chi tiết trạm yêu thích
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -100,7 +90,7 @@ public class FavoriteStationsFragment extends Fragment {
         });
     }
 
-    // Truy vấn chi tiết của station từ node "station" dựa trên station id
+    // Truy vấn chi tiết của station từ node "station" dựa trên stationId
     private void fetchStationDetail(final int stationId) {
         DatabaseReference stationRef = FirebaseDatabase.getInstance().getReference("station");
         Query query = stationRef.orderByChild("id").equalTo(stationId);

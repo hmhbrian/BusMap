@@ -61,8 +61,8 @@ public class RouteListFragment extends Fragment {
             startActivity(intent);
             getActivity().finish();
         }
-        loadFavoriteRoutes();
-        fetchRoutesFromFirebase();
+        loadFavoriteRoutes();  // Tải các tuyến yêu thích
+        fetchRoutesFromFirebase();  // Tải các tuyến từ Firebase
     }
 
     private void fetchRoutesFromFirebase() {
@@ -78,9 +78,13 @@ public class RouteListFragment extends Fragment {
                     }
                 }
                 routeAdapter = new RouteAdapter(routeList, favoriteRoutes, (routeItem, isFavorite) -> {
-                    toggleFavoriteRoute(routeItem.getId(), isFavorite);
-                },  route -> {
-                    openBusRouteActivity(route.getId());
+                    toggleFavoriteRoute(routeItem.getId(), isFavorite);  // Lưu trạng thái yêu thích vào bảng Favorite
+                }, new RouteAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(route routeItem) {
+                        openBusRouteActivity(routeItem);
+                        Toast.makeText(getActivity(), routeItem.getName() + "- id: " + routeItem.getId(), Toast.LENGTH_SHORT).show();
+                    }
                 });
                 rVRouteList.setAdapter(routeAdapter);
             }
@@ -93,20 +97,21 @@ public class RouteListFragment extends Fragment {
     }
 
     private void loadFavoriteRoutes() {
+        // Truy cập vào bảng "Favorite" thay vì "FavoriteRoutes"
         DatabaseReference favRef = FirebaseDatabase.getInstance()
-                .getReference("User")
-                .child(userId)
-                .child("favorite_routes");
+                .getReference("Favorite")
+                .child(userId);  // Lấy ID người dùng
+
         favRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 favoriteRoutes.clear();
                 // Lấy key của từng node (chính là id tuyến đã lưu)
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    favoriteRoutes.add(dataSnapshot.getKey());
+                    favoriteRoutes.add(dataSnapshot.getKey());  // Lấy ID của các tuyến yêu thích
                 }
                 if (routeAdapter != null) {
-                    routeAdapter.notifyDataSetChanged();
+                    routeAdapter.notifyDataSetChanged();  // Cập nhật lại giao diện khi dữ liệu yêu thích thay đổi
                 }
             }
 
@@ -116,21 +121,24 @@ public class RouteListFragment extends Fragment {
     }
 
     private void toggleFavoriteRoute(String routeId, boolean isFavorite) {
+        // Cập nhật trạng thái yêu thích tuyến trong bảng "Favorite"
         DatabaseReference favRef = FirebaseDatabase.getInstance()
-                .getReference("User")
-                .child(userId)
-                .child("favorite_routes");
+                .getReference("Favorite")
+                .child(userId);  // Lưu vào dưới ID người dùng
+
         if (isFavorite) {
-            // Lưu id của tuyến xe thay vì giá trị true
-            favRef.child(routeId).setValue(routeId);
+            // Lưu ID tuyến xe vào bảng Favorite dưới ID người dùng
+            favRef.child(routeId).setValue(true);
         } else {
+            // Nếu không yêu thích nữa, xóa ID tuyến xe khỏi bảng
             favRef.child(routeId).removeValue();
         }
     }
 
-    private void openBusRouteActivity(String route_id) {
+    private void openBusRouteActivity(route routeItem) {
         Intent intent = new Intent(getContext(), BusRouteActivity.class);
-        intent.putExtra("route_id", route_id);
+        intent.putExtra("route_id", routeItem.getId());
+        intent.putExtra("route_name", routeItem.getName());
         startActivity(intent);
     }
 }

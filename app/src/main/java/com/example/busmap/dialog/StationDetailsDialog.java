@@ -61,11 +61,11 @@ public class StationDetailsDialog {
 
         // Lấy userId từ FirebaseAuth
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final DatabaseReference favRef = FirebaseDatabase.getInstance().getReference("User")
-                .child(userId).child("favorite_stations");
+        final DatabaseReference favRef = FirebaseDatabase.getInstance().getReference("Favorite")
+                .child(userId);  // Dùng bảng "Favorite" để lưu trạm yêu thích
 
         // Kiểm tra trạng thái yêu thích và cập nhật icon
-        favRef.child(String.valueOf(stationId))
+        favRef.child("station_" + stationId)  // Lưu trạm với định dạng "station_{stationId}"
                 .addListenerForSingleValueEvent(new ValueEventListener(){
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
@@ -84,17 +84,19 @@ public class StationDetailsDialog {
         ivFavorite.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                favRef.child(String.valueOf(stationId))
+                favRef.child("station_" + stationId)
                         .addListenerForSingleValueEvent(new ValueEventListener(){
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
                                 boolean isFav = snapshot.exists();
                                 if (isFav) {
-                                    favRef.child(String.valueOf(stationId)).removeValue();
-                                    ivFavorite.setImageResource(R.drawable.ic_heart_outline);
+                                    // Nếu đã yêu thích, bỏ yêu thích
+                                    favRef.child("station_" + stationId).removeValue();
+                                    ivFavorite.setImageResource(R.drawable.ic_heart_outline);  // Trái tim màu xám khi bỏ yêu thích
                                 } else {
-                                    favRef.child(String.valueOf(stationId)).setValue(stationId);
-                                    ivFavorite.setImageResource(R.drawable.ic_heart_filled);
+                                    // Nếu chưa yêu thích, thêm vào yêu thích
+                                    favRef.child("station_" + stationId).setValue(true);
+                                    ivFavorite.setImageResource(R.drawable.ic_heart_filled);  // Trái tim màu đỏ khi yêu thích
                                 }
                             }
                             @Override
