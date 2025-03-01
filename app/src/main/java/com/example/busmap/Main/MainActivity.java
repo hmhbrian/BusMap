@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.busmap.Favorites.FavoriteFragment;
+import com.example.busmap.Notification.NotificationFragment;
 import com.example.busmap.R;
 import com.example.busmap.ShareFragment;
 import com.example.busmap.User.Login;
@@ -98,11 +99,13 @@ public class MainActivity extends AppCompatActivity {
             if(item.getItemId() == R.id.home)
             {
                 replaceFragment(new MapsFragment());
-            } else if (item.getItemId() == R.id.favorite) {
-                replaceFragment(new FavoriteFragment());
+            } else if (item.getItemId() == R.id.notify) {
+                replaceFragment(new NotificationFragment ());
+            }else if (item.getItemId() == R.id.favorite) {
+                replaceFragment(new FavoriteFragment ());
             }else if (item.getItemId() == R.id.route) {
-                replaceFragment(new RouteListFragment());
-            }else if (item.getItemId() == R.id.ìnfo) {
+                replaceFragment(new RouteListFragment());}
+            else if (item.getItemId() == R.id.info) {
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(intent);
                 return true;
