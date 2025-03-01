@@ -1,12 +1,8 @@
 package com.example.busmap.Route.FindRoute;
 
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +10,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.busmap.FindRouteHelper.RouteInfo;
+import com.example.busmap.FindRouteHelper.RouteResult;
 import com.example.busmap.R;
 import com.example.busmap.entities.BusStop;
-import com.example.busmap.entities.LocationData;
+import com.example.busmap.FindRouteHelper.LocationData;
 import com.example.busmap.entities.route;
 import com.example.busmap.entities.station;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,13 +37,15 @@ import java.util.concurrent.CompletableFuture;
 
 public class ResultFindRouteActivity extends AppCompatActivity {
     private RecyclerView rVRouteList;
-    private Button btnFind;
     private EditText edtTo, edtFrom;
     double radiusKm;
     private DatabaseReference database;
-    Map<String, String> routeMap = new HashMap<>();  // Lưu route_id -> route_name
+    Map<Integer, station> stationMap = new HashMap<>();
+    Map<String, RouteInfo> routeMap = new HashMap<>();
+    //Map<String, String> routeMap = new HashMap<>();  // Lưu route_id -> route_name
     List<BusStop> busStops = new ArrayList<>();
     LocationData from_location, to_location;
+    int choice;
     private ArrayList<route> routeList = new ArrayList<>();
 
     void init(){
@@ -55,7 +54,7 @@ public class ResultFindRouteActivity extends AppCompatActivity {
         rVRouteList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         edtTo = findViewById(R.id.tv_to);
         edtFrom = findViewById(R.id.tv_from);
-        database = FirebaseDatabase.getInstance().getReference();;
+        database = FirebaseDatabase.getInstance().getReference();
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,22 +65,32 @@ public class ResultFindRouteActivity extends AppCompatActivity {
         //fetchRoutesFromFirebase();
         from_location = getIntent().getParcelableExtra("From_Location");
         to_location = getIntent().getParcelableExtra("To_Location");
+        choice = getIntent().getIntExtra("choice",0);
         if(from_location != null && to_location != null){
             edtFrom.setText(from_location.getName());
             edtTo.setText(to_location.getName());
             FindRouteBetween2Points(from_location,to_location);
         }
-//        btnFind.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String address = edtTo.getText().toString();
-//                getCoordinatesFromAddress(address);
-//            }
-//        });
 
     }
 
     public void LoadData(){
+        // Lấy danh sách station
+        database.child("station").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    int id = snapshot.child("id").getValue(Integer.class);
+                    String name = snapshot.child("name").getValue(String.class);
+                    double lat = snapshot.child("lat").getValue(Double.class);
+                    double lng = snapshot.child("lng").getValue(Double.class);
+                    stationMap.put(id, new station(id, name, lat, lng));
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
         // Lấy danh sách route để ánh xạ route_id -> route_name
         database.child("route").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -89,7 +98,8 @@ public class ResultFindRouteActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String id = snapshot.child("id").getValue(String.class);
                     String name = snapshot.child("name").getValue(String.class);
-                    routeMap.put(id, name);
+                    double cost = snapshot.child("price").getValue(Double.class);
+                    routeMap.put(id, new RouteInfo(name, cost));
                 }
             }
             @Override
@@ -111,35 +121,6 @@ public class ResultFindRouteActivity extends AppCompatActivity {
 
     }
 
-//    private void fetchRoutesFromFirebase(){
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("route");
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                routeList.clear();
-//                GenericTypeIndicator<List<route>> typeIndicator = new GenericTypeIndicator<List<route>>() {};
-//                List<route> firebaseRouteList = snapshot.getValue(typeIndicator); // Lấy danh sách từ Firebase
-//                if (firebaseRouteList != null) {
-//                    routeList.addAll(firebaseRouteList);// Thêm tất cả vào danh sách
-//                    routeAdapter = new RouteAdapter(routeList,route -> {
-//                        // Chuyển qua BusRouteActivity
-//                        Intent intent = new Intent(FindRoadActivity.this, BusRouteActivity.class);
-//                        intent.putExtra("route_id", route.getId()); // Truyền id qua Intent
-//                        startActivity(intent);
-//                    });
-//                    rVRouteList.setAdapter(routeAdapter);
-//                }
-//                routeAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Log.e("FirebaseError", "Error loading routes: " + error.getMessage());
-//                Toast.makeText(FindRoadActivity.this, "Đã xảy ra lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
     public void FindRouteBetween2Points(LocationData from, LocationData to) {
         try {
             if (from != null && to != null) {
@@ -159,34 +140,6 @@ public class ResultFindRouteActivity extends AppCompatActivity {
             Log.e("ERROR", "Lỗi khi xử lý : ", e);
         }
     }
-    //chuyển địa chỉ thành tọa độ
-//    public void getCoordinatesFromAddress(String address) {
-//        Geocoder geocoder = new Geocoder(this);
-//        try {
-//            List<Address> addresses = geocoder.getFromLocationName(address, 1);
-//            if (addresses != null && !addresses.isEmpty()) {
-//                Address location = addresses.get(0);
-//                double userLat = location.getLatitude();
-//                double userLng = location.getLongitude();
-//                double initialRadiusKm = 2.0; // Bán kính ban đầu
-//                double incrementKm = 3.0;     // Bước mở rộng bán kính
-//                //Toast.makeText(FindRoadActivity.this,"Latitude: " + latitude + ", Longitude: " + longitude,Toast.LENGTH_SHORT).show();
-//                Log.d("Coordinates", "Latitude: " + userLat + ", Longitude: " + userLng);
-//                //findNearestStationWithIncrementalRadius(userLat, userLng, initialRadiusKm, incrementKm);
-//                findNearestStationsForTwoPoints(10.964776144481784, 106.6676283098276, userLat, userLng, initialRadiusKm, incrementKm)
-//                        .thenRun(() -> Log.d("Success", "Successfully found both stations"))
-//                        .exceptionally(e -> {
-//                            Log.e("Error", "Failed to find stations", e);
-//                            return null;
-//                        });
-//
-//            } else {
-//                Log.e("Geocoding", "Không tìm thấy tọa độ cho địa chỉ: " + address);
-//            }
-//        } catch (IOException e) {
-//            Log.e("Geocoding", "Lỗi khi xử lý Geocoder: ", e);
-//        }
-//    }
 
     //Tính giới hạn tọa độ
     public double[] getBoundingBox(double userLat, double userLng, double radiusKm) {
@@ -241,10 +194,10 @@ public class ResultFindRouteActivity extends AppCompatActivity {
     //tìm trạm gần nhất từ danh sách đã lọc
     public station findNearestStation(double userLat, double userLng, List<station> stations) {
         station nearestStation = null;
-        float minDistance = Float.MAX_VALUE;
+        Double minDistance = Double.MAX_VALUE;
 
         for (station sta : stations) {
-            float distance = calculateDistance(userLat, userLng, sta.getLatitude(), sta.getLongitude());
+            Double distance = calculateDistance(userLat, userLng, sta.getLat(), sta.getLng());
             if (distance < minDistance) {
                 minDistance = distance;
                 nearestStation = sta;
@@ -255,10 +208,24 @@ public class ResultFindRouteActivity extends AppCompatActivity {
     }
 
     //Tính khoảng cách giữa 2 tọa độ
-    public float calculateDistance(double lat1, double lng1, double lat2, double lng2) {
-        float[] results = new float[1];
-        Location.distanceBetween(lat1, lng1, lat2, lng2, results);
-        return results[0];
+//    public float calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+//        float[] results = new float[1];
+//        Location.distanceBetween(lat1, lng1, lat2, lng2, results);
+//        return results[0]/1000;
+//    }
+    public double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+        final int R = 6371; // Radius of the Earth in kilometers
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lngDistance = Math.toRadians(lng2 - lng1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // distance in kilometers
+    }
+
+    public double calculateTime(double distance, double speed) {
+        return distance / speed; // time in hours
     }
 
     public CompletableFuture<station> findNearestStationWithIncrementalRadius(double userLat, double userLng, double initialRadiusKm, double incrementKm) {
@@ -301,14 +268,15 @@ public class ResultFindRouteActivity extends AppCompatActivity {
                     //findDirectRoutes(station1, station2);
                     //BusRouteFinder busRouteFinder = new BusRouteFinder();
 
-                    List<List<String>> searchResults = findRoutes(station1.getId(), station2.getId(), busStops);
+                    List<RouteResult> searchResults = findRoutes(station1.getId(), station2.getId(), busStops);
                     Log.d("Station","station 1: " + station1.getName());
                     Log.d("Station","station 2: " + station2.getName());
                     Log.d("BusStop ","Size busStop: "+busStops.size());
                     Log.d("Result ","Size result: "+searchResults.size());
-                    for (List<String> result : searchResults) {
+                    for (RouteResult result : searchResults) {
                         StringBuilder sb = new StringBuilder("Route: ");
-                        for (String route : result) {
+                        for (String route : result.getRouteNames()
+                        ) {
                             sb.append(route).append(" -> ");
                         }
                         Log.d("Result", sb.toString());
@@ -320,9 +288,9 @@ public class ResultFindRouteActivity extends AppCompatActivity {
                 });
     }
 
-    public List<List<String>> findRoutes(int stationA, int stationB, List<BusStop> busStops) {
-        Set<List<String>> uniqueResults = new HashSet<>();
-        //List<List<String>> results = new ArrayList<>();
+    public List<RouteResult> findRoutes(int stationA, int stationB, List<BusStop> busStops) {
+        //Set<List<String>> uniqueResults = new HashSet<>();
+        List<RouteResult> results = new ArrayList<>();
         Map<String, List<BusStop>> routeStopMap = new HashMap<>();
 
         // Gom các BusStop theo route_id
@@ -330,24 +298,62 @@ public class ResultFindRouteActivity extends AppCompatActivity {
             routeStopMap.computeIfAbsent(stop.route_id, k -> new ArrayList<>()).add(stop);
         }
 
-        // Tìm tuyến trực tiếp
+        if(choice == 0){ // Tìm tuyến trực tiếp
+            results = find_OneRoutes(stationA,stationB, routeStopMap);
+        } else if (choice == 1) { // Tìm tuyến có trung chuyển
+            results = find_TwoRoutes(stationA,stationB, routeStopMap);
+        }
+        return results;
+    }
+
+    public List<RouteResult> find_OneRoutes(int stationA, int stationB, Map<String, List<BusStop>> routeStopMap) {
+        List<RouteResult> results = new ArrayList<>();
+        final double averageSpeed = 30.0; // km/h
+
         for (String routeId : routeStopMap.keySet()) {
             List<BusStop> stops = routeStopMap.get(routeId);
             stops.sort(Comparator.comparingInt(s -> s.order));
 
             boolean foundA = false;
-            for (BusStop stop : stops) {
-                if (stop.station_id == stationA) {
+            double totalDistance = 0;
+            double totalTime = 0;
+
+            List<String> stationsList = new ArrayList<>();;
+
+            for (int i = 0; i < stops.size() - 1; i++) {
+                BusStop currentStop = stops.get(i);
+                BusStop nextStop = stops.get(i + 1);
+                if (currentStop.station_id == stationA) {
                     foundA = true;
                 }
-                if (foundA && stop.station_id == stationB) {
-                    uniqueResults.add(Collections.singletonList(routeMap.get(routeId)));  // Lưu tên tuyến thay vì ID
+                if (foundA) {
+                    station currentStation = stationMap.get(currentStop.station_id);
+                    station nextStation = stationMap.get(nextStop.station_id);
+
+                    double distance = calculateDistance(currentStation.getLat(), currentStation.getLng(), nextStation.getLat(), nextStation.getLng());
+                    totalDistance += distance;
+                    totalTime += calculateTime(distance, averageSpeed);
+                }
+                if (foundA && nextStop.station_id == stationB) {
+                    RouteInfo routeInfo = routeMap.get(routeId);
+                    results.add(new RouteResult(
+                            Collections.singletonList(routeInfo.getRouteName()),
+                            routeInfo.getCost(),
+                            totalDistance,
+                            totalTime));
                     break;
                 }
             }
         }
+        return results;
+    }
 
-        // Tìm tuyến có trung chuyển
+    public List<RouteResult> find_TwoRoutes(int stationA, int stationB, Map<String, List<BusStop>> routeStopMap) {
+        List<RouteResult> results = new ArrayList<>();
+        final double averageSpeed = 40.0; // km/h
+
+        results = find_OneRoutes(stationA,stationB, routeStopMap);
+
         for (String routeId1 : routeMap.keySet()) {
             List<BusStop> stops1 = routeStopMap.get(routeId1);
             if (stops1 == null) continue;
@@ -356,138 +362,58 @@ public class ResultFindRouteActivity extends AppCompatActivity {
             for (BusStop stopA : stops1) {
                 if (stopA.station_id != stationA) continue;
 
-                for (BusStop stopC : stops1) {
-                    if (stopC.order <= stopA.order) continue; // Đảm bảo C đến sau A
+                double distanceToC = 0;
+                double timeToC = 0;
+                boolean foundC = false;
 
-                    // Tìm tuyến thứ 2
+                for (BusStop stopC : stops1) {
+                    if (stopC.order <= stopA.order) continue;
+
+                    station station_A = stationMap.get(stopA.station_id);
+                    station station_C = stationMap.get(stopC.station_id);
+                    distanceToC += calculateDistance(station_A.getLat(), station_A.getLng(), station_C.getLat(), station_C.getLng());
+                    timeToC += calculateTime(distanceToC, averageSpeed);
+
                     for (String routeId2 : routeMap.keySet()) {
-                        if (routeId1.equals(routeId2)) continue; // Tránh trùng tuyến
+                        if (routeId1.equals(routeId2)) continue;
 
                         List<BusStop> stops2 = routeStopMap.get(routeId2);
+                        if (stops2 == null) continue;
                         stops2.sort(Comparator.comparingInt(s -> s.order));
 
-                        boolean foundC = false;
+                        double distanceToB = 0;
+                        double timeToB = 0;
+                        boolean foundB = false;
+
                         for (BusStop stop : stops2) {
                             if (stop.station_id == stopC.station_id) {
                                 foundC = true;
                             }
+                            if (foundC) {
+                                station station_C2 = stationMap.get(stopC.station_id);
+                                station station_B = stationMap.get(stop.station_id);
+                                distanceToB += calculateDistance(station_C2.getLat(), station_C2.getLng(), station_B.getLat(), station_B.getLng());
+                                timeToB += calculateTime(distanceToB, averageSpeed);
+                            }
                             if (foundC && stop.station_id == stationB) {
-                                uniqueResults.add(Arrays.asList(routeMap.get(routeId1), routeMap.get(routeId2)));  // Lưu tên tuyến
+                                RouteInfo routeInfo1 = routeMap.get(routeId1);
+                                RouteInfo routeInfo2 = routeMap.get(routeId2);
+                                double totalCost = routeInfo1.getCost() + routeInfo2.getCost();
+                                double totalDistance = distanceToC + distanceToB;
+                                double totalTime = timeToC + timeToB;
+                                results.add(new RouteResult(
+                                        Arrays.asList(routeInfo1.getRouteName(), routeInfo2.getRouteName()),
+                                        totalCost, totalDistance, totalTime));
+                                foundB = true;
                                 break;
                             }
                         }
+                        if (foundB) break;
                     }
+                    if (foundC) break;
                 }
             }
         }
-
-        return new ArrayList<>(uniqueResults);
+        return results;
     }
-
-
-
-//    private void findDirectRoutes(station stationA, station stationB) {
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference routesRef = database.getReference("busstop");
-//
-//        routesRef.orderByChild("station_id").equalTo(stationA.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                List<String> routesFromA = new ArrayList<>();
-//                Map<String, Integer> orderFromA = new HashMap<>(); // Lưu order của StationA trên mỗi route
-//
-//                // Lấy danh sách các tuyến qua trạm A và lưu order
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    String routeId = snapshot.child("route_id").getValue(String.class);
-//                    Integer order = snapshot.child("order").getValue(Integer.class);
-//
-//                    if (routeId != null && order != null) {
-//                        routesFromA.add(routeId);
-//                        orderFromA.put(routeId, order);
-//                    }
-//                }
-//
-//                // Kiểm tra tuyến qua trạm B
-//                routesRef.orderByChild("station_id").equalTo(stationB.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        List<String> directRoutes = new ArrayList<>();
-//
-//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                            String routeId = snapshot.child("route_id").getValue(String.class);
-//                            Integer orderB = snapshot.child("order").getValue(Integer.class);
-//
-//                            if (routeId != null && orderB != null && routesFromA.contains(routeId)) {
-//                                Integer orderA = orderFromA.get(routeId);
-//
-//                                // Kiểm tra điều kiện order của StationA < StationB
-//                                if (orderA != null && orderA < orderB) {
-//                                    directRoutes.add(routeId);
-//                                }
-//                            }
-//                        }
-//
-//                        if (!directRoutes.isEmpty()) {
-//                            // Hiển thị danh sách tuyến trực tiếp
-//                            showDirectRoutes(directRoutes);
-//                        } else {
-//                            routeList.clear();
-//                            // Không tìm thấy tuyến trực tiếp
-//                            showNoDirectRouteMessage();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//                        Log.e("Firebase", "Error fetching data", databaseError.toException());
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Log.e("Firebase", "Error fetching data", databaseError.toException());
-//            }
-//        });
-//    }
-//
-//
-//    private void showDirectRoutes(List<String> routeIds) {
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("route");
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                routeList.clear();
-//                GenericTypeIndicator<List<route>> typeIndicator = new GenericTypeIndicator<List<route>>() {};
-//                List<route> firebaseRouteList = snapshot.getValue(typeIndicator); // Lấy danh sách từ Firebase
-//                if (firebaseRouteList != null) {
-//                    for (route r : firebaseRouteList) {
-//                        // Kiểm tra nếu id của route nằm trong routeIds
-//                        if (routeIds.contains(r.getId())) {
-//                            routeList.add(r); // Thêm vào routeList nếu tìm thấy
-//                        }
-//                    }
-//                    routeAdapter = new RouteAdapter(routeList,route -> {
-//                        // Chuyển qua BusRouteActivity
-//                        Intent intent = new Intent(FindRoadActivity.this, BusRouteActivity.class);
-//                        intent.putExtra("route_id", route.getId()); // Truyền id qua Intent
-//                        startActivity(intent);
-//                    });
-//                    rVRouteList.setAdapter(routeAdapter);
-//                }
-//                routeAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Log.e("FirebaseError", "Error loading routes: " + error.getMessage());
-//                Toast.makeText(FindRoadActivity.this, "Đã xảy ra lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//
-//    private void showNoDirectRouteMessage() {
-//        Toast.makeText(this, "Không tìm thấy tuyến trực tiếp", Toast.LENGTH_SHORT).show();
-//    }
-
 }

@@ -5,19 +5,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.busmap.FindRouteHelper.RouteResult;
+import com.example.busmap.FindRouteHelper.Tranfers;
 import com.example.busmap.R;
 
 import java.util.List;
 
 public class RouteFindAdapter extends RecyclerView.Adapter<RouteFindAdapter.RouteViewHolder> {
-    private List<List<String>> routes;
+    private List<RouteResult> routes;
     private Context context;
 
-    public RouteFindAdapter(Context context, List<List<String>> routes) {
+    public RouteFindAdapter(Context context, List<RouteResult> routes) {
         this.context = context;
         this.routes = routes;
     }
@@ -30,7 +35,8 @@ public class RouteFindAdapter extends RecyclerView.Adapter<RouteFindAdapter.Rout
 
     @Override
     public void onBindViewHolder(@NonNull RouteViewHolder holder, int position) {
-        List<String> routePath = routes.get(position);
+        RouteResult routeResult  = routes.get(position);
+        List<String> routePath = routeResult.getRouteNames();
 
         if (routePath.size() == 1) {
             holder.route1.setText(routePath.get(0));  // Hiển thị route_name
@@ -42,6 +48,8 @@ public class RouteFindAdapter extends RecyclerView.Adapter<RouteFindAdapter.Rout
             holder.route2.setVisibility(View.VISIBLE);
             holder.route2.setText(routePath.get(1));
         }
+        holder.edtCost.setText(Tranfers.formatCurrency(routeResult.getTotalCost()));
+        holder.tv_time.setText(Tranfers.formatTime(routeResult.getTotalTime()));
     }
 
     @Override
@@ -52,12 +60,16 @@ public class RouteFindAdapter extends RecyclerView.Adapter<RouteFindAdapter.Rout
     public static class RouteViewHolder extends RecyclerView.ViewHolder {
         Button route1, route2;
         ImageView arrow;
+        EditText edtCost;
+        TextView tv_time;
 
         public RouteViewHolder(View itemView) {
             super(itemView);
             route1 = itemView.findViewById(R.id.btnRoute1);
             route2 = itemView.findViewById(R.id.btnRoute2);
             arrow = itemView.findViewById(R.id.imgArrow);
+            edtCost = itemView.findViewById(R.id.edt_Totalprice);
+            tv_time = itemView.findViewById(R.id.tv_Totaltime);
         }
     }
 }
