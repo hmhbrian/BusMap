@@ -41,7 +41,6 @@
     <string name="complete">Hoàn thành</string>
 
 
-
     <!--  String array là danh sách các đánh giá được dùng để chọn rate  -->
     <string-array name="rate_type">
         <item>Không tốt!</item>

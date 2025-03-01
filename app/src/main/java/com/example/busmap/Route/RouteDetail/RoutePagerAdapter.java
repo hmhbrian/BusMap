@@ -23,6 +23,8 @@ public class RoutePagerAdapter extends FragmentStateAdapter {
                 return StationListFragment.newInstance(routeId); // Truyền routeId vào Fragment
             case 2:
                 return RouteInfoFragment.newInstance(routeId);
+            case 3:
+                return RouteRatingFragment.newInstance(routeId);
             default:
                 return TimeTableFragment.newInstance(routeId);
         }
@@ -30,6 +32,6 @@ public class RoutePagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 3; // 3 tab: Biểu đồ giờ, Trạm dừng, Thông tin
+        return 4; // 3 tab: Biểu đồ giờ, Trạm dừng, Thông tin
     }
 }

@@ -191,6 +191,10 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
                 case 2:
                     tab.setText("Thông tin");
                     break;
+                case 3:
+                    tab.setText("Đánh Giá");
+                    break;
+
             }
         }).attach();
     }
