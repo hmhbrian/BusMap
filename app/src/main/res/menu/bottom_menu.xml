@@ -5,7 +5,10 @@
         android:id="@+id/home"
         android:title="@string/home"
         android:icon="@drawable/baseline_home_24"/>
-
+    <item
+        android:id="@+id/notify"
+        android:title="Thông Báo"
+        android:icon="@drawable/ic_notification"/>
     <item
         android:id="@+id/favorite"
         android:title="@string/favorite"
@@ -15,7 +18,7 @@
         android:title="@string/route"
         android:icon="@drawable/baseline_directions_bus_24"/>
     <item
-        android:id="@+id/ìnfo"
+        android:id="@+id/info"
         android:title="Cá Nhân"
         android:icon="@drawable/baseline_info_24"/>
 </menu>
