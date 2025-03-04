@@ -1,9 +1,7 @@
-package com.example.busmap.entities;
+package com.example.busmap.FindRouteHelper;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.android.gms.maps.model.LatLng;
 
 public class LocationData implements Parcelable {
     private double latitude;
