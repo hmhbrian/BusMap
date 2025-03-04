@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -301,7 +302,7 @@ public class ResultFindRouteActivity extends AppCompatActivity {
         if(choice == 0){ // Tìm tuyến trực tiếp
             results = find_OneRoutes(stationA,stationB, routeStopMap);
         } else if (choice == 1) { // Tìm tuyến có trung chuyển
-            results = find_TwoRoutes(stationA,stationB, routeStopMap);
+           // results = find_TwoRoutes(stationA,stationB, routeStopMap);
         }
         return results;
     }
@@ -318,17 +319,21 @@ public class ResultFindRouteActivity extends AppCompatActivity {
             double totalDistance = 0;
             double totalTime = 0;
 
-            List<String> stationsList = new ArrayList<>();;
+            //Lưu danh sách trạm theo routeId
+            Map<String, List<Integer>> stationMapForRoute = new HashMap<>();
+            List<Integer> stationsList = new ArrayList<>();;
 
             for (int i = 0; i < stops.size() - 1; i++) {
                 BusStop currentStop = stops.get(i);
                 BusStop nextStop = stops.get(i + 1);
                 if (currentStop.station_id == stationA) {
                     foundA = true;
+                    stationsList.add(currentStop.station_id);
                 }
                 if (foundA) {
                     station currentStation = stationMap.get(currentStop.station_id);
                     station nextStation = stationMap.get(nextStop.station_id);
+                    stationsList.add(nextStation.getId());
 
                     double distance = calculateDistance(currentStation.getLat(), currentStation.getLng(), nextStation.getLat(), nextStation.getLng());
                     totalDistance += distance;
@@ -336,11 +341,16 @@ public class ResultFindRouteActivity extends AppCompatActivity {
                 }
                 if (foundA && nextStop.station_id == stationB) {
                     RouteInfo routeInfo = routeMap.get(routeId);
+                    //Toast.makeText(ResultFindRouteActivity.this,"RouteId:" + routeId.toString(), Toast.LENGTH_SHORT).show();
+
+                    stationMapForRoute.put(routeId, new ArrayList<>(stationsList));
+
                     results.add(new RouteResult(
                             Collections.singletonList(routeInfo.getRouteName()),
                             routeInfo.getCost(),
                             totalDistance,
-                            totalTime));
+                            totalTime,
+                            stationMapForRoute));
                     break;
                 }
             }
@@ -348,72 +358,72 @@ public class ResultFindRouteActivity extends AppCompatActivity {
         return results;
     }
 
-    public List<RouteResult> find_TwoRoutes(int stationA, int stationB, Map<String, List<BusStop>> routeStopMap) {
-        List<RouteResult> results = new ArrayList<>();
-        final double averageSpeed = 40.0; // km/h
-
-        results = find_OneRoutes(stationA,stationB, routeStopMap);
-
-        for (String routeId1 : routeMap.keySet()) {
-            List<BusStop> stops1 = routeStopMap.get(routeId1);
-            if (stops1 == null) continue;
-            stops1.sort(Comparator.comparingInt(s -> s.order));
-
-            for (BusStop stopA : stops1) {
-                if (stopA.station_id != stationA) continue;
-
-                double distanceToC = 0;
-                double timeToC = 0;
-                boolean foundC = false;
-
-                for (BusStop stopC : stops1) {
-                    if (stopC.order <= stopA.order) continue;
-
-                    station station_A = stationMap.get(stopA.station_id);
-                    station station_C = stationMap.get(stopC.station_id);
-                    distanceToC += calculateDistance(station_A.getLat(), station_A.getLng(), station_C.getLat(), station_C.getLng());
-                    timeToC += calculateTime(distanceToC, averageSpeed);
-
-                    for (String routeId2 : routeMap.keySet()) {
-                        if (routeId1.equals(routeId2)) continue;
-
-                        List<BusStop> stops2 = routeStopMap.get(routeId2);
-                        if (stops2 == null) continue;
-                        stops2.sort(Comparator.comparingInt(s -> s.order));
-
-                        double distanceToB = 0;
-                        double timeToB = 0;
-                        boolean foundB = false;
-
-                        for (BusStop stop : stops2) {
-                            if (stop.station_id == stopC.station_id) {
-                                foundC = true;
-                            }
-                            if (foundC) {
-                                station station_C2 = stationMap.get(stopC.station_id);
-                                station station_B = stationMap.get(stop.station_id);
-                                distanceToB += calculateDistance(station_C2.getLat(), station_C2.getLng(), station_B.getLat(), station_B.getLng());
-                                timeToB += calculateTime(distanceToB, averageSpeed);
-                            }
-                            if (foundC && stop.station_id == stationB) {
-                                RouteInfo routeInfo1 = routeMap.get(routeId1);
-                                RouteInfo routeInfo2 = routeMap.get(routeId2);
-                                double totalCost = routeInfo1.getCost() + routeInfo2.getCost();
-                                double totalDistance = distanceToC + distanceToB;
-                                double totalTime = timeToC + timeToB;
-                                results.add(new RouteResult(
-                                        Arrays.asList(routeInfo1.getRouteName(), routeInfo2.getRouteName()),
-                                        totalCost, totalDistance, totalTime));
-                                foundB = true;
-                                break;
-                            }
-                        }
-                        if (foundB) break;
-                    }
-                    if (foundC) break;
-                }
-            }
-        }
-        return results;
-    }
+//    public List<RouteResult> find_TwoRoutes(int stationA, int stationB, Map<String, List<BusStop>> routeStopMap) {
+//        List<RouteResult> results = new ArrayList<>();
+//        final double averageSpeed = 40.0; // km/h
+//
+//        results = find_OneRoutes(stationA,stationB, routeStopMap);
+//
+//        for (String routeId1 : routeMap.keySet()) {
+//            List<BusStop> stops1 = routeStopMap.get(routeId1);
+//            if (stops1 == null) continue;
+//            stops1.sort(Comparator.comparingInt(s -> s.order));
+//
+//            for (BusStop stopA : stops1) {
+//                if (stopA.station_id != stationA) continue;
+//
+//                double distanceToC = 0;
+//                double timeToC = 0;
+//                boolean foundC = false;
+//
+//                for (BusStop stopC : stops1) {
+//                    if (stopC.order <= stopA.order) continue;
+//
+//                    station station_A = stationMap.get(stopA.station_id);
+//                    station station_C = stationMap.get(stopC.station_id);
+//                    distanceToC += calculateDistance(station_A.getLat(), station_A.getLng(), station_C.getLat(), station_C.getLng());
+//                    timeToC += calculateTime(distanceToC, averageSpeed);
+//
+//                    for (String routeId2 : routeMap.keySet()) {
+//                        if (routeId1.equals(routeId2)) continue;
+//
+//                        List<BusStop> stops2 = routeStopMap.get(routeId2);
+//                        if (stops2 == null) continue;
+//                        stops2.sort(Comparator.comparingInt(s -> s.order));
+//
+//                        double distanceToB = 0;
+//                        double timeToB = 0;
+//                        boolean foundB = false;
+//
+//                        for (BusStop stop : stops2) {
+//                            if (stop.station_id == stopC.station_id) {
+//                                foundC = true;
+//                            }
+//                            if (foundC) {
+//                                station station_C2 = stationMap.get(stopC.station_id);
+//                                station station_B = stationMap.get(stop.station_id);
+//                                distanceToB += calculateDistance(station_C2.getLat(), station_C2.getLng(), station_B.getLat(), station_B.getLng());
+//                                timeToB += calculateTime(distanceToB, averageSpeed);
+//                            }
+//                            if (foundC && stop.station_id == stationB) {
+//                                RouteInfo routeInfo1 = routeMap.get(routeId1);
+//                                RouteInfo routeInfo2 = routeMap.get(routeId2);
+//                                double totalCost = routeInfo1.getCost() + routeInfo2.getCost();
+//                                double totalDistance = distanceToC + distanceToB;
+//                                double totalTime = timeToC + timeToB;
+//                                results.add(new RouteResult(
+//                                        Arrays.asList(routeInfo1.getRouteName(), routeInfo2.getRouteName()),
+//                                        totalCost, totalDistance, totalTime));
+//                                foundB = true;
+//                                break;
+//                            }
+//                        }
+//                        if (foundB) break;
+//                    }
+//                    if (foundC) break;
+//                }
+//            }
+//        }
+//        return results;
+//    }
 }
