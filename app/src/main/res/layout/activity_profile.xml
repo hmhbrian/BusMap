@@ -3,34 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/xam">
+    android:layout_height="match_parent">
 
     <!-- Header section -->
-    <ImageView
-        android:id="@+id/imgHeader"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/headerbkg"
-        android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
 
     <ImageView
         android:id="@+id/imgProfile"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="152dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginBottom="8dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_profile"
-
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <!--    </FrameLayout>-->
 
     <TextView
         android:id="@+id/txtTitle"
@@ -38,12 +25,11 @@
         android:layout_height="wrap_content"
         android:text="Tài khoản"
         android:textSize="24sp"
-        android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/imgProfile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
 
     <!-- Upgrade button -->
     <LinearLayout
@@ -51,18 +37,20 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/custom_edittext"
-        android:padding="16dp"
+        android:background="@drawable/bg_card"
+        android:padding="12dp"
         app:layout_constraintTop_toBottomOf="@id/txtTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:elevation="4dp">
 
         <ImageView
             android:id="@+id/imgUpgradeIcon"
-            android:layout_width="44dp"
-            android:layout_height="32dp"
-            android:src="@drawable/bus_notification" />
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/bus_notification"
+            />
 
         <TextView
             android:id="@+id/txtUpgrade"
@@ -70,8 +58,8 @@
             android:layout_height="wrap_content"
             android:text="Nâng cấp lên BusMap Plus"
             android:textSize="16sp"
-            android:textColor="@color/black"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="8dp"
+            android:gravity="center_vertical"/>
     </LinearLayout>
 
     <!-- Menu items -->
@@ -83,7 +71,8 @@
         app:layout_constraintTop_toBottomOf="@id/btnUpgrade"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp">
+        android:layout_marginTop="24dp"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/txtPersonalInfo"
@@ -93,7 +82,8 @@
             android:textSize="16sp"
             android:drawableStart="@drawable/baseline_info_24"
             android:drawablePadding="8dp"
-            android:padding="16dp" />
+            android:paddingVertical="12dp"
+            android:background="@drawable/bg_card" />
 
         <TextView
             android:id="@+id/txtSettings"
@@ -103,27 +93,8 @@
             android:textSize="16sp"
             android:drawableStart="@drawable/baseline_settings_24"
             android:drawablePadding="8dp"
-            android:padding="16dp" />
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/txtChangeArea"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Thay đổi khu vực"-->
-        <!--            android:textSize="16sp"-->
-        <!--            android:drawableStart="@drawable/baseline_location_on_24"-->
-        <!--            android:drawablePadding="8dp"-->
-        <!--            android:padding="16dp" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/txtUpdateData"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Cập nhật dữ liệu"-->
-        <!--            android:textSize="16sp"-->
-        <!--            android:drawableStart="@drawable/baseline_refresh_24"-->
-        <!--            android:drawablePadding="8dp"-->
-        <!--            android:padding="16dp" />-->
+            android:paddingVertical="12dp"
+            android:background="@drawable/bg_card" />
 
         <TextView
             android:id="@+id/txtRateApp"
@@ -133,8 +104,8 @@
             android:textSize="16sp"
             android:drawableStart="@drawable/baseline_star_rate_24"
             android:drawablePadding="8dp"
-            android:padding="16dp"
-            />
+            android:paddingVertical="12dp"
+            android:background="@drawable/bg_card" />
 
         <TextView
             android:id="@+id/txtCompanyInfo"
@@ -144,7 +115,8 @@
             android:textSize="16sp"
             android:drawableStart="@drawable/baseline_info_24"
             android:drawablePadding="8dp"
-            android:padding="16dp" />
+            android:paddingVertical="12dp"
+            android:background="@drawable/bg_card" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

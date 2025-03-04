@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/home"
@@ -20,5 +21,7 @@
     <item
         android:id="@+id/info"
         android:title="Cá Nhân"
-        android:icon="@drawable/baseline_info_24"/>
+        android:icon="@drawable/baseline_info_24"
+        android:tint="#00897B"
+        tools:ignore="UseAppTint"/>
 </menu>

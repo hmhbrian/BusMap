@@ -19,8 +19,9 @@
             android:padding="16dp"
             android:textStyle="bold"
             android:gravity="center"
-            android:background="@color/primary_300"
+            android:background="@color/green"
             android:textColor="@android:color/white" />
+
 
         <!-- Bản đồ -->
         <fragment
@@ -28,15 +29,17 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_margin="16dp" />
 
         <!-- Điều khiển tìm kiếm -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            app:cardElevation="6dp"
-            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="12dp"
+            android:layout_gravity="bottom"
             android:background="@android:color/white">
 
             <LinearLayout
@@ -44,13 +47,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:padding="16dp">
+                android:padding="12dp">
 
                 <ImageButton
                     android:id="@+id/btnDecrease"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
                     android:src="@drawable/baseline_remove_24" />
 
                 <TextView
@@ -59,15 +61,24 @@
                     android:layout_height="wrap_content"
                     android:text="500m"
                     android:textSize="18sp"
-                    android:padding="16dp" />
+                    android:paddingHorizontal="16dp" />
 
                 <ImageButton
                     android:id="@+id/btnIncrease"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
                     android:src="@drawable/baseline_add_24" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
+        <!-- Danh sách trạm -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewStations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="16dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
     </LinearLayout>
 </FrameLayout>
