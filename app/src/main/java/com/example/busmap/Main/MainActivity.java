@@ -51,10 +51,10 @@ public class MainActivity extends AppCompatActivity {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
                 Log.d("FirebaseAuth", "Người dùng vẫn đăng nhập: " + user.getEmail());
-            } else {
-                Log.d("FirebaseAuth", "Phiên đăng nhập đã hết hạn");
-                startActivity(new Intent(MainActivity.this, Login.class));
             }
+        }else {
+            Log.d("FirebaseAuth", "đăng nhập ");
+            startActivity(new Intent(MainActivity.this, Login.class));
         }
 
         // Gán view cho DrawerLayout, Toolbar và BottomNavigationView
@@ -112,6 +112,39 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
+
+//        DatabaseReference databaseB = FirebaseDatabase.getInstance().getReference("busstop");
+//
+//        databaseB.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (snapshot.exists()) {
+//                    Map<String, Object> newStationData = new HashMap<>();
+//                    for (DataSnapshot child : snapshot.getChildren()) {
+//                        String id = child.child("route_id").getValue(String.class);
+//                        Integer order = child.child("order").getValue(Integer.class);
+//                        Integer idR = Integer.parseInt(id);
+//                        if (idR != null && order != null) {
+//                            String orderB =  order < 10 ? "0" + order : String.valueOf(order);
+//                            String idB = idR < 10 ? "0" + id : id;
+//                            String key = idB + "_" + orderB;
+//                            newStationData.put(key, child.getValue());
+//                        }
+//                    }
+//
+//                    // Ghi lại dữ liệu dưới dạng đối tượng JSON
+//                    databaseB.setValue(newStationData)
+//                            .addOnSuccessListener(aVoid -> Log.d("Firebase", "Dữ liệu đã chuyển đổi thành công!"))
+//                            .addOnFailureListener(e -> Log.e("Firebase", "Lỗi khi ghi dữ liệu!", e));
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.e("Firebase", "Lỗi truy vấn!", error.toException());
+//            }
+//        });
+        
 
     }
 

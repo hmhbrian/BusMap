@@ -55,6 +55,8 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         route routeItem = routeList.get(position);
         holder.tvRouteName.setText(routeItem.getName());
+        holder.tvRouteTime.setText(routeItem.getOperation());
+        holder.tvRoutePrice.setText(String.valueOf(routeItem.getPrice()));
 
         // Kiểm tra xem tuyến có nằm trong danh sách yêu thích hay không để set icon tương ứng
         checkIfFavorite(holder, routeItem);
@@ -131,12 +133,14 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvRouteName;
+        public TextView tvRouteName, tvRouteTime, tvRoutePrice;
         public ImageView ivFavorite;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tvRouteName = itemView.findViewById(R.id.tv_routeName);
+            tvRouteName = itemView.findViewById(R.id.route_name);
+            tvRouteTime = itemView.findViewById(R.id.route_time);
+            tvRoutePrice = itemView.findViewById(R.id.route_price);
             ivFavorite = itemView.findViewById(R.id.iv_favorite);
         }
     }

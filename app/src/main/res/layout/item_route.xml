@@ -1,33 +1,94 @@
-<!-- layout_item_route.xml -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="8dp">
-
-    <!-- Container có nền rounded_background -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@drawable/rounded_background"
-        android:padding="10dp">
+        android:orientation="horizontal">
+    <!-- Icon tuyến xe -->
+        <ImageView
+            android:id="@+id/route_icon"
+            android:layout_width="70dp"
+            android:layout_height="75dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/purple"
+            android:background="@drawable/rounded_background"
+            android:src="@drawable/ic_bus" /> <!-- Đặt icon mặc định -->
 
-        <TextView
-            android:id="@+id/tv_routeName"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Route Name"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textColor="@color/primary_600" />
+            android:baselineAligned="false"
+            android:orientation="vertical">
 
+            <!-- Tên tuyến -->
+            <TextView
+                android:id="@+id/route_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên tuyến"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Thời gian (kèm icon) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:layout_marginTop="4dp">
+
+                <ImageView
+                    android:id="@+id/time_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_time" /> <!-- Icon thời gian -->
+
+                <TextView
+                    android:id="@+id/route_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thời gian"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Giá vé (kèm icon) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:layout_marginTop="4dp">
+
+                <ImageView
+                    android:id="@+id/price_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_money" /> <!-- Icon giá vé -->
+
+                <TextView
+                    android:id="@+id/route_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Giá vé"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
         <ImageView
             android:id="@+id/iv_favorite"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_heart_outline"
+            android:layout_marginTop="18dp"
             android:padding="8dp"
             android:clickable="true"
             android:focusable="true" />
