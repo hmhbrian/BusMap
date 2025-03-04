@@ -22,7 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.busmap.R;
 import com.example.busmap.Route.FindRoute.FindRouteActivity;
-import com.example.busmap.Route.RadaBusActivity;
+import com.example.busmap.busstopnear.RadaBusActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
