@@ -11,11 +11,11 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary_600">
+        android:background="@color/green">
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
-        android:background="@color/primary_600"
+        android:background="@color/white"
         android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,7 +29,7 @@
                 android:layout_margin="4dp"
                 android:padding="4dp"
                 android:background="@drawable/corner_5"
-                android:backgroundTint="@color/primary_800"
+                android:backgroundTint="@color/green"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -54,8 +54,8 @@
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
                     android:textSize="16sp"
-                    android:textColorHint="@color/secondary_500"
-                    android:textColor="@color/secondary_900"
+                    android:textColorHint="@color/white"
+                    android:textColor="@color/white"
                     android:background="@null"
                     android:focusable="false"
                     android:clickable="false"
@@ -67,7 +67,7 @@
                 android:layout_margin="4dp"
                 android:padding="4dp"
                 android:background="@drawable/corner_5"
-                android:backgroundTint="@color/primary_800"
+                android:backgroundTint="@color/green"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -128,7 +128,7 @@
             android:fontFamily="@font/quicksand_semi_bold"
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
-            android:textColor="@color/secondary_900"
+            android:textColor="@color/green"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

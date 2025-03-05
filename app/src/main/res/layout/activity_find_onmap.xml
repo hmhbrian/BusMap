@@ -51,7 +51,7 @@
         android:id="@+id/btnSelectLocation"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:backgroundTint="@color/primary_300"
+        android:backgroundTint="@color/green"
         android:text="CHỌN ĐỊA ĐIỂM"
         android:textColor="@android:color/white"
         android:textStyle="bold"
