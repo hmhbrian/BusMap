@@ -42,8 +42,25 @@ public class StationDetailsDialog {
         final ImageView ivFavorite = view.findViewById(R.id.iv_favorite);
         RecyclerView rvRouteDetails = view.findViewById(R.id.rv_route_details);
 
-        // Cập nhật tiêu đề
-        tvDialogTitle.setText("Các tuyến qua trạm " + stationId);
+        // Truy vấn tên trạm từ Firebase
+        DatabaseReference stationRef = FirebaseDatabase.getInstance().getReference("station").child(String.valueOf(stationId));
+        stationRef.child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Cập nhật tiêu đề với tên trạm
+                String stationName = dataSnapshot.getValue(String.class);
+                if (stationName != null) {
+                    tvDialogTitle.setText("Các tuyến qua trạm " + stationName);
+                } else {
+                    tvDialogTitle.setText("Các tuyến qua trạm " + stationId);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                tvDialogTitle.setText("Các tuyến qua trạm " + stationId);
+            }
+        });
 
         // Set up RecyclerView với adapter
         rvRouteDetails.setLayoutManager(new LinearLayoutManager(context));

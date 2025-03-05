@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/corner_30"
-            android:textColorHint="@color/gray"
+            android:textColorHint="@color/secondary_400"
             android:padding="10dp"
             android:textSize="7pt"
             android:minHeight="48dp"
