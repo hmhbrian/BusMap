@@ -25,7 +25,6 @@
             android:textSize="30dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/black"
-
             android:textStyle="bold" />
 
         <ImageView
@@ -37,14 +36,11 @@
             android:contentDescription="Favorite" />
     </LinearLayout>
 
-    <!-- Nội dung hiển thị danh sách các tuyến -->
-    <TextView
-        android:id="@+id/tv_route_details"
+    <!-- RecyclerView thay thế TextView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_route_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Route details..."
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/black"
         android:paddingTop="8dp"
         android:paddingBottom="8dp" />
 

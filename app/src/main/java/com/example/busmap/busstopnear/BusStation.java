@@ -35,6 +35,9 @@ public class BusStation {
         return distance;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getFormattedDistance() {
         if (distance < 1000) {
             return String.format("%.0f m", distance);

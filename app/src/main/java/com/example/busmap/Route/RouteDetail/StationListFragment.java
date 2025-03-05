@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busmap.R;
+import com.example.busmap.busstopnear.RadaBusActivity;
 import com.example.busmap.dialog.StationDetailsDialog;
+import com.example.busmap.entities.route;
 import com.example.busmap.entities.station;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -188,17 +190,25 @@ public class StationListFragment extends Fragment {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        List<String> routeDetails = new ArrayList<>();
+                        List<route> routeDetails = new ArrayList<>(); // Sử dụng List<route> thay vì List<String>
+
                         for (DataSnapshot routeSnapshot : snapshot.getChildren()) {
                             String id = routeSnapshot.child("id").getValue(String.class);
                             String name = routeSnapshot.child("name").getValue(String.class);
                             String operation = routeSnapshot.child("operation").getValue(String.class);
 
+                            // Các giá trị mặc định cho những thuộc tính chưa có
+                            int startStationId = 0; // Giá trị mặc định
+                            int endStationId = 0;   // Giá trị mặc định
+                            double price = 0.0;      // Giá trị mặc định
+
+                            // Kiểm tra và thêm đối tượng route vào danh sách nếu phù hợp
                             if (id != null && name != null && operation != null && routeIds.contains(id)) {
-                                routeDetails.add(name + " (" + operation + ")");
+                                routeDetails.add(new route(endStationId, id, name, operation, price, startStationId));
                             }
                         }
-                        // Sử dụng lớp tách StationDetailsDialog để xây dựng và hiển thị dialog
+
+                        // Sử dụng lớp StationDetailsDialog để hiển thị dialog với thông tin chi tiết tuyến bus
                         new StationDetailsDialog(getContext(), stationId, routeDetails).show();
                     }
 

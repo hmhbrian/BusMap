@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busmap.R;
+import com.example.busmap.dialog.StationDetailsDialog;
+import com.example.busmap.entities.route;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,7 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RadaBusActivity extends AppCompatActivity implements RadaAdapter.OnStationClickListener {
+public class RadaBusActivity extends AppCompatActivity implements RadaAdapter.OnStationClickListener, RadaAdapter.OnStationDetailsClickListener  {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private static final String TAG = "RadaBusActivity";
@@ -107,7 +109,7 @@ public class RadaBusActivity extends AppCompatActivity implements RadaAdapter.On
 
         // Thiết lập RecyclerView và Adapter
         recyclerViewStations.setLayoutManager(new LinearLayoutManager(this));
-        radaAdapter = new RadaAdapter(this);
+        radaAdapter = new RadaAdapter(this, this); // Truyền vào listener cho nút chi tiết
         recyclerViewStations.setAdapter(radaAdapter);
 
         // Thêm đường kẻ giữa các item
@@ -128,7 +130,11 @@ public class RadaBusActivity extends AppCompatActivity implements RadaAdapter.On
         btnIncrease.setOnClickListener(v -> updateRadius(100));
         btnDecrease.setOnClickListener(v -> updateRadius(-100));
     }
-
+    @Override
+    public void onStationDetailsClick(int stationId) {
+        // Khi nhấn vào nút chi tiết, gọi phương thức showRoutesForStation
+        showRoutesForStation(stationId);
+    }
     /**
      * Lấy vị trí người dùng:
      * - Kiểm tra quyền trước khi gọi API.
@@ -356,6 +362,7 @@ public class RadaBusActivity extends AppCompatActivity implements RadaAdapter.On
         if (marker != null) {
             marker.showInfoWindow();
         }
+
     }
 
     /**
@@ -430,6 +437,67 @@ public class RadaBusActivity extends AppCompatActivity implements RadaAdapter.On
             }
         }
     }
+    private void showRoutesForStation(final int stationId) {
+        databaseRef = FirebaseDatabase.getInstance().getReference();
+        databaseRef.child("busstop")
+                .orderByChild("station_id")
+                .equalTo(stationId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        List<String> routeIds = new ArrayList<>();
+                        for (DataSnapshot busStopSnapshot : snapshot.getChildren()) {
+                            String routeId = busStopSnapshot.child("route_id").getValue(String.class);
+                            if (routeId != null) {
+                                routeIds.add(routeId);
+                            }
+                        }
+                        fetchRouteDetails(routeIds, stationId);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Firebase", "Lỗi lấy dữ liệu trạm", error.toException());
+                    }
+                });
+    }
+
+    private void fetchRouteDetails(List<String> routeIds, final int stationId) {
+        databaseRef.child("route")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        List<route> routeDetails = new ArrayList<>(); // Sử dụng List<route> thay vì List<String>
+
+                        for (DataSnapshot routeSnapshot : snapshot.getChildren()) {
+                            String id = routeSnapshot.child("id").getValue(String.class);
+                            String name = routeSnapshot.child("name").getValue(String.class);
+                            String operation = routeSnapshot.child("operation").getValue(String.class);
+
+                            // Các giá trị mặc định cho những thuộc tính chưa có
+                            int startStationId = 0; // Giá trị mặc định
+                            int endStationId = 0;   // Giá trị mặc định
+                            double price = 0.0;      // Giá trị mặc định
+
+                            // Kiểm tra và thêm đối tượng route vào danh sách nếu phù hợp
+                            if (id != null && name != null && operation != null && routeIds.contains(id)) {
+                                routeDetails.add(new route(endStationId, id, name, operation, price, startStationId));
+                            }
+                        }
+
+                        // Sử dụng lớp StationDetailsDialog để hiển thị dialog với thông tin chi tiết tuyến bus
+                        new StationDetailsDialog(RadaBusActivity.this, stationId, routeDetails).show();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Firebase", "Lỗi lấy dữ liệu tuyến bus", error.toException());
+                    }
+                });
+    }
+
+
+
 
     @Override
     protected void onDestroy() {

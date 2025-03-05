@@ -64,7 +64,7 @@
         <activity android:name=".account.infocompany"/>
         <activity android:name=".User.AccountActivity"/>
         <activity android:name=".User.EditAccountActivity"/>
-        <activity android:name=".Route.RadaBusActivity"/>
+        <activity android:name=".busstopnear.RadaBusActivity"/>
 
     </application>
 
