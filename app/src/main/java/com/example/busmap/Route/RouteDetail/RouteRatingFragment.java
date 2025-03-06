@@ -113,6 +113,37 @@ public class RouteRatingFragment extends Fragment {
         });
     }
 
+//    private void submitRating() {
+//        String note = edtRating.getText().toString().trim();
+//        float star = starRating.getRating();
+//        String time = String.valueOf(System.currentTimeMillis());
+//
+//        if (note.isEmpty()) {
+//            Toast.makeText(getContext(), "Vui lòng nhập ghi chú!", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        if (userName == null || userName.isEmpty()) {
+//            Toast.makeText(getContext(), "Tên người dùng không xác định!", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        // Tạo đối tượng đánh giá
+//        Rating rating = new Rating(userName, (int) star, time, note);
+//
+//        // Lưu vào Firebase dưới userId
+//        databaseRef.child(routeId).child(userId).push().setValue(rating).addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                Toast.makeText(getContext(), "Đánh giá thành công!", Toast.LENGTH_SHORT).show();
+//                // Xóa dữ liệu sau khi lưu thành công
+//                edtRating.setText("");
+//                starRating.setRating(0);
+//            } else {
+//                Toast.makeText(getContext(), "Lỗi lưu dữ liệu: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
     private void submitRating() {
         String note = edtRating.getText().toString().trim();
         float star = starRating.getRating();
@@ -128,22 +159,36 @@ public class RouteRatingFragment extends Fragment {
             return;
         }
 
-        // Tạo đối tượng đánh giá
-        Rating rating = new Rating(userName, (int) star, time, note);
+        // Kiểm tra xem người dùng đã đánh giá chưa
+        databaseRef.child(routeId).child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Toast.makeText(getContext(), "Bạn đã đánh giá tuyến này.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Tạo đối tượng đánh giá
+                    Rating rating = new Rating(userName, (int) star, time, note);
 
-        // Lưu vào Firebase dưới userId
-        databaseRef.child(routeId).child(userId).push().setValue(rating).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(getContext(), "Đánh giá thành công!", Toast.LENGTH_SHORT).show();
-                // Xóa dữ liệu sau khi lưu thành công
-                edtRating.setText("");
-                starRating.setRating(0);
-            } else {
-                Toast.makeText(getContext(), "Lỗi lưu dữ liệu: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    // Lưu vào Firebase
+                    databaseRef.child(routeId).child(userId).push().setValue(rating).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getContext(), "Đánh giá thành công!", Toast.LENGTH_SHORT).show();
+                            // Xóa dữ liệu sau khi lưu thành công
+                            edtRating.setText("");
+                            starRating.setRating(0);
+                        } else {
+                            Toast.makeText(getContext(), "Lỗi lưu dữ liệu: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getContext(), "Lỗi kiểm tra dữ liệu: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 
     private void loadRatings() {
         DatabaseReference ratingsRef = FirebaseDatabase.getInstance().getReference("Ratings").child(routeId);
