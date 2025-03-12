@@ -18,6 +18,7 @@ public class GenericFavoriteAdapter<T> extends RecyclerView.Adapter<GenericFavor
     private List<T> itemList;
     private OnFavoriteClickListener<T> onFavoriteClickListener;
     private OnItemClickListener itemClickListener;
+    private boolean isClickable;
 
     public interface OnFavoriteClickListener<T> {
         void onFavoriteClick(T item, boolean isFavorite);
@@ -26,10 +27,11 @@ public class GenericFavoriteAdapter<T> extends RecyclerView.Adapter<GenericFavor
         void onItemClick(route routeItem);
     }
 
-    public GenericFavoriteAdapter(List<T> itemList, OnFavoriteClickListener<T> listener, OnItemClickListener itemClickListener) {
+    public GenericFavoriteAdapter(List<T> itemList, OnFavoriteClickListener<T> listener, OnItemClickListener itemClickListener, boolean isClickable) {
         this.itemList = itemList;
         this.onFavoriteClickListener = listener;
         this.itemClickListener = itemClickListener;
+        this.isClickable = isClickable;
     }
 
     @NonNull
@@ -57,7 +59,11 @@ public class GenericFavoriteAdapter<T> extends RecyclerView.Adapter<GenericFavor
         });
         // Sự kiện click vào cả item (để chuyển sang BusRouteActivity)
         holder.itemView.setOnClickListener(v -> itemClickListener.onItemClick((com.example.busmap.entities.route)item));
-
+        if (isClickable) {
+            holder.itemView.setOnClickListener(v -> itemClickListener.onItemClick((com.example.busmap.entities.route) item));
+        } else {
+            holder.itemView.setOnClickListener(null);
+        }
     }
 
     @Override

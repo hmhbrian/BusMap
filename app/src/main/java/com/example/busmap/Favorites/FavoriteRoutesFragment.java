@@ -51,7 +51,7 @@ public class FavoriteRoutesFragment extends Fragment {
                 intent.putExtra("route_id", routeItem.getId());
                 startActivity(intent);
             }
-        });
+        },true);
         recyclerView.setAdapter(adapter);
 
         // Tải danh sách các tuyến xe yêu thích

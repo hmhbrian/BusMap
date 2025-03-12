@@ -50,7 +50,7 @@ public class FavoriteStationsFragment extends Fragment {
             public void onItemClick(route routeItem) {
 
             }
-        });
+        }, false);
         recyclerView.setAdapter(adapter);
 
         // Tải danh sách các trạm yêu thích
