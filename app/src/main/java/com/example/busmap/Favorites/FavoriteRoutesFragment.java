@@ -1,5 +1,6 @@
 package com.example.busmap.Favorites;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busmap.R;
+import com.example.busmap.Route.RouteDetail.BusRouteActivity;
 import com.example.busmap.entities.route;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -41,7 +43,15 @@ public class FavoriteRoutesFragment extends Fragment {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Khởi tạo adapter với mảng favoriteRoutes ban đầu rỗng
-        adapter = new GenericFavoriteAdapter<>(favoriteRoutes, (routeItem, isFavorite) -> { });
+        adapter = new GenericFavoriteAdapter<>(favoriteRoutes, (routeItem, isFavorite) -> {
+        }, new GenericFavoriteAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(route routeItem) {
+                Intent intent = new Intent(getContext(), BusRouteActivity.class);
+                intent.putExtra("route_id", routeItem.getId());
+                startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         // Tải danh sách các tuyến xe yêu thích

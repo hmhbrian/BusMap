@@ -23,4 +23,15 @@ public class Tranfers {
         String numbers = extractNumbers(input);
         return numbers;
     }
+
+    public static String formatDistance(double distanceKm) {
+        double roundedDistance = Math.round(distanceKm * 10.0) / 10.0;
+
+        if (roundedDistance < 1) {
+            int distanceMeters = (int) (roundedDistance * 1000); // Chuyển km -> m
+            return distanceMeters + " m";
+        } else {
+            return roundedDistance + " km";
+        }
+    }
 }

@@ -7,7 +7,7 @@ public class NewsModel {
 
     public NewsModel() {}  // Constructor mặc định cho Firebase
 
-    public NewsModel(String title, String content, String date) {
+    public NewsModel(String content, String date,String title) {
         this.title = title;
         this.content = content;
         this.date = date;

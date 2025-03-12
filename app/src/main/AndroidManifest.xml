@@ -52,6 +52,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".User.Login"/>
+        <activity android:name=".Main.RouteListActivity"/>
         <activity android:name=".Route.FindRoute.FindRouteActivity"/>
         <activity android:name=".Route.FindRoute.ResultFindRouteActivity"/>
         <activity android:name=".Route.FindRoute.InputFindActivity"/>

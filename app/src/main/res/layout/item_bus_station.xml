@@ -33,14 +33,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:padding="8dp"
                 android:text="Station Name" />
-
-            <TextView
-                android:id="@+id/tvStationId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:text="ID: 123" />
         </LinearLayout>
 
         <TextView

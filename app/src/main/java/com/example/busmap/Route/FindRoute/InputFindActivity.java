@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.busmap.FindRouteHelper.LocationManager;
 import com.example.busmap.R;
 import com.example.busmap.FindRouteHelper.LocationData;
 import com.example.busmap.entities.station;
@@ -40,9 +41,8 @@ public class InputFindActivity extends AppCompatActivity {
     private ImageView ImgBack;
     private AutoCompleteTextView edtInput;
     private ActivityResultLauncher<Intent> resultLauncher;
-    private FusedLocationProviderClient fusedLocationClient;
+    //private FusedLocationProviderClient fusedLocationClient;
     private DatabaseReference database;
-    private LatLng userLocation;
     private ArrayAdapter<String> adapter;
     private List<station> stationList = new ArrayList<>();
     private station selectedStation;
@@ -52,7 +52,7 @@ public class InputFindActivity extends AppCompatActivity {
         linear_OnMap = findViewById(R.id.Linear_OnMap);
         edtInput = findViewById(R.id.searchInput);
         ImgBack = findViewById(R.id.imgback);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         database = FirebaseDatabase.getInstance().getReference();
     }
 
@@ -65,6 +65,7 @@ public class InputFindActivity extends AppCompatActivity {
             }
         });
         linear_CrtLocation.setOnClickListener(view -> {
+            LatLng userLocation = LocationManager.getInstance().getLatLng();
             LocationData currentLocation = new LocationData(userLocation.latitude, userLocation.longitude, "[ Vị trí hiện tại ]");
             Intent resultIntent = new Intent();
             resultIntent.putExtra("Selected_Location", currentLocation);
@@ -85,7 +86,6 @@ public class InputFindActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_find);
         init();
-        getCurrentLocation();
         initListener();
 
         // Khởi tạo adapter
@@ -131,23 +131,6 @@ public class InputFindActivity extends AppCompatActivity {
 
     }
 
-    private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
-        }
-
-        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
-            if (location != null) {
-                userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            }
-        });
-    }
 
     private void fetchStationsFromFirebase() {
         database.child("station").addListenerForSingleValueEvent(new ValueEventListener() {

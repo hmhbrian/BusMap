@@ -105,6 +105,15 @@ public class MapsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        LinearLayout SearchLayout = view.findViewById(R.id.TraCuu);
+        SearchLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent (getContext(), RouteListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void loadBusStations() {

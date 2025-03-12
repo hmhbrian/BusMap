@@ -1,5 +1,7 @@
 package com.example.busmap.Route.FindRoute;
 
+import static com.example.busmap.FindRouteHelper.Tranfers.StringNumberExtractor;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,21 +18,35 @@ import com.example.busmap.entities.station;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BusStopAdapter extends RecyclerView.Adapter<BusStopAdapter.ViewHolder> {
-    private ArrayList<station> stationList;
-    private String routeId;
+    private Map<String, List<station>> stationOfRoute;
+    private List<StationItem> stationItems = new ArrayList<>();
+    private List<String> routeList = new ArrayList<>();
 
-
-    public BusStopAdapter(ArrayList<station> stationList, String routeId) {
-        this.stationList = stationList;
-        this.routeId = routeId;
+    public BusStopAdapter(Map<String, List<station>> stationOfRoute) {
+        this.stationOfRoute = stationOfRoute;
+        this.routeList.addAll(stationOfRoute.keySet());
+        populateStationItems();
     }
 
+    private void populateStationItems() {
+        stationItems.clear();
+        for (String routeId : routeList) {
+            List<station> stations = stationOfRoute.get(routeId);
+            if (stations != null) {
+                for (station s : stations) {
+                    stationItems.add(new StationItem(routeId, s));
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
-    public BusStopAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_busstop, parent, false);
         return new ViewHolder(view);
@@ -38,28 +54,41 @@ public class BusStopAdapter extends RecyclerView.Adapter<BusStopAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        station currentStation = stationList.get(holder.getAdapterPosition());
-        Log.d("ADAPTER_BusStop", "Binding: " + currentStation.getName());
-        holder.stationName.setText(currentStation.getName());
-        holder.stationNumber.setText(routeId.toString());
+        StationItem stationItem = stationItems.get(position);
+        holder.stationName.setText(stationItem.station.getName());
+        holder.stationNumber.setText(StringNumberExtractor(stationItem.routeId));
 
+        // Định nghĩa màu sắc cho từng tuyến đường
+        int[] routeColors = {R.color.green, R.color.orange, R.color.red, R.color.primary_400};
+        int colorIndex = routeList.indexOf(stationItem.routeId) % routeColors.length;
+        int routeColor = holder.itemView.getContext().getResources().getColor(routeColors[colorIndex]);
+        holder.stationNumber.setTextColor(routeColor);
+        holder.txtSymbol.setBackgroundColor(routeColor);
     }
 
     @Override
     public int getItemCount() {
-        Log.d("ADAPTER_BusStop", "Item count: " + stationList.size());
-        return stationList.size();
+        return stationItems.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView stationName, stationNumber;
-        CardView cardView;
+        TextView stationName, stationNumber, txtSymbol;
 
         public ViewHolder(View itemView) {
             super(itemView);
             stationName = itemView.findViewById(R.id.txtStationName);
             stationNumber = itemView.findViewById(R.id.txtStationNumber);
-            cardView = (CardView) itemView;
+            txtSymbol = itemView.findViewById(R.id.txtSymbol);
+        }
+    }
+
+    private static class StationItem {
+        String routeId;
+        station station;
+
+        public StationItem(String routeId, station station) {
+            this.routeId = routeId;
+            this.station = station;
         }
     }
 }

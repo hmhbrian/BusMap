@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RouteListFragment extends Fragment {
+public class RouteListActivity extends AppCompatActivity {
     private RecyclerView rVRouteList;
     private RouteAdapter routeAdapter;
     private ArrayList<route> routeList = new ArrayList<>();
@@ -38,28 +38,20 @@ public class RouteListFragment extends Fragment {
     private DatabaseReference databaseReference;
     private String userId;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_route_list, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view,
-                              @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        rVRouteList = view.findViewById(R.id.rv_routList);
-        rVRouteList.setLayoutManager(new LinearLayoutManager(getContext()));
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_route_list);
+        rVRouteList = findViewById(R.id.rv_routList);
+        rVRouteList.setLayoutManager(new LinearLayoutManager(this));
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userId = user.getUid();  // Chỉ gọi getUid() khi user != null
         } else {
             Log.e("FirebaseAuth", "Người dùng chưa đăng nhập!");
-            Intent intent = new Intent(getActivity(), Login.class);
+            Intent intent = new Intent(RouteListActivity.this, Login.class);
             startActivity(intent);
-            getActivity().finish();
+            finish();
         }
         loadFavoriteRoutes();  // Tải các tuyến yêu thích
         fetchRoutesFromFirebase();  // Tải các tuyến từ Firebase
@@ -83,7 +75,7 @@ public class RouteListFragment extends Fragment {
                     @Override
                     public void onItemClick(route routeItem) {
                         openBusRouteActivity(routeItem);
-                        Toast.makeText(getActivity(), routeItem.getName() + "- id: " + routeItem.getId(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RouteListActivity.this, routeItem.getName() + "- id: " + routeItem.getId(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 rVRouteList.setAdapter(routeAdapter);
@@ -91,7 +83,7 @@ public class RouteListFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Lỗi tải dữ liệu!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RouteListActivity.this, "Lỗi tải dữ liệu!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -136,7 +128,7 @@ public class RouteListFragment extends Fragment {
     }
 
     private void openBusRouteActivity(route routeItem) {
-        Intent intent = new Intent(getContext(), BusRouteActivity.class);
+        Intent intent = new Intent(RouteListActivity.this, BusRouteActivity.class);
         intent.putExtra("route_id", routeItem.getId());
         intent.putExtra("route_name", routeItem.getName());
         startActivity(intent);

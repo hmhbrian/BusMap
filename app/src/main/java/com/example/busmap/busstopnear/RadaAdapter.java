@@ -59,14 +59,12 @@ public class RadaAdapter extends RecyclerView.Adapter<RadaAdapter.StationViewHol
 
     class StationViewHolder extends RecyclerView.ViewHolder {
         private TextView tvStationName;
-        private TextView tvStationId;
         private TextView tvDistance;
         private ImageButton btnStationDetails;
 
         public StationViewHolder(@NonNull View itemView) {
             super(itemView);
             tvStationName = itemView.findViewById(R.id.tvStationName);
-            tvStationId = itemView.findViewById(R.id.tvStationId);
             tvDistance = itemView.findViewById(R.id.tvDistance);
             btnStationDetails = itemView.findViewById(R.id.btnStationDetails);
 
@@ -89,7 +87,6 @@ public class RadaAdapter extends RecyclerView.Adapter<RadaAdapter.StationViewHol
 
         public void bind(BusStation station) {
             tvStationName.setText(station.getName());
-            tvStationId.setText("ID: " + station.getId());
             tvDistance.setText(station.getFormattedDistance());
         }
     }

@@ -102,9 +102,10 @@ public class MainActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.notify) {
                 replaceFragment(new NotificationFragment ());
             }else if (item.getItemId() == R.id.favorite) {
-                replaceFragment(new FavoriteFragment ());
-            }else if (item.getItemId() == R.id.route) {
-                replaceFragment(new RouteListFragment());}
+                replaceFragment(new FavoriteFragment());
+            }
+//            }else if (item.getItemId() == R.id.route) {
+//                replaceFragment(new RouteListFragment());}
             else if (item.getItemId() == R.id.info) {
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(intent);

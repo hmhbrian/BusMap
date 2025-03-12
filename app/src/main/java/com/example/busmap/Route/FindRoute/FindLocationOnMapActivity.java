@@ -51,7 +51,7 @@ public class FindLocationOnMapActivity extends AppCompatActivity implements OnMa
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
             selected_coordinate = new LocationData(latLng.latitude,latLng.longitude,"[ Tọa độ điểm ]");
             // Hiển thị tọa độ trong Toast
-            Toast.makeText(this, "Latitude: " + latLng.latitude + "\nLongitude: " + latLng.longitude, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Latitude: " + latLng.latitude + "\nLongitude: " + latLng.longitude, Toast.LENGTH_SHORT).show();
         });
     }
 

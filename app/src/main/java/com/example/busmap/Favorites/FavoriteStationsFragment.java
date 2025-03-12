@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busmap.R;
+import com.example.busmap.entities.route;
 import com.example.busmap.entities.station;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -44,6 +45,11 @@ public class FavoriteStationsFragment extends Fragment {
         // Khởi tạo adapter với danh sách rỗng và gán cho RecyclerView
         adapter = new GenericFavoriteAdapter<>(favoriteStations, (stationItem, isFavorite) -> {
             // Xử lý khi toggle favorite nếu cần
+        }, new GenericFavoriteAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(route routeItem) {
+
+            }
         });
         recyclerView.setAdapter(adapter);
 

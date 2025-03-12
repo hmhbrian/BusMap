@@ -1,10 +1,13 @@
 package com.example.busmap.Route.FindRoute;
 
+import static com.example.busmap.FindRouteHelper.Tranfers.StringNumberExtractor;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +20,17 @@ import com.example.busmap.Route.RouteDetail.BusRouteActivity;
 import com.example.busmap.Route.RouteDetail.StationAdapter;
 import com.example.busmap.Route.RouteDetail.StationListFragment;
 import com.example.busmap.entities.station;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 import java.util.ArrayList;
 
@@ -25,14 +38,15 @@ public class BusStopPassFragment extends Fragment {
     private RecyclerView rV_BusStop;
     private BusStopAdapter BusStopAdapter;
     private DatabaseReference databaseRef;
+    private Map<String, List<station>> stationOfRoute;
     private String routeId;
     private ArrayList<station> BusStopList = new ArrayList<>();
+    private String routename;
 
-    public static BusStopPassFragment newInstance(ArrayList<station> StationList, String routeId) {
+    public static BusStopPassFragment newInstance(Map<String, List<station>> stationOfRoute) {
         BusStopPassFragment fragment = new BusStopPassFragment();
         Bundle args = new Bundle();
-        args.putSerializable("BusStopList", StationList);
-        args.putString("route_id", routeId);
+        args.putSerializable("stationOfRoute", (Serializable) stationOfRoute);
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,9 +54,9 @@ public class BusStopPassFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        databaseRef = FirebaseDatabase.getInstance().getReference();
         if (getArguments() != null) {
-            routeId = getArguments().getString("route_id");
-            BusStopList = (ArrayList<station>)getArguments().getSerializable("BusStopList");
+            stationOfRoute = (Map<String, List<station>>) getArguments().getSerializable("stationOfRoute");
         }
     }
 
@@ -55,7 +69,9 @@ public class BusStopPassFragment extends Fragment {
         rV_BusStop = view.findViewById(R.id.recycler_view);
         rV_BusStop.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        BusStopAdapter = new BusStopAdapter(BusStopList,routeId);
+        //loadRouteStations(routeId);
+        //BusStopAdapter = new BusStopAdapter(BusStopList,StringNumberExtractor(routename));
+        BusStopAdapter = new BusStopAdapter(stationOfRoute);
         rV_BusStop.setAdapter(BusStopAdapter);
 
         BusStopAdapter.notifyDataSetChanged();
@@ -69,4 +85,29 @@ public class BusStopPassFragment extends Fragment {
         }
         return view;
     }
+
+//    public void loadRouteStations(String routeId) {
+//        if (routeId == null) {
+//            Log.e("BusRouteActivity", "Route ID is null.");
+//        }
+//
+//        databaseRef.child("route").orderByChild("id").equalTo(routeId)
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot RouteSnapshot) {
+//                        for (DataSnapshot snapshot : RouteSnapshot.getChildren()) {
+//                            routename = snapshot.child("name").getValue(String.class);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        Log.e("Firebase", "Failed to fetch bus stops", error.toException());
+//                    }
+//                });
+//
+//        Log.e("Routename", routename);
+//    }
+
+
 }

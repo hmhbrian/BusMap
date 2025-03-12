@@ -28,7 +28,7 @@
                 android:gravity="center_vertical">
                 <TextView
                     android:layout_marginStart="8dp"
-                    android:text="đi từ"
+                    android:text="Đi từ"
                     android:layout_width="50dp"
                     android:textSize="16sp"
                     android:fontFamily="@font/quicksand_semi_bold"
@@ -70,7 +70,7 @@
                 android:gravity="center_vertical">
                 <TextView
                     android:layout_marginStart="8dp"
-                    android:text="đến"
+                    android:text="Đến"
                     android:layout_width="50dp"
                     android:textSize="16sp"
                     android:fontFamily="@font/quicksand_semi_bold"

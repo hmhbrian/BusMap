@@ -3,6 +3,7 @@ package com.example.busmap.Route.FindRoute;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.busmap.FindRouteHelper.LocationData;
+import com.example.busmap.FindRouteHelper.LocationManager;
 import com.example.busmap.R;
 import com.example.busmap.entities.station;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,6 +26,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Dot;
+import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -37,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,13 +50,13 @@ import java.util.Map;
 public class FindRouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private DatabaseReference databaseRef;
-    private List<LatLng> stationLocations = new ArrayList<>();
+    //private List<LatLng> stationLocations = new ArrayList<>();
+    private Map<String, List<LatLng>> stationLocationsMap = new HashMap<>();
+    private Map<String, List<station>> stationOfRoute = new HashMap<>();
     private View bottomSheet;
     private BottomSheetBehavior<View> bottomSheetBehavior;
-    private ArrayList<station> StationList = new ArrayList<>();
     private Map<Integer, Marker> stationMarkers = new HashMap<>();
     private ViewPager2 viewPager;
-    private String firstRouteId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,17 +82,13 @@ public class FindRouteDetailActivity extends AppCompatActivity implements OnMapR
                 stationsMap.put(entry.getKey(), new ArrayList<>(entry.getValue()));
             }
         }
-        if (!stationsMap.isEmpty()) {
-            firstRouteId = stationsMap.keySet().iterator().next(); // Lấy routeId đầu tiên
-            List<Integer> firstStationList = stationsMap.get(firstRouteId);
-
-            loadStationDetails(firstStationList);
-        }
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         setHalfScreenHeight(); // Đặt Bottom Sheet chiếm 1/2 màn hình
         setupBottomSheetCallback();
-        setupTabLayout();
+        if (!stationsMap.isEmpty()) {
+            loadStationDetails(stationsMap);
+        }
     }
 
     @Override
@@ -122,15 +124,12 @@ public class FindRouteDetailActivity extends AppCompatActivity implements OnMapR
         });
     }
 
-
-
-    private void setupTabLayout() {
+    private void setupTabLayout(Map<String, List<station>> StationOfRoute) {
         ViewPager2 viewPager = findViewById(R.id.viewPager);
         TabLayout tabLayout = findViewById(R.id.tabLayout);
-        Log.e("FINDDETAIL","Route_id: "+ firstRouteId);
-        for(station sta : StationList)
-            Log.e("FINDDETAIL",sta.getName());
-        RoutePagerFindAdapter adapter = new RoutePagerFindAdapter(this,StationList,firstRouteId);
+        List<String> routeNames = new ArrayList<>(StationOfRoute.keySet());
+        Log.e("FINDDETAIL",String.valueOf(routeNames.size()));
+        RoutePagerFindAdapter adapter = new RoutePagerFindAdapter(this,StationOfRoute);
         viewPager.setAdapter(adapter);
 
 
@@ -141,11 +140,11 @@ public class FindRouteDetailActivity extends AppCompatActivity implements OnMapR
 
     }
 
-    private void loadStationDetails(List<Integer> stationIds) {
+    private void loadStationDetails(Map<String, List<Integer>> stationsMap) {
         databaseRef.child("station").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot stationSnapshot) {
-                Map<Integer, station> stationMap = new HashMap<>();
+                //Map<Integer, station> stationMap = new HashMap<>();
 
                 if (FindRouteDetailActivity.this.isFinishing() || mMap == null) {
                     Log.e("BusRouteActivity", "Activity đã bị hủy hoặc Google Map chưa sẵn sàng.");
@@ -153,63 +152,65 @@ public class FindRouteDetailActivity extends AppCompatActivity implements OnMapR
                 }
 
                 stationMarkers.clear(); // Xóa các marker cũ trước khi tải mới
-                StationList.clear();
-                for (DataSnapshot snapshot : stationSnapshot.getChildren()) {
-                    Integer id = snapshot.child("id").getValue(Integer.class);
-                    Double lat = snapshot.child("lat").getValue(Double.class);
-                    Double lng = snapshot.child("lng").getValue(Double.class);
-                    String name = snapshot.child("name").getValue(String.class);
+                stationLocationsMap.clear(); // Xóa danh sách tuyến cũ
 
-                    // Kiểm tra các giá trị null
-                    if (id == null || lat == null || lng == null || name == null) {
-                        Log.e("Firebase", "Dữ liệu trạm không hợp lệ, bỏ qua.");
-                        continue;
-                    }
+                for (String routeName : stationsMap.keySet()) {
+                    List<Integer> stationIds = stationsMap.get(routeName);
+                    List<LatLng> locations = new ArrayList<>();
+                    List<station> stations = new ArrayList<>();
 
-                    if (stationIds.contains(id)) {
-                        // Thêm station vào danh sách
-                        stationMap.put(id, new station(id, name, lat, lng));
-                        StationList.add(new station(id, name, lat, lng));
-                        LatLng location = new LatLng(lat, lng);
+                    for (DataSnapshot snapshot : stationSnapshot.getChildren()) {
+                        Integer id = snapshot.child("id").getValue(Integer.class);
+                        Double lat = snapshot.child("lat").getValue(Double.class);
+                        Double lng = snapshot.child("lng").getValue(Double.class);
+                        String name = snapshot.child("name").getValue(String.class);
 
-                        // Chạy trên UI Thread để cập nhật giao diện
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            if (mMap != null) {
-                                Marker marker = mMap.addMarker(new MarkerOptions()
-                                        .position(location)
-                                        .title(name)
-                                        .icon(bitmapDescriptorFromVector(R.drawable.ic_station_big))); // Sử dụng icon mới
+                        // Kiểm tra các giá trị null
+                        if (id == null || lat == null || lng == null || name == null) {
+                            Log.e("Firebase", "Dữ liệu trạm không hợp lệ, bỏ qua.");
+                            continue;
+                        }
 
-                                // Kiểm tra và gắn marker vào map
-                                if (marker != null) {
-                                    stationMarkers.put(id, marker);
+                        if (stationIds.contains(id)) {
+                            LatLng location = new LatLng(lat, lng);
+                            locations.add(location);
+                            stations.add(new station(id,name,lat,lng));
+
+                            // Chạy trên UI Thread để cập nhật giao diện
+                            new Handler(Looper.getMainLooper()).post(() -> {
+                                if (mMap != null) {
+                                    Marker marker = mMap.addMarker(new MarkerOptions()
+                                            .position(location)
+                                            .title(name)
+                                            .icon(bitmapDescriptorFromVector(R.drawable.ic_station_big))); // Sử dụng icon mới
+
+                                    // Kiểm tra và gắn marker vào map
+                                    if (marker != null) {
+                                        stationMarkers.put(id, marker);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
+                    // Lưu danh sách tọa độ theo tuyến
+                    stationLocationsMap.put(routeName, locations);
+                    stationOfRoute.put(routeName,stations);
                 }
+                LatLng currentLocation = LocationManager.getInstance().getLatLng();
+                LocationData to = LocationManager.getInstance().getToLocation();
 
-                // Cập nhật danh sách các trạm
-//                StationList.clear();
-//                for (int id : stationIds) {
-//                    if (stationMap.containsKey(id)) {
-//                        StationList.add(stationMap.get(id));
-//                    }
-//                }
-
-                // Cập nhật danh sách tọa độ
-                stationLocations.clear();
-                for (station sta : StationList) {
-                    stationLocations.add(new LatLng(sta.getLat(), sta.getLng()));
-                }
 
                 // Vẽ polyline sau khi đã có danh sách trạm dừng
-                drawPolyline();
+                drawPolyline(to);
 
                 // Cập nhật camera để hiển thị trạm dừng đầu tiên
-                if (!stationLocations.isEmpty()) {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(stationLocations.get(0), 14));
+                if (!stationLocationsMap.isEmpty()) {
+                    String firstRoute = stationLocationsMap.keySet().iterator().next();
+                    if (!stationLocationsMap.get(firstRoute).isEmpty()) {
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(stationLocationsMap.get(firstRoute).get(0), 14));
+                    }
                 }
+                setupTabLayout(stationOfRoute);
             }
 
             @Override
@@ -217,6 +218,43 @@ public class FindRouteDetailActivity extends AppCompatActivity implements OnMapR
                 Log.e("Firebase", "Failed to fetch stations", error.toException());
             }
         });
+    }
+
+    private void drawPolyline( LocationData to) {
+        int[] colors = {Color.GREEN,Color.RED, Color.BLUE, Color.YELLOW}; // Các màu khác nhau
+        int colorIndex = 0;
+
+        LatLng lastPoint = null;
+        for (String routeName : stationLocationsMap.keySet()) {
+            List<LatLng> locations = stationLocationsMap.get(routeName);
+
+            if (locations.size() > 1) {
+                PolylineOptions polylineOptions = new PolylineOptions()
+                        .addAll(locations)
+                        .width(8)
+                        .color(colors[colorIndex % colors.length]); // Gán màu theo thứ tự
+
+                mMap.addPolyline(polylineOptions);
+                colorIndex++; // Chuyển sang màu tiếp theo
+                lastPoint = locations.get(locations.size() - 1);
+            }
+        }
+        LatLng ToPoint = new LatLng(to.getLatitude(),to.getLongitude());
+        if (lastPoint != null && lastPoint != ToPoint) {
+            PolylineOptions dashedLine = new PolylineOptions()
+                    .add(lastPoint, ToPoint) // Nối từ điểm cuối của tuyến cuối cùng đến điểm mới
+                    .width(8)
+                    .color(Color.BLACK)
+                    .pattern(Arrays.asList(new Dot(), new Gap(10))); // Nét đứt
+
+            mMap.addPolyline(dashedLine);
+
+            // Thêm marker màu đỏ tại điểm mới
+            mMap.addMarker(new MarkerOptions()
+                    .position(ToPoint)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                    .title("Điểm đến"));
+        }
     }
 
     private BitmapDescriptor bitmapDescriptorFromVector(int vectorResId) {
@@ -234,13 +272,5 @@ public class FindRouteDetailActivity extends AppCompatActivity implements OnMapR
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private void drawPolyline() {
-        if (stationLocations.size() > 1) {
-            PolylineOptions polylineOptions = new PolylineOptions()
-                    .addAll(stationLocations)
-                    .width(8)
-                    .color(ContextCompat.getColor(this, R.color.green));  // Use ContextCompat for compatibility
-            mMap.addPolyline(polylineOptions);
-        }
-    }
+
 }

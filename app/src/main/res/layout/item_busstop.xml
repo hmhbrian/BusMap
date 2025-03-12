@@ -18,12 +18,12 @@
         android:gravity="center_vertical">
 
         <!-- Hiển thị số thứ tự trạm -->
-        <ImageView
+        <TextView
             android:id="@+id/txtSymbol"
             android:layout_width="8dp"
             android:layout_height="40dp"
             android:gravity="center"
-            android:background="@drawable/vertical_line"/>
+            android:background="@color/teal_200"/>
 
         <TextView
             android:id="@+id/txtStationNumber"

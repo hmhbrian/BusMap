@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.busmap.FindRouteHelper.LocationManager;
 import com.example.busmap.R;
 import com.example.busmap.FindRouteHelper.LocationData;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -72,7 +73,6 @@ public class FindRouteActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
                 position = i;
-                Toast.makeText(FindRouteActivity.this, "Bạn đã chọn: " + position, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -84,6 +84,7 @@ public class FindRouteActivity extends AppCompatActivity implements OnMapReadyCa
         btnFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                LocationManager.getInstance().setToLocation(to);
                 Intent intentResult = new Intent(FindRouteActivity.this, ResultFindRouteActivity.class);
                 intentResult.putExtra("From_Location", from);
                 intentResult.putExtra("To_Location", to);
@@ -195,6 +196,7 @@ public class FindRouteActivity extends AppCompatActivity implements OnMapReadyCa
         fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
             if (location != null) {
                 userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                LocationManager.getInstance().setLatLng(userLocation);
                 mMap.addMarker(new MarkerOptions().position(userLocation).title("Vị trí của bạn"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
             }

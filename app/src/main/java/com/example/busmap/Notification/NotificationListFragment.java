@@ -16,8 +16,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class NotificationListFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -54,6 +61,22 @@ public class NotificationListFragment extends Fragment {
                         notificationList.add(notification);
                     }
                 }
+                // Định dạng ngày (dd-MM-yyyy)
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Collections.sort(notificationList, new Comparator<NotificationModel>() {
+                    @Override
+                    public int compare(NotificationModel n1, NotificationModel n2) {
+                        try {
+                            Date date1 = sdf.parse(n1.getDate());
+                            Date date2 = sdf.parse(n2.getDate());
+                            return date2.compareTo(date1); // Sắp xếp giảm dần
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            return 0;
+                        }
+                    }
+                });
+
                 adapter.notifyDataSetChanged();
             }
 
