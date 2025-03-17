@@ -124,7 +124,7 @@
         app:layout_constraintTop_toBottomOf="@id/Linear_TitleHistory">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/rV_SearchHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"/>
