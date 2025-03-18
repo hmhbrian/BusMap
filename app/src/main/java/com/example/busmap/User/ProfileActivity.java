@@ -30,7 +30,6 @@ public class ProfileActivity extends AppCompatActivity {
         // Ánh xạ View
         btnUpgrade = findViewById(R.id.btnUpgrade);
         txtPersonalInfo = findViewById(R.id.txtPersonalInfo);
-        txtSettings = findViewById(R.id.txtSettings);
         txtRateApp = findViewById(R.id.txtRateApp);
         txtCompanyInfo = findViewById(R.id.txtCompanyInfo);
         txtTitle = findViewById(R.id.txtTitle);
@@ -50,10 +49,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
-        // Khi nhấn vào "Cài đặt" (hiện tại chưa có Activity nào, chỉ hiện Toast)
-        txtSettings.setOnClickListener(v -> {
-            Toast.makeText(this, "Cài đặt chưa được triển khai", Toast.LENGTH_SHORT).show();
-        });
 
         // Khi nhấn vào "Đánh giá ứng dụng" → mở `RatingActivity`
         txtRateApp.setOnClickListener(v -> {

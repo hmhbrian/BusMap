@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/lightgreen">
+    android:layout_height="match_parent">
 
     <!-- Header section -->
 
@@ -87,15 +86,7 @@
             android:paddingVertical="12dp"
          />
 
-        <TextView
-            android:id="@+id/txtSettings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cài đặt"
-            android:textSize="16sp"
-            android:drawableStart="@drawable/baseline_settings_24"
-            android:drawablePadding="8dp"
-            android:paddingVertical="12dp" />
+
 
         <TextView
             android:id="@+id/txtRateApp"
