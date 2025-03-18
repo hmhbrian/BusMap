@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.busmap.Favorites.FavoriteFragment;
 import com.example.busmap.Notification.NotificationFragment;
+import com.example.busmap.SettingFragment;
 import com.example.busmap.R;
 import com.example.busmap.ShareFragment;
 import com.example.busmap.User.Login;
@@ -24,14 +24,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
             if (user != null) {
                 Log.d("FirebaseAuth", "Người dùng vẫn đăng nhập: " + user.getEmail());
             }
+
         }else {
             Log.d("FirebaseAuth", "đăng nhập ");
             startActivity(new Intent(MainActivity.this, Login.class));
@@ -79,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         //Thay thế Fragment theo lựa chọn của NavigationView
         navigationView.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_settings) {
-                replaceFragment(new MapsFragment());
+                replaceFragment(new SettingFragment());
             }else if(item.getItemId() == R.id.nav_share){
                 replaceFragment(new ShareFragment());
             }else if(item.getItemId() == R.id.nav_about){
@@ -155,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_layout, fragment);
         fragmentTransaction.commit();
+
     }
 
     public void Logout(){

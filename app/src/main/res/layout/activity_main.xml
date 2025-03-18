@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:menu="@menu/bottom_menu"
-            app:labelVisibilityMode="labeled"/>
+            app:labelVisibilityMode="labeled" />
             <!--app:itemIconTint="@color/lavender"
             app:itemTextColor="@color/lavender" -->
 
