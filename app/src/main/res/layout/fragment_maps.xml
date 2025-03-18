@@ -29,7 +29,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:contentDescription="Tra cứu"
-                    android:src="@drawable/ic_search"
+                    android:src="@drawable/findmap"
                     app:tint="#FF9800" />
 
                 <TextView
@@ -49,7 +49,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:contentDescription="Tìm đường"
-                    android:src="@drawable/ic_route"
+                    android:src="@drawable/findroute"
                     app:tint="#1976D2" />
 
                 <TextView
@@ -69,7 +69,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:contentDescription="Trạm Xung Quanh"
-                    android:src="@drawable/ic_swap"
+                    android:src="@drawable/near"
                     app:tint="#8BC34A"/>
 
                 <TextView
