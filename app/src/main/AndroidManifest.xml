@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.front" android:required="false"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
 
     <application
@@ -70,7 +73,7 @@
         <activity android:name=".User.AccountActivity"/>
         <activity android:name=".User.EditAccountActivity"/>
         <activity android:name=".busstopnear.RadaBusActivity"/>
-        <activity android:name=".Main.MainActivity"/>
+        <activity android:name=".Main.MainActivity" android:screenOrientation="portrait"/>
 
     </application>
 
