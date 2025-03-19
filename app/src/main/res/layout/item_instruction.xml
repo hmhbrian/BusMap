@@ -42,7 +42,10 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/rounded_background"
                 android:textColor="@color/primary_600"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:focusable="false"
+                android:clickable="false"
+                android:focusableInTouchMode="false"/>
 
         </LinearLayout>
         <LinearLayout

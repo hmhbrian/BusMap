@@ -56,6 +56,7 @@ public class FindRouteDetailActivity extends AppCompatActivity implements OnMapR
     private View bottomSheet;
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private Map<Integer, Marker> stationMarkers = new HashMap<>();
+    LatLng userLocation = LocationManager.getInstance().getLatLng();
     private ViewPager2 viewPager;
 
     @Override
@@ -221,10 +222,22 @@ public class FindRouteDetailActivity extends AppCompatActivity implements OnMapR
     }
 
     private void drawPolyline( LocationData to) {
+        LatLng ToPoint = new LatLng(to.getLatitude(),to.getLongitude());
+
         int[] colors = {Color.GREEN,Color.RED, Color.BLUE, Color.YELLOW}; // Các màu khác nhau
         int colorIndex = 0;
 
+        LatLng firstStationPoint = null;
         LatLng lastPoint = null;
+
+        // Lấy điểm đầu tiên từ stationLocationsMap
+        if (!stationLocationsMap.isEmpty()) {
+            List<LatLng> firstRouteLocations = stationLocationsMap.values().iterator().next(); // Lấy tuyến đầu tiên
+            if (!firstRouteLocations.isEmpty()) {
+                firstStationPoint = firstRouteLocations.get(0); // Lấy điểm đầu tiên
+            }
+        }
+
         for (String routeName : stationLocationsMap.keySet()) {
             List<LatLng> locations = stationLocationsMap.get(routeName);
 
@@ -239,21 +252,49 @@ public class FindRouteDetailActivity extends AppCompatActivity implements OnMapR
                 lastPoint = locations.get(locations.size() - 1);
             }
         }
-        LatLng ToPoint = new LatLng(to.getLatitude(),to.getLongitude());
+
         if (lastPoint != null && lastPoint != ToPoint) {
-            PolylineOptions dashedLine = new PolylineOptions()
-                    .add(lastPoint, ToPoint) // Nối từ điểm cuối của tuyến cuối cùng đến điểm mới
-                    .width(8)
-                    .color(Color.BLACK)
-                    .pattern(Arrays.asList(new Dot(), new Gap(10))); // Nét đứt
+            // Nối từ điểm hiện tại đến trạm bắt đầu
+            DrawStart_End(userLocation ,firstStationPoint, "Điểm bắt đầu");
+        }
 
-            mMap.addPolyline(dashedLine);
+        if (lastPoint != null && lastPoint != ToPoint) {
+            // Nối từ điểm cuối của tuyến cuối cùng đến điểm mới
+            DrawStart_End(lastPoint,ToPoint,"Điểm đến");
+//            PolylineOptions dashedLine = new PolylineOptions()
+//                    .add(lastPoint, ToPoint)
+//                    .width(8)
+//                    .color(Color.BLACK)
+//                    .pattern(Arrays.asList(new Dot(), new Gap(10))); // Nét đứt
+//
+//            mMap.addPolyline(dashedLine);
+//
+//            // Thêm marker màu đỏ tại điểm mới
+//            mMap.addMarker(new MarkerOptions()
+//                    .position(ToPoint)
+//                    .icon(bitmapDescriptorFromVector(R.drawable.ic_walk))
+//                    .title("Điểm đến"));
+        }
+    }
 
-            // Thêm marker màu đỏ tại điểm mới
+    private void DrawStart_End(LatLng start, LatLng end, String title){
+        PolylineOptions dashedLine = new PolylineOptions()
+                .add(start, end) // Nối từ điểm cuối của tuyến cuối cùng đến điểm mới
+                .width(8)
+                .color(Color.BLACK)
+                .pattern(Arrays.asList(new Dot(), new Gap(10))); // Nét đứt
+
+        mMap.addPolyline(dashedLine);
+        if(start == userLocation){
             mMap.addMarker(new MarkerOptions()
-                    .position(ToPoint)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                    .title("Điểm đến"));
+                    .position(start)
+                    .icon(bitmapDescriptorFromVector(R.drawable.ic_walk))
+                    .title(title));
+        }else{
+            mMap.addMarker(new MarkerOptions()
+                    .position(end)
+                    .icon(bitmapDescriptorFromVector(R.drawable.ic_walk))
+                    .title(title));
         }
     }
 

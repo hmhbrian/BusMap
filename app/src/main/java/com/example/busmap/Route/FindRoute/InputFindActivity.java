@@ -138,7 +138,7 @@ public class InputFindActivity extends AppCompatActivity {
                 String selectedName = (String) adapterView.getItemAtPosition(i);
                 for (station station : stationList) {
                     if (station.getName().equals(selectedName)) {
-                        selectedStation = station; // Lưu trạm được chọn
+                        selectedStation = station;
                         // Lưu vào lịch sử khi chọn
                         saveToSearchHistory(selectedStation);
                         break;

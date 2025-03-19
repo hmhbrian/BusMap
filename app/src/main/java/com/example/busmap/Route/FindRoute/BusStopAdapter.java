@@ -59,7 +59,7 @@ public class BusStopAdapter extends RecyclerView.Adapter<BusStopAdapter.ViewHold
         holder.stationNumber.setText(StringNumberExtractor(stationItem.routeId));
 
         // Định nghĩa màu sắc cho từng tuyến đường
-        int[] routeColors = {R.color.green, R.color.orange, R.color.red, R.color.primary_400};
+        int[] routeColors = {R.color.green,R.color.red, R.color.orange, R.color.primary_400};
         int colorIndex = routeList.indexOf(stationItem.routeId) % routeColors.length;
         int routeColor = holder.itemView.getContext().getResources().getColor(routeColors[colorIndex]);
         holder.stationNumber.setTextColor(routeColor);

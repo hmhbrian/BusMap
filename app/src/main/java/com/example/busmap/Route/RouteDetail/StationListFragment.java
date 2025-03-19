@@ -98,7 +98,7 @@ public class StationListFragment extends Fragment {
         databaseRef.child("busstop")
                 .orderByChild("route_id")
                 .equalTo(routeId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot busStopSnapshot) {
                         List<Integer> stationIds = new ArrayList<>();
@@ -164,7 +164,7 @@ public class StationListFragment extends Fragment {
         databaseRef.child("busstop")
                 .orderByChild("station_id")
                 .equalTo(stationId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         List<String> routeIds = new ArrayList<>();

@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.busmap.R;
+import com.example.busmap.entities.BusStop;
 import com.example.busmap.entities.station;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,6 +53,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private ViewPager2 viewPager;
     private ArrayList<station> StationList = new ArrayList<>();
+    private List<Integer> stationIds = new ArrayList<>();
     private Map<Integer, Marker> stationMarkers = new HashMap<>();
     private int selectedStationId = -1; // Lưu ID của trạm đang chọn
     String routeId;
@@ -207,7 +210,7 @@ public class BusRouteActivity extends AppCompatActivity implements OnMapReadyCal
         if (routeId != null) {
             Log.e("Firebase_ID_route", "Route_id: "+ routeId);
             databaseRef.child("busstop").orderByChild("route_id").equalTo(routeId)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                    .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot busStopSnapshot) {
                             if (!busStopSnapshot.exists()) {

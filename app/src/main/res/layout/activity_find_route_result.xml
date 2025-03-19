@@ -100,27 +100,20 @@
                     android:focusableInTouchMode="false"/>
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/ib_swap"
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="-20dp"
-                android:background="@drawable/corner_left_10"
-                android:backgroundTint="@color/primary_600"
-                android:src="@drawable/ic_swap"
-                app:tint="@color/secondary_900" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/ib_swap"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:minHeight="48dp"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:layout_marginTop="-20dp"-->
+<!--                android:background="@drawable/corner_left_10"-->
+<!--                android:backgroundTint="@color/primary_600"-->
+<!--                android:src="@drawable/ic_swap"-->
+<!--                app:tint="@color/secondary_900" />-->
         </RelativeLayout>
-<!--        <Button-->
-<!--            android:id="@+id/btnFind"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Find"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:layout_gravity="center_horizontal"/>-->
-        <TextView
+         <TextView
             android:paddingVertical="8dp"
             android:text="Các cách di chuyển phù hợp"
             android:textSize="18sp"

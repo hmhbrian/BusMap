@@ -70,7 +70,7 @@ public class TimeTableFragment extends Fragment {
         databaseRef = FirebaseDatabase.getInstance().getReference("busstop");
 
         databaseRef.orderByChild("route_id").equalTo(routeId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot busStopSnapshot) {
                         arrivalTimes.clear();

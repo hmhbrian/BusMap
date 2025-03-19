@@ -58,7 +58,9 @@
         app:layout_constraintTop_toBottomOf="@id/login_subtext"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"/>
 
     <!-- Password Input -->
     <EditText
@@ -74,16 +76,15 @@
         app:layout_constraintTop_toBottomOf="@id/edt_email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
-
-
-
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"/>
 
 
     <!-- Login Button -->
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="0dp"
+        android:layout_width="200dp"
         android:layout_height="48dp"
         android:text="Login"
         android:backgroundTint="#4CAF50"

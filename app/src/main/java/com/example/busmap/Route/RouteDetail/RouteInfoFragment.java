@@ -113,7 +113,7 @@ public class RouteInfoFragment extends Fragment {
 
     private void fetchStationsForRoute(String routeId) {
         databaseRef.child("busstop").orderByChild("route_id").equalTo(routeId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot busStopSnapshot) {
                         List<Integer> stationIds = new ArrayList<>();

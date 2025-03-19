@@ -85,7 +85,10 @@
                 android:layout_height="wrap_content"
                 android:text="20k đ"
                 android:background="@drawable/rounded_background"
-                android:textColor="@color/teal_700"/>
+                android:textColor="@color/teal_700"
+                android:focusable="false"
+                android:clickable="false"
+                android:focusableInTouchMode="false"/>
 
             <TextView
                 android:id="@+id/tv_Totaltime"
