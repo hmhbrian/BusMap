@@ -3,7 +3,9 @@ package com.example.busmap.Route.FindRoute;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +40,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ResultFindRouteActivity extends AppCompatActivity {
     private RecyclerView rVRouteList;
+    private LinearLayout Lnr_NoRoute;
     private EditText edtTo, edtFrom;
     double radiusKm;
     private DatabaseReference database;
@@ -53,6 +56,7 @@ public class ResultFindRouteActivity extends AppCompatActivity {
         rVRouteList = findViewById(R.id.rv_routList);
         rVRouteList.setLayoutManager(new LinearLayoutManager(ResultFindRouteActivity.this));
         rVRouteList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        Lnr_NoRoute = findViewById(R.id.lnr_NoRoute);
         edtTo = findViewById(R.id.tv_to);
         edtFrom = findViewById(R.id.tv_from);
         database = FirebaseDatabase.getInstance().getReference();
@@ -282,10 +286,16 @@ public class ResultFindRouteActivity extends AppCompatActivity {
                         }
                         Log.d("Result", sb.toString());
                     }
-
-                    RouteFindAdapter adapter = new RouteFindAdapter(ResultFindRouteActivity.this, searchResults);
-                    rVRouteList.setAdapter(adapter);
-
+//                    rVRouteList.setVisibility(View.VISIBLE);
+//                    RouteFindAdapter adapter = new RouteFindAdapter(ResultFindRouteActivity.this, searchResults);
+//                    rVRouteList.setAdapter(adapter);
+                    if(searchResults.size() > 0){
+                        rVRouteList.setVisibility(View.VISIBLE);
+                        RouteFindAdapter adapter = new RouteFindAdapter(ResultFindRouteActivity.this, searchResults);
+                        rVRouteList.setAdapter(adapter);
+                    }else{
+                        Lnr_NoRoute.setVisibility(View.VISIBLE);
+                    }
                 });
     }
 

@@ -46,6 +46,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -54,6 +55,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
+    private static final int QR_SCAN_REQUEST_CODE = 1;
     DrawerLayout drawerLayout;
     BottomNavigationView bottomNavigationView;
     private DatabaseReference databaseReference;
@@ -255,30 +257,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Khởi động quét mã QR
+//    private void startQRScanner() {
+//        IntentIntegrator integrator = new IntentIntegrator(this);
+//        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+//        integrator.setPrompt("Quét mã QR trên xe bus");
+//        integrator.setCameraId(0);
+//        integrator.setBeepEnabled(true);
+//        integrator.setBarcodeImageEnabled(false);
+//        integrator.setOrientationLocked(false);
+//        integrator.initiateScan();
+//    }
     private void startQRScanner() {
-        IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-        integrator.setPrompt("Quét mã QR trên xe bus");
-        integrator.setCameraId(0);
-        integrator.setBeepEnabled(true);
-        integrator.setBarcodeImageEnabled(false);
-        integrator.setOrientationLocked(true);
-        integrator.initiateScan();
+        Intent intent = new Intent(this, QRScannerActivity.class);
+        startActivityForResult(intent, QR_SCAN_REQUEST_CODE);
     }
 
     // Xử lý kết quả quét mã QR
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//        if (result != null) {
+//            if (result.getContents() == null) {
+//                Toast.makeText(this, "Hủy quét mã QR", Toast.LENGTH_SHORT).show();
+//            } else {
+//                String qrData = result.getContents(); // Ví dụ: "route_id=1"
+//                processQRData(qrData);
+//            }
+//        } else {
+//            super.onActivityResult(requestCode, resultCode, data);
+//        }
+//    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() == null) {
-                Toast.makeText(this, "Hủy quét mã QR", Toast.LENGTH_SHORT).show();
-            } else {
-                String qrData = result.getContents(); // Ví dụ: "route_id=1"
-                processQRData(qrData);
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == QR_SCAN_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            String scanResult = data.getStringExtra("SCAN_RESULT");
+            processQRData(scanResult);
         }
     }
 

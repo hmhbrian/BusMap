@@ -253,7 +253,7 @@ public class FindRouteDetailActivity extends AppCompatActivity implements OnMapR
             }
         }
 
-        if (lastPoint != null && lastPoint != ToPoint) {
+        if (firstStationPoint != null && firstStationPoint != userLocation) {
             // Nối từ điểm hiện tại đến trạm bắt đầu
             DrawStart_End(userLocation ,firstStationPoint, "Điểm bắt đầu");
         }

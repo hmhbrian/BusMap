@@ -75,7 +75,6 @@ public class RouteListActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(route routeItem) {
                         openBusRouteActivity(routeItem);
-                        Toast.makeText(RouteListActivity.this, routeItem.getName() + "- id: " + routeItem.getId(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 rVRouteList.setAdapter(routeAdapter);
