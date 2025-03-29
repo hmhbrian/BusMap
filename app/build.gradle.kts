@@ -42,6 +42,11 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.places)
     implementation(libs.recyclerview)
+    implementation(fileTree(mapOf(
+        "dir" to "E:\\Nghiên cứu khoa học\\zalopay",
+        "include" to listOf("*.aar", "*.jar"),
+        "exclude" to listOf("")
+    )))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -55,6 +60,5 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation ("com.google.firebase:firebase-database:20.0.5")
     implementation ("com.google.firebase:firebase-auth:21.1.0")
-    implementation ("com.google.zxing:core:3.4.1")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
 }

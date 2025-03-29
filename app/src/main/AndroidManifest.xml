@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.camera.front" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
     <uses-permission android:name="android.permission.CAMERA" />
 
 
@@ -60,6 +61,7 @@
         </activity>
         <activity android:name=".User.Login"/>
         <activity android:name=".Main.RouteListActivity"/>
+        <activity android:name=".Main.QRScannerActivity"/>
         <activity android:name=".Route.FindRoute.FindRouteActivity"/>
         <activity android:name=".Route.FindRoute.ResultFindRouteActivity"/>
         <activity android:name=".Route.FindRoute.InputFindActivity"/>
