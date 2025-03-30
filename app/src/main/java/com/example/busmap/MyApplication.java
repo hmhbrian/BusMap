@@ -11,7 +11,6 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();        // Bật chế độ offline cho Firebase Database
-        ZaloPaySDK.init(2554, Environment.SANDBOX);
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 }
