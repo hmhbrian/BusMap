@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Welcome Back"
+        android:text="Chào mừng trở lại"
         android:textColor="#4CAF50"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +37,7 @@
         android:id="@+id/login_subtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login to your account"
+        android:text="Đăng Nhập Tài khoản của bạn"
         android:textSize="14sp"
         android:textColor="#4CAF50"
         app:layout_constraintTop_toBottomOf="@id/welcome_text"
@@ -48,7 +48,7 @@
     <!-- Full Name Input -->
     <EditText
         android:id="@+id/edt_email"
-        android:layout_width="0dp"
+        android:layout_width="330dp"
         android:layout_height="48dp"
         android:hint="Email"
         android:background="@drawable/custom_edittext"
@@ -63,30 +63,32 @@
         android:layout_marginLeft="8dp"/>
 
     <!-- Password Input -->
-    <EditText
-        android:id="@+id/edt_password"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:hint="Password"
-        android:background="@drawable/custom_edittext"
-        android:textColor="#000000"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/edt_email"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"/>
 
 
     <!-- Login Button -->
+    <EditText
+        android:id="@+id/edt_password"
+        android:layout_width="330dp"
+        android:layout_height="48dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/custom_edittext"
+        android:hint="Mật Khẩu"
+        android:inputType="textPassword"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edt_email" />
+
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="200dp"
+        android:layout_width="180dp"
         android:layout_height="48dp"
-        android:text="Login"
+        android:text="Đăng Nhập"
         android:backgroundTint="#4CAF50"
         android:textColor="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/edt_password"
@@ -99,7 +101,7 @@
         android:id="@+id/tv_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don’t have an account? Sign up"
+        android:text="Chưa có tài khoản? Đăng kí ngay"
         android:textColor="#4CAF50"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/btn_login"
