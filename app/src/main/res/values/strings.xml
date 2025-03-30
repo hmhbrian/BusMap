@@ -20,12 +20,13 @@
     <string name="phone_text">Số điện thoại</string>
     <string name="pass_label">Mật khẩu</string>
     <string name="confirm_pass_label">Xác nhận mật khẩu</string>
-    <string name="pass_hint">VD: 123456789aZ</string>
-    <string name="hint_phone">VD: 0868754872</string>
+    <string name="pass_hint">Mật khẩu</string>
+    <string name="hint_phone">số điện thoại</string>
+    <string name="cfpass_hint">Xác nhận mật khẩu</string>
     <string name="email_text">Email</string>
-    <string name="hint_email">VD: ungdungbusmap@gmail.com</string>
+    <string name="hint_email">Email</string>
     <string name="name_text">Họ và tên</string>
-    <string name="hint_name">VD: Nguyễn Minh Bus</string>
+    <string name="hint_name">Họ và tên</string>
     <string name="gender_text">Giới tính</string>
     <string name="dob_text">Ngày sinh</string>
     <string name="hint_dob">11/05/2025</string>

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -69,7 +70,18 @@
         <activity android:name=".Route.FindRoute.FindRouteDetailActivity"/>
         <activity android:name=".Route.RouteDetail.BusRouteActivity"/>
         <activity android:name=".User.Register"/>
-        <activity android:name=".User.ProfileActivity"/>
+        <activity android:name=".User.ProfileActivity"
+            android:exported="true"
+            android:label="Merchant Demo"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="demozpdk"
+                    android:host="app" />
+            </intent-filter>
+        </activity>
         <activity android:name=".account.RatingActivity"/>
         <activity android:name=".account.infocompany"/>
         <activity android:name=".User.AccountActivity"/>
