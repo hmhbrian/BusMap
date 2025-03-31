@@ -1,3 +1,5 @@
+import org.gradle.internal.impldep.bsh.commands.dir
+
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
@@ -41,11 +43,12 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.places)
     implementation(libs.recyclerview)
-    implementation(fileTree(mapOf(
-        "dir" to "E:\\Nghiên cứu khoa học\\zalopay",
-        "include" to listOf("*.aar", "*.jar"),
-        "exclude" to listOf("")
-    )))
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
+//    implementation(fileTree(mapOf(
+//        "dir" to "E:\\Nghiên cứu khoa học\\zalopay",
+//        "include" to listOf("*.aar", "*.jar"),
+//        "exclude" to listOf("")
+//    )))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
