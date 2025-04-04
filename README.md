@@ -21,5 +21,5 @@
 
 1. **Clone dự án**:  
    ```bash
-   git clone https://github.com/nmt1511/BusMap1.git
+   git clone https://github.com/hmhbrian/BusMap.git
    cd busmap
