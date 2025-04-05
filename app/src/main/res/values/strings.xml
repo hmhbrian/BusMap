@@ -26,7 +26,7 @@
     <string name="email_text">Email</string>
     <string name="hint_email">Email</string>
     <string name="name_text">Họ và tên</string>
-    <string name="hint_name">Họ và tên</string>
+    <string name="hint_name">Họ tên</string>
     <string name="gender_text">Giới tính</string>
     <string name="dob_text">Ngày sinh</string>
     <string name="hint_dob">11/05/2025</string>
