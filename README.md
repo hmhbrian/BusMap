@@ -14,17 +14,12 @@
 ## 🛠️ Công Nghệ Sử Dụng
 
 - **Ngôn ngữ lập trình**: Java (Android)
-- **Cơ sở dữ liệu**: SQLite (offline), Firebase Realtime Database (online).
+- **Cơ sở dữ liệu**: Firebase Realtime Database.
+- **Xác thực**: Firebase Authentication.
 - **Bản đồ**: Google Maps API.
-- **Thông báo**: Firebase Cloud Messaging (FCM).
-
-## 📖 Kiến Trúc Ứng Dụng
-
-- **MVVM**: Giúp tách biệt logic xử lý dữ liệu và giao diện, tăng khả năng mở rộng và bảo trì.
-- **RESTful API**: Giao tiếp với máy chủ để lấy dữ liệu về tuyến xe buýt và tình trạng giao thông
 ## 📋 Hướng Dẫn Cài Đặt
 
 1. **Clone dự án**:  
    ```bash
-   git clone https://github.com/nmt1511/BusMap1.git
+   git clone https://github.com/hmhbrian/BusMap.git
    cd busmap
